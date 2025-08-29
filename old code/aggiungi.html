@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggiungi un capo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='stycly-favicon.png') }}">
+</head>
+<body>
+    <div class="form-stycly">
+        <h2 style="text-align:center; margin-bottom: 20px;">Aggiungi un capo</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="tipologia">Tipologia:</label>
+            <select name="tipologia" id="tipologia" required>
+                <option value="">-- Seleziona --</option>
+                <option>Maglietta</option>
+                <option>Camicia</option>
+                <option>Pantaloni</option>
+                <option>Felpa</option>
+                <option>Gonna</option>
+                <option>Vestito</option>
+                <option>Jeans</option>
+                <option>Giacca</option>
+                <option>Body</option>
+                <option>Pigiama</option>
+                <option>Cappotto</option>
+                <option>Scarpe</option>
+                <option>Sandali</option>
+                <option>Infradito</option>
+                <option>Calzini</option>
+                <option>Cappello</option>
+                <option>Occhiali da sole</option>
+                <option>Costume da bagno</option>
+                <option>Salopette</option>
+                <option>Prop (accessori scenici)</option>
+                <option>Giocattolo</option>
+                <option>Altro</option>
+            </select>
+
+            <label for="taglia">Taglia:</label>
+            <select name="taglia" id="taglia" required>
+                <option value="">-- Seleziona --</option>
+                <option>0-3 mesi</option>
+                <option>3-6 mesi</option>
+                <option>6-9 mesi</option>
+                <option>9-12 mesi</option>
+                <option>12-18 mesi</option>
+                <option>18-24 mesi</option>
+                <option>2 anni</option>
+                <option>3 anni</option>
+                <option>4 anni</option>
+                <option>5 anni</option>
+                <option>6 anni</option>
+                <option>7 anni</option>
+                <option>8 anni</option>
+                <option>9 anni</option>
+                <option>10 anni</option>
+                <option>11 anni</option>
+                <option>12 anni</option>
+                <option>13 anni</option>
+                <option>14 anni</option>
+                <option>16 anni</option>
+                <option>XS</option>
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+                <option>XXL</option>
+                <option>XXXL</option>
+            </select>
+
+            <label for="colore">Colore:</label>
+            <select name="colore" id="colore" required>
+                <option value="">-- Seleziona --</option>
+                <option>Bianco</option>
+                <option>Nero</option>
+                <option>Grigio</option>
+                <option>Beige</option>
+                <option>Rosso</option>
+                <option>Blu</option>
+                <option>Giallo</option>
+                <option>Verde</option>
+                <option>Rosa</option>
+                <option>Lilla</option>
+                <option>Marrone</option>
+                <option>Multicolore</option>
+            </select>
+
+            <label for="brand">Brand:</label>
+            <select name="brand" id="brand" required>
+                <option value="">-- Seleziona --</option>
+                <option>Zara</option>
+                <option>OVS</option>
+                <option>Massimo Dutti</option>
+                <option>The North Face</option>
+                <option>Vans</option>
+                <option>Converse</option>
+                <option>Napapijri</option>
+                <option>Benetton</option>
+                <option>H&M</option>
+                <option>Nike</option>
+                <option>Adidas</option>
+                <option>Primark</option>
+                <option>Chicco</option>
+                <option>Petit Bateau</option>
+                <option>C&A</option>
+                <option>Nessuna Marca</option>
+            </select>
+
+            <label for="destinazione">Destinazione:</label>
+            <select name="destinazione" id="destinazione" required>
+                <option value="">-- Seleziona --</option>
+                <option>Bambino</option>
+                <option>Bambina</option>
+                <option>Uomo</option>
+                <option>Donna</option>
+            </select>
+
+            <label for="immagine">Carica immagine:</label>
+            <input type="file" name="immagine" id="immagine" required>
+
+           <div class="form-actions">
+                <button type="submit" class="home-main-btn-stycly">Aggiungi</button>
+                <a href="{{ url_for('guardaroba') }}" class="home-main-btn-stycly" style="background:#e3e7ee; color:#1a2233;">Annulla</a>
+            </div>
+        </form>
+       
+    </div>
+</body>
+</html>
+

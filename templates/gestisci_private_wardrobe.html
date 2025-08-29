@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Gestione Wardrobe - Stycly{% endblock %}
+
+{% block content %}
+<section class="stycly-hero">
+  <div class="stycly-hero-content">
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.4rem;">{{ nome_tabella.replace('wardrobe_', '').replace('_', ' ').title() }}</h2>
+    <p style="font-size: 1rem;">Visualizza, modifica o aggiungi capi al guardaroba</p>
+
+    <div style="display: flex; justify-content: center; gap: 1rem; margin: 1.5rem 0;">
+      
+      <a href="{{ url_for('select_private_wardrobe') }}" class="capo-icon-btn" title="Indietro">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="{{ url_for('home') }}" class="capo-icon-btn" title="Home">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M3 10L12 3l9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9z" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="wardrobe-grid">
+      {% set totale = capi|length %}
+      {% for capo in capi %}
+      <div class="capo-flip-card">
+        <div class="capo-flip-inner">
+          <div class="capo-flip-front" data-capo='{{ capo|tojson|safe }}'>
+            <img src="{{ url_for('immagini', filename=capo['immagine'].split('/')[-1]) }}" alt="fronte" class="capo-img">
+          </div>
+          <div class="capo-flip-back" data-capo='{{ capo|tojson|safe }}'>
+            {% if capo['immagine2'] %}
+            <img src="{{ url_for('immagini', filename=capo['immagine2'].split('/')[-1]) }}" alt="retro" class="capo-img">
+            {% else %}
+            <p style="text-align:center; font-size: 0.8rem;">Nessuna retro immagine</p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="capo-actions">
+          <button class="capo-icon-btn btn-dettaglio" data-capo='{{ capo|tojson|safe }}' title="Dettagli">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 4.5C7 4.5 2.73 8 1 12c1.73 4 6 7.5 11 7.5s9.27-3.5 11-7.5c-1.73-4-6-7.5-11-7.5Z" stroke="#4a5670" stroke-width="2"/>
+              <circle cx="12" cy="12" r="3" fill="none" stroke="#4a5670" stroke-width="2"/>
+            </svg>
+          </button>
+
+<a href="{{ url_for('modifica_capo_wardrobe', nome_tabella=nome_tabella, capo_id=capo['id']) }}" class="capo-icon-btn" title="Modifica">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+              <path d="M14.7 2.29a1 1 0 0 1 1.42 0l1.59 1.59a1 1 0 0 1 0 1.42l-9.3 9.3-2.12.71.71-2.12 9.3-9.3zM3 17h14v2H3v-2z" fill="#1468e5"/>
+            </svg>
+          </a>
+
+          <form method="POST" action="{{ url_for('elimina_capo_wardrobe', nome_tabella=nome_tabella, capo_id=capo['id']) }}" onsubmit="return confirm('Sei sicuro di voler eliminare questo capo?');" style="display:inline;">
+            <button type="submit" class="capo-icon-btn" title="Elimina">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M3 6h18M10 11v6M14 11v6M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="#cc3d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </form>
+        </div>
+      </div>
+      {% endfor %}
+
+      {% set totale = capi|length %}
+{% set card_totali = totale %}
+{% if card_totali % 5 == 3 %}
+  {% set riempimento = 2 %}
+{% elif card_totali % 5 == 4 %}
+  {% set riempimento = 1 %}
+{% elif card_totali % 5 == 0 %}
+  {% set riempimento = 5 %}
+{% else %}
+  {% set riempimento = 5 - (card_totali % 5) %}
+{% endif %}
+{% for i in range(riempimento) %}
+
+      <div class="capo-flip-card empty-card">
+        <a href="{{ url_for('aggiungi_capo_wardrobe', nome_tabella=nome_tabella) }}" class="capo-icon-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" fill="#e3e7ee"/>
+            <path d="M12 8v8M8 12h8" stroke="#7b9acc" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Popup dettagli + immagine -->
+<div id="detail-modal" class="stycly-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999;">
+  <div class="stycly-modal-content" style="max-width: 900px; display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; margin:auto; background:#fff; padding:2rem; border-radius:10px; position:relative;">
+    <button class="stycly-modal-close" onclick="closeDetailPopup()" style="position:absolute; top:1rem; right:1rem; font-size:1.5rem;">&times;</button>
+    <div style="flex:1; text-align:center;">
+      <img id="popup-image" src="" alt="Capo" style="max-width: 100%; max-height: 380px; border-radius: 8px;">
+      <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center;">
+        <button onclick="showFront()" class="capo-icon-btn" title="Fronte">⬅</button>
+        <button onclick="showBack()" class="capo-icon-btn" title="Retro">➡</button>
+      </div>
+
+    </div>
+    <div id="popup-details" style="flex:1; font-size: 0.95rem; padding: 0.5rem;"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let frontImg = "";
+let backImg = "";
+
+function openDetailPopup(capo) {
+  frontImg = capo.immagine;
+  backImg = capo.immagine2 || "";
+
+  const imgPath = (path) => path.startsWith('/') ? path : '/' + path;
+
+  document.getElementById('popup-image').src = imgPath(frontImg);
+  document.getElementById('popup-details').innerHTML = `
+    <p><b>Categoria:</b> ${capo.categoria}</p>
+    <p><b>Tipologia:</b> ${capo.tipologia}</p>
+    <p><b>Taglia:</b> ${capo.taglia}</p>
+    <p><b>Fit:</b> ${capo.fit}</p>
+    <p><b>Colore:</b> ${capo.colore}</p>
+    <p><b>Brand:</b> ${capo.brand}</p>
+    <p><b>Destinazione:</b> ${capo.destinazione}</p>
+  `;
+  document.getElementById('detail-modal').style.display = 'flex';
+}
+
+function closeDetailPopup() {
+  document.getElementById('detail-modal').style.display = 'none';
+}
+
+function showFront() {
+  if (frontImg) document.getElementById('popup-image').src = frontImg.startsWith('/') ? frontImg : '/' + frontImg;
+}
+
+function showBack() {
+  if (backImg) document.getElementById('popup-image').src = backImg.startsWith('/') ? backImg : '/' + backImg;
+}
+
+// Event binding per tutti i bottoni
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.btn-dettaglio').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const capo = JSON.parse(this.dataset.capo);
+      openDetailPopup(capo);
+    });
+  });
+
+  document.querySelectorAll('.capo-flip-front, .capo-flip-back').forEach(div => {
+    div.addEventListener('click', function () {
+      const capo = JSON.parse(this.dataset.capo);
+      openDetailPopup(capo);
+    });
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Aggiungi capo{% endblock %}
+{% block content %}
+<section class="stycly-hero">
+  <div class="stycly-hero-content">
+    <h1>Aggiungi capo a: {{ nome_tabella.replace('wardrobe_', '').replace('_',' ').title() }}</h1>
+
+    <form method="post" enctype="multipart/form-data" class="form-guidato">
+      <!-- Categoria -->
+      <label class="field">
+        <span>Categoria</span>
+        <div class="psuedo_select" data-name="categoria">
+          <span class="selected">-- Seleziona --</span>
+          <ul class="options">
+            {% for cat in tipologie.keys() %}
+              <li class="option" data-value="{{ cat }}">{{ cat }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <input type="hidden" name="categoria" required>
+      </label>
+
+      <!-- Tipologia -->
+      <label class="field">
+        <span>Tipologia</span>
+        <div class="psuedo_select" data-name="tipologia">
+          <span class="selected">-- Seleziona --</span>
+          <ul class="options"></ul>
+        </div>
+        <input type="hidden" name="tipologia" required>
+      </label>
+
+      <!-- Altri campi -->
+      {% for campo, valori in {
+        'brand': brands,
+        'destinazione': destinazioni,
+        'taglia': taglie,
+        'colore': colori,
+        'fit': fit
+      }.items() %}
+      <label class="field">
+        <span>{{ campo.capitalize() }}</span>
+        <div class="psuedo_select" data-name="{{ campo }}">
+          <span class="selected">-- Seleziona --</span>
+          <ul class="options">
+            {% for v in valori %}
+              <li class="option" data-value="{{ v }}">{{ v }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <input type="hidden" name="{{ campo }}" required>
+      </label>
+      {% endfor %}
+
+      <!-- Immagine -->
+      <label class="field">
+        <span>Immagine</span>
+        <input type="file" name="immagine" accept="image/*" required>
+      </label>
+<label for="immagine2">Immagine Retro (facoltativa):</label>
+<br><input type="file" name="immagine2" id="immagine2" accept="image/*">
+
+      <!-- Bottoni -->
+      <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem;">
+        <button type="submit" class="capo-icon-btn" title="Aggiungi capo" style="display: flex; gap: 0.4rem; align-items: center;">
+          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="10" fill="#7b9acc"/>
+            <path d="M11 7v8M7 11h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <a href="{{ url_for('gestisci_private_wardrobe', nome_tabella=nome_tabella) }}"
+           class="capo-icon-btn" title="Indietro" style="display: flex; gap: 0.4rem; align-items: center;">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M12 4l-6 6 6 6" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+const tipologie = {{ tipologie|tojson }};
+
+function closeAll() {
+  document.querySelectorAll('.psuedo_select .options').forEach(o => o.classList.remove('open'));
+  document.querySelectorAll('.field').forEach(f => f.classList.remove('focused'));
+}
+
+function setupPsuedoSelect(ps) {
+  const name = ps.dataset.name;
+  const hidden = document.querySelector(`input[name="${name}"]`);
+  const sel = ps.querySelector('.selected');
+  const opts = ps.querySelector('.options');
+
+  ps.addEventListener('click', e => {
+    e.stopPropagation();
+    closeAll();
+    ps.parentElement.classList.add('focused');
+    opts.classList.add('open');
+  });
+
+  opts.querySelectorAll('.option').forEach(li => {
+    li.addEventListener('click', e => {
+      e.stopPropagation();
+      const val = li.dataset.value;
+      sel.textContent = li.textContent;
+      hidden.value = val;
+      closeAll();
+
+      if (name === 'categoria') {
+        const tipPs = document.querySelector('.psuedo_select[data-name="tipologia"]');
+        const tipUl = tipPs.querySelector('.options');
+        const tipSel = tipPs.querySelector('.selected');
+        const tipHidden = document.querySelector('input[name="tipologia"]');
+        const list = tipologie[val] || [];
+        tipUl.innerHTML = '';
+        tipSel.textContent = '-- Seleziona --';
+        tipHidden.value = '';
+        list.forEach(t => {
+          const nli = document.createElement('li');
+          nli.className = 'option';
+          nli.dataset.value = t;
+          nli.textContent = t;
+          tipUl.appendChild(nli);
+        });
+        setupPsuedoSelect(tipPs);
+      }
+    });
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.psuedo_select').forEach(setupPsuedoSelect);
+  document.addEventListener('click', closeAll);
+});
+</script>
+{% endblock %}
+
+

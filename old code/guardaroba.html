@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magazzino Capi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='stycly-favicon.png') }}">
+</head>
+<body>
+    <div class="container">
+    <div class="wardrobe-header">
+        <div class="wardrobe-logo">
+            <img src="{{ url_for('static', filename='stycly-logo.png') }}" alt="Stycly Logo">
+        </div>
+        <div class="wardrobe-actions">
+            <a href="{{ url_for('aggiungi') }}" class="icon-action-btn" title="Aggiungi nuovo capo">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+                    <path d="M11 7V15" stroke="#1a2233" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M7 11H15" stroke="#1a2233" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </a>
+            <a href="{{ url_for('home') }}" class="icon-action-btn" title="Torna alla homepage">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M3 10.75L12 4l9 6.75" stroke="#1a2233" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 10.75V20a1 1 0 0 0 1 1h4.5v-5h5v5H19a1 1 0 0 0 1-1V10.75" stroke="#1a2233" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="wardrobe-grid">
+        {% for capo in capi %}
+        <div class="wardrobe-card">
+            <div class="wardrobe-img-container">
+                {% if capo.immagine %}
+                <img src="/immagini/{{ capo.immagine | replace('immagini/', '') }}" alt="Immagine">
+                {% else %}
+                <div class="no-img">Nessuna immagine</div>
+                {% endif %}
+            </div>
+            <div class="wardrobe-details" style="display: flex; flex-direction: column; height: 100%;">
+        <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-start;">
+            <div class="wardrobe-info">
+                <span class="wardrobe-type">{{ capo.tipologia }}</span>
+                <span class="wardrobe-brand">{{ capo.brand }}</span>
+            </div>
+            <div class="wardrobe-meta">
+                <span>{{ capo.destinazione }}</span>
+                <span>{{ capo.taglia }}</span>
+                <span>{{ capo.colore }}</span>
+            </div>
+        
+        <div class="action-buttons" style="margin-top: 0;">
+            <a href="{{ url_for('modifica', capo_id=capo.id) }}" class="icon-button icon-modifica" title="Modifica">
+                <!-- Icona matita -->
+                <svg viewBox="0 0 24 24">
+                    <path d="M16.5 3.5L20.5 7.5M4 20H8L19 9C19.5523 8.44772 19.5523 7.55228 19 7L17 5C16.4477 4.44772 15.5523 4.44772 15 5L4 16V20Z"
+                        stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+            <form method="POST" action="{{ url_for('elimina', capo_id=capo.id) }}">
+                <button type="button" class="icon-button icon-elimina js-delete-btn" title="Elimina">
+                    <!-- Icona cestino -->
+                    <svg viewBox="0 0 24 24" fill="none">
+        <rect x="6" y="8" width="12" height="10" rx="2" stroke="currentColor" stroke-width="2"/>
+        <path d="M9 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M12 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M15 11V17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4 8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <path d="M10 4h4a1 1 0 0 1 1 1v3H9V5a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+                </button>
+            </form>
+        </div>
+        </div>
+    </div>
+</div>
+        {% endfor %}
+    </div>
+ <!-- Modal conferma eliminazione -->
+        <div id="deleteModal" class="modal-stycly" style="display:none;">
+            <div class="modal-content-stycly">
+                <h3>Sei sicuro di voler eliminare questo capo?</h3>
+                <div class="modal-actions-stycly">
+                    <button id="confirmDeleteBtn" class="home-main-btn-stycly" style="background:#e74c3c;">Elimina</button>
+                    <button id="cancelDeleteBtn" class="home-main-btn-stycly" style="background:#e3e7ee; color:#1a2233;">Annulla</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let formToDelete = null;
+    document.querySelectorAll('.js-delete-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            formToDelete = btn.closest('form');
+            document.getElementById('deleteModal').style.display = 'flex';
+        });
+    });
+    document.getElementById('cancelDeleteBtn').onclick = function() {
+        document.getElementById('deleteModal').style.display = 'none';
+        formToDelete = null;
+    };
+    document.getElementById('confirmDeleteBtn').onclick = function() {
+        if(formToDelete) formToDelete.submit();
+    };
+    window.addEventListener('keydown', function(e) {
+        if(e.key === "Escape") {
+            document.getElementById('deleteModal').style.display = 'none';
+            formToDelete = null;
+        }
+    });
+    </script>
+</body>
+</html>

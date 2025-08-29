@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica capo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='stycly-favicon.png') }}">
+</head>
+<body>
+    <div class="form-stycly">
+        <h2 style="text-align:center; margin-bottom: 20px;">Modifica capo</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="tipologia">Tipologia:</label>
+            <select name="tipologia" id="tipologia" required>
+                <option value="">-- Seleziona --</option>
+                <option {% if capo.tipologia == 'Maglietta' %}selected{% endif %}>Maglietta</option>
+                <option {% if capo.tipologia == 'Camicia' %}selected{% endif %}>Camicia</option>
+                <option {% if capo.tipologia == 'Pantaloni' %}selected{% endif %}>Pantaloni</option>
+                <option {% if capo.tipologia == 'Felpa' %}selected{% endif %}>Felpa</option>
+                <option {% if capo.tipologia == 'Gonna' %}selected{% endif %}>Gonna</option>
+                <option {% if capo.tipologia == 'Vestito' %}selected{% endif %}>Vestito</option>
+                <option {% if capo.tipologia == 'Jeans' %}selected{% endif %}>Jeans</option>
+                <option {% if capo.tipologia == 'Giacca' %}selected{% endif %}>Giacca</option>
+                <option {% if capo.tipologia == 'Body' %}selected{% endif %}>Body</option>
+                <option {% if capo.tipologia == 'Pigiama' %}selected{% endif %}>Pigiama</option>
+                <option {% if capo.tipologia == 'Cappotto' %}selected{% endif %}>Cappotto</option>
+                <option {% if capo.tipologia == 'Scarpe' %}selected{% endif %}>Scarpe</option>
+                <option {% if capo.tipologia == 'Sandali' %}selected{% endif %}>Sandali</option>
+                <option {% if capo.tipologia == 'Infradito' %}selected{% endif %}>Infradito</option>
+                <option {% if capo.tipologia == 'Calzini' %}selected{% endif %}>Calzini</option>
+                <option {% if capo.tipologia == 'Cappello' %}selected{% endif %}>Cappello</option>
+                <option {% if capo.tipologia == 'Occhiali da sole' %}selected{% endif %}>Occhiali da sole</option>
+                <option {% if capo.tipologia == 'Costume da bagno' %}selected{% endif %}>Costume da bagno</option>
+                <option {% if capo.tipologia == 'Salopette' %}selected{% endif %}>Salopette</option>
+                <option {% if capo.tipologia == 'Prop (accessori scenici)' %}selected{% endif %}>Prop (accessori scenici)</option>
+                <option {% if capo.tipologia == 'Giocattolo' %}selected{% endif %}>Giocattolo</option>
+                <option {% if capo.tipologia == 'Altro' %}selected{% endif %}>Altro</option>
+            </select>
+
+            <label for="taglia">Taglia:</label>
+            <select name="taglia" id="taglia" required>
+                <option value="">-- Seleziona --</option>
+                <option {% if capo.taglia == '0-3 mesi' %}selected{% endif %}>0-3 mesi</option>
+                <option {% if capo.taglia == '3-6 mesi' %}selected{% endif %}>3-6 mesi</option>
+                <option {% if capo.taglia == '6-9 mesi' %}selected{% endif %}>6-9 mesi</option>
+                <option {% if capo.taglia == '9-12 mesi' %}selected{% endif %}>9-12 mesi</option>
+                <option {% if capo.taglia == '12-18 mesi' %}selected{% endif %}>12-18 mesi</option>
+                <option {% if capo.taglia == '18-24 mesi' %}selected{% endif %}>18-24 mesi</option>
+                <option {% if capo.taglia == '2 anni' %}selected{% endif %}>2 anni</option>
+                <option {% if capo.taglia == '3 anni' %}selected{% endif %}>3 anni</option>
+                <option {% if capo.taglia == '4 anni' %}selected{% endif %}>4 anni</option>
+                <option {% if capo.taglia == '5 anni' %}selected{% endif %}>5 anni</option>
+                <option {% if capo.taglia == '6 anni' %}selected{% endif %}>6 anni</option>
+                <option {% if capo.taglia == '7 anni' %}selected{% endif %}>7 anni</option>
+                <option {% if capo.taglia == '8 anni' %}selected{% endif %}>8 anni</option>
+                <option {% if capo.taglia == '9 anni' %}selected{% endif %}>9 anni</option>
+                <option {% if capo.taglia == '10 anni' %}selected{% endif %}>10 anni</option>
+                <option {% if capo.taglia == '11 anni' %}selected{% endif %}>11 anni</option>
+                <option {% if capo.taglia == '12 anni' %}selected{% endif %}>12 anni</option>
+                <option {% if capo.taglia == '13 anni' %}selected{% endif %}>13 anni</option>
+                <option {% if capo.taglia == '14 anni' %}selected{% endif %}>14 anni</option>
+                <option {% if capo.taglia == '16 anni' %}selected{% endif %}>16 anni</option>
+                <option {% if capo.taglia == 'XS' %}selected{% endif %}>XS</option>
+                <option {% if capo.taglia == 'S' %}selected{% endif %}>S</option>
+                <option {% if capo.taglia == 'M' %}selected{% endif %}>M</option>
+                <option {% if capo.taglia == 'L' %}selected{% endif %}>L</option>
+                <option {% if capo.taglia == 'XL' %}selected{% endif %}>XL</option>
+                <option {% if capo.taglia == 'XXL' %}selected{% endif %}>XXL</option>
+                <option {% if capo.taglia == 'XXXL' %}selected{% endif %}>XXXL</option>
+            </select>
+
+            <label for="colore">Colore:</label>
+            <select name="colore" id="colore" required>
+                <option value="">-- Seleziona --</option>
+                <option {% if capo.colore == 'Bianco' %}selected{% endif %}>Bianco</option>
+                <option {% if capo.colore == 'Nero' %}selected{% endif %}>Nero</option>
+                <option {% if capo.colore == 'Grigio' %}selected{% endif %}>Grigio</option>
+                <option {% if capo.colore == 'Beige' %}selected{% endif %}>Beige</option>
+                <option {% if capo.colore == 'Rosso' %}selected{% endif %}>Rosso</option>
+                <option {% if capo.colore == 'Blu' %}selected{% endif %}>Blu</option>
+                <option {% if capo.colore == 'Giallo' %}selected{% endif %}>Giallo</option>
+                <option {% if capo.colore == 'Verde' %}selected{% endif %}>Verde</option>
+                <option {% if capo.colore == 'Rosa' %}selected{% endif %}>Rosa</option>
+                <option {% if capo.colore == 'Lilla' %}selected{% endif %}>Lilla</option>
+                <option {% if capo.colore == 'Marrone' %}selected{% endif %}>Marrone</option>
+                <option {% if capo.colore == 'Multicolore' %}selected{% endif %}>Multicolore</option>
+            </select>
+
+            <label for="brand">Brand:</label>
+            <select name="brand" id="brand" required>
+                <option value="">-- Seleziona --</option>
+                <option {% if capo.brand == 'Zara' %}selected{% endif %}>Zara</option>
+                <option {% if capo.brand == 'OVS' %}selected{% endif %}>OVS</option>
+                <option {% if capo.brand == 'Massimo Dutti' %}selected{% endif %}>Massimo Dutti</option>
+                <option {% if capo.brand == 'The North Face' %}selected{% endif %}>The North Face</option>
+                <option {% if capo.brand == 'Vans' %}selected{% endif %}>Vans</option>
+                <option {% if capo.brand == 'Converse' %}selected{% endif %}>Converse</option>
+                <option {% if capo.brand == 'Napapijri' %}selected{% endif %}>Napapijri</option>
+                <option {% if capo.brand == 'Benetton' %}selected{% endif %}>Benetton</option>
+                <option {% if capo.brand == 'H&M' %}selected{% endif %}>H&M</option>
+                <option {% if capo.brand == 'Nike' %}selected{% endif %}>Nike</option>
+                <option {% if capo.brand == 'Adidas' %}selected{% endif %}>Adidas</option>
+                <option {% if capo.brand == 'Primark' %}selected{% endif %}>Primark</option>
+                <option {% if capo.brand == 'Chicco' %}selected{% endif %}>Chicco</option>
+                <option {% if capo.brand == 'Petit Bateau' %}selected{% endif %}>Petit Bateau</option>
+                <option {% if capo.brand == 'C&A' %}selected{% endif %}>C&A</option>
+                <option {% if capo.brand == 'Nessuna Marca' %}selected{% endif %}>Nessuna Marca</option>
+            </select>
+
+            <label for="destinazione">Destinazione:</label>
+            <select name="destinazione" id="destinazione" required>
+                <option value="">-- Seleziona --</option>
+                <option {% if capo.destinazione == 'Bambino' %}selected{% endif %}>Bambino</option>
+                <option {% if capo.destinazione == 'Bambina' %}selected{% endif %}>Bambina</option>
+                <option {% if capo.destinazione == 'Uomo' %}selected{% endif %}>Uomo</option>
+                <option {% if capo.destinazione == 'Donna' %}selected{% endif %}>Donna</option>
+            </select>
+
+            <label for="immagine">Carica immagine:</label>
+            <input type="file" name="immagine" id="immagine">
+
+            <div class="form-actions">
+                <button type="submit" class="home-main-btn-stycly">Salva modifiche</button>
+                <a href="{{ url_for('guardaroba') }}" class="home-main-btn-stycly" style="background:#e3e7ee; color:#1a2233;">Annulla</a>
+            </div>
+        </form>
+        
+    </div>
+</body>
+</html>
+

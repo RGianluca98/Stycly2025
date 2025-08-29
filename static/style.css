@@ -1,0 +1,677 @@
+/* --- FONT & ROOT --- */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+    --col-primario: #1a2233;
+    --col-secondario: #f5f7fa;
+    --col-accent: #7b9acc;
+    --col-hover: #1468e5;
+    --col-white: #fff;
+    --font-main: 'Poppins', Arial, sans-serif;
+    --f-sm: 0.95rem;
+    --f-md: 1.1rem;
+    --f-lg: 1.4rem;
+    --f-xl: 2.2rem;
+    --f-2xl: 2.8rem;
+    --f-3xl: 3.2rem;
+}
+
+html, body {
+    font-family: var(--font-main);
+    background: linear-gradient(45deg, #e3e7ee 0%, #f5f7fa 100%);
+    color: var(--col-primario);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* --- NAVBAR --- */
+.stycly-header {
+    width: 100%;
+    background: var(--col-white);
+    box-shadow: 0 2px 12px rgba(123,154,204,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 10;
+    min-height: 68px;
+}
+
+.stycly-logo img {
+    height: 44px;
+    width: auto;
+    display: block;
+    margin-left: 18px;
+}
+
+.stycly-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-left: auto;
+    margin-right: 18px;
+    position: relative;
+}
+
+.stycly-nav > a,
+.stycly-nav-dropdown-btn {
+    font-size: var(--f-md);
+    color: var(--col-primario);
+    text-decoration: none;
+    background: none;
+    border: none;
+    font-family: var(--font-main);
+    font-weight: 500;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: color 0.18s;
+    position: relative;
+}
+
+.stycly-nav > a:hover,
+.stycly-nav-dropdown-btn:hover {
+    color: var(--col-hover);
+}
+
+.stycly-nav-dropdown-parent {
+    position: relative;
+}
+
+.stycly-nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: var(--col-white);
+    box-shadow: 0 8px 32px rgba(123,154,204,0.13);
+    border-radius: 10px;
+    min-width: 180px;
+    flex-direction: column;
+    padding: 8px 0;
+    z-index: 100;
+    animation: fadeIn 0.18s;
+}
+
+.stycly-nav-dropdown-menu a {
+    color: var(--col-primario);
+    text-decoration: none;
+    padding: 12px 24px;
+    font-size: var(--f-md);
+    font-weight: 500;
+    border: none;
+    background: none;
+    text-align: left;
+    transition: background 0.18s, color 0.18s;
+    border-radius: 0;
+    display: block;
+}
+
+.stycly-nav-dropdown-menu a:hover {
+    background: #e3e7ee;
+    color: var(--col-hover);
+}
+
+/* Mostra dropdown su hover/click */
+.stycly-nav-dropdown-parent.open .stycly-nav-dropdown-menu {
+    display: flex;
+}
+
+/* --- HAMBURGER --- */
+.stycly-nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;
+    z-index: 101;
+}
+.stycly-nav-hamburger span {
+    display: block;
+    height: 4px;
+    width: 28px;
+    background: var(--col-primario);
+    margin: 4px 0;
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+/* --- HERO --- */
+.stycly-hero {
+   min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    position: relative;
+    z-index: 1;
+}
+
+.stycly-hero-content {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    align-items: center;
+}
+
+.stycly-hero-content h1 {
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.stycly-hero-content strong {
+    font-size: 3rem;
+    color: #7b9acc;
+    font-weight: 700;
+    margin: -0.7rem 0 1rem 0;
+    display: block;
+}
+
+.stycly-hero-content p {
+    font-size: var(--f-md);
+    color: #4a5670;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+}
+
+.stycly-cta-btn {
+    font: inherit;
+    font-size: var(--f-md);
+    padding: 0.7rem 2.2rem;
+    border: 2px solid var(--col-accent);
+    background-color: var(--col-accent);
+    color: var(--col-white);
+    cursor: pointer;
+    border-radius: 35px;
+    font-weight: 600;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(123,154,204,0.10);
+    letter-spacing: 0.5px;
+    outline: none;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    display: inline-block;
+}
+.stycly-cta-btn:hover,
+.stycly-cta-btn:focus {
+    background-color: var(--col-hover);
+    border-color: var(--col-hover);
+    color: var(--col-white);
+}
+
+/* --- MODAL POPUP --- */
+.stycly-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: none; /* default hidden */
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+
+.stycly-modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stycly-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+}
+.stycly-modal-content h2 {
+    font-size: var(--f-lg);
+    color: var(--col-primario);
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+.stycly-modal-content p {
+    font-size: var(--f-md);
+    color: #4a5670;
+    margin-bottom: 24px;
+}
+.stycly-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 8px;
+}
+
+.stycly-modal-close:hover {
+    color: var(--col-hover);
+}
+
+/* --- DIVIDER SVG --- */
+.divider-bottom {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    z-index: 0;
+    pointer-events: none;
+}
+.divider-bottom svg {
+     width: 100vw;
+    height: 120px;
+    display: block;
+}
+body {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 120px; /* spazio per la wave */
+}
+
+/* --- ANIMATION --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .stycly-hero-content {
+        max-width: 98vw;
+        padding: 0 2vw;
+    }
+    .stycly-modal-content {
+        min-width: 220px;
+        padding: 24px 8px 18px 8px;
+    }
+}
+@media (max-width: 700px) {
+    .stycly-header {
+        flex-direction: column;
+        min-height: 56px;
+    }
+    .stycly-logo img {
+        margin: 0 auto;
+    }
+    .stycly-nav {
+        gap: 0.5rem;
+        margin-right: 0;
+    }
+    .stycly-hero-content h1 {
+        font-size: var(--f-lg);
+    }
+    .stycly-hero-content strong {
+        font-size: var(--f-xl);
+    }
+}
+@media (max-width: 600px) {
+    .stycly-nav {
+        display: none;
+    }
+    .stycly-nav-hamburger {
+        display: flex;
+        margin-left: auto;
+    }
+    .stycly-header {
+        justify-content: space-between;
+        padding: 0 8px;
+    }
+    .stycly-hero-content {
+        padding: 0 2vw;
+    }
+    .stycly-modal-content {
+        min-width: 90vw;
+        padding: 18px 2vw 12px 2vw;
+    }
+}
+/* ... existing root and general styles stay the same ... */
+
+/* --- WARDROBE GRID (was: warehouse-grid) --- */
+.wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 180px);
+  gap: 2rem;
+  justify-content: center;
+}
+
+/* --- WARDROBE CARD (was: warehouse-card) --- */
+.wardrobe-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(20,104,229,0.08);
+  padding: 2rem 2.5rem;
+  min-width: 260px;
+  max-width: 320px;
+  text-align: center;
+  transition: box-shadow 0.2s;
+  position: relative;
+}
+
+.wardrobe-card h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  color: #1468e5;
+}
+
+.wardrobe-card p {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+}
+
+.wardrobe-card .stycly-cta-btn {
+  margin: 0.2rem 0.3rem;
+}
+
+.wardrobe-card:hover {
+  box-shadow: 0 8px 32px rgba(20,104,229,0.18);
+}
+
+/* --- CAPO CARD (unchanged) --- */
+.capo-card {
+  width: 180px;
+  background: #ffffff;
+  border: 1px solid #e0e4ea;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.15s;
+}
+
+.capo-card:hover {
+  box-shadow: 0 6px 18px rgba(123, 154, 204, 0.08);
+}
+
+.capo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;  /* oppure: cover | fill */
+  border-radius: 6px;
+}
+
+.capo-img-wrapper {
+  width: 100%;
+  height: 140px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.capo-titolo {
+  font-weight: 600;
+  color: var(--col-primario);
+  margin-bottom: 0.3rem;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.capo-info {
+  font-size: 0.85rem;
+  color: #4a5670;
+  margin-bottom: 0.8rem;
+  text-align: center;
+}
+
+.capo-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+
+.capo-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: transform 0.2s;
+}
+
+.capo-icon-btn:hover {
+  transform: scale(1.1);
+}
+
+
+/* Keep all other styles unchanged unless you want me to simplify more */
+
+
+/* Riduci larghezza e allinea label + select personalizzata */
+.form-guidato .field {
+  max-width: 280px;
+  margin: 1rem auto;
+  position: relative;
+}
+
+/* Rimuove i bullet point */
+.field .psuedo_select .options {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Pseudo‑select personalizzato */
+label.field {
+  position: relative;
+  display: block;
+  font-size: var(--f-sm);
+  margin: 1rem 0;
+  padding-top: 1.5rem;
+}
+label.field span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: var(--f-sm);
+  color: #666;
+  transition: all .2s ease;
+}
+label.field.focused span {
+  top: -1.2rem;
+  font-size: 0.85rem;
+  color: var(--col-accent);
+}
+.psuedo_select {
+    min-width: auto;
+  width: 100%;
+  position: relative;
+  border-bottom: 2px solid #ccc;
+  padding: .6rem 2.5rem .6rem .2rem;
+  cursor: pointer;
+}
+
+/* Rende le opzioni più compatte e leggibili */
+.psuedo_select .option {
+  padding: 6px 10px;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.psuedo_select::after {
+  content: "";
+  position: absolute;
+  right: .4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #666;
+  transition: transform .2s;
+}
+label.field.focused .psuedo_select {
+  border-bottom-color: var(--col-accent);
+}
+label.field.focused .psuedo_select::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+.options {
+  position: absolute;
+  left: 0; right: 0;
+  background: var(--col-white);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .2s ease;
+  z-index: 10;
+}
+.options.open {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.option {
+  padding: .6rem .8rem;
+  cursor: pointer;
+}
+.option:hover {
+  background: var(--col-secondario);
+}
+.capo-flip-card {
+  width: 180px;
+  height: 240px;
+  perspective: 1000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.08);
+  padding: 0.5rem;
+  margin: 0.5rem;
+}
+
+.capo-flip-inner {
+  width: 100%;
+  height: 180px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.capo-flip-card:hover .capo-flip-inner {
+  transform: rotateY(180deg);
+}
+
+.capo-flip-front,
+.capo-flip-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.capo-flip-back {
+  transform: rotateY(180deg);
+}
+
+
+
+.capo-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.capo-icon-btn {
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: #f0f2f6;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.capo-icon-btn:hover {
+  background: #e3e7ee;
+  border: 1px solid #1468e5;
+  transform: translateY(-2px);
+}
+
+.empty-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7f8fa;
+  cursor: pointer;
+}
+
+.empty-card .capo-icon-btn {
+  margin: 0;
+}
+
+#image-modal img {
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.wardrobe-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(300px, 1fr));
+  justify-content: center;
+  gap: 2rem;
+}
+
+@media (max-width: 900px) {
+  .wardrobe-grid-3col {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .wardrobe-grid-3col {
+    grid-template-columns: 1fr;
+  }
+}
+.wardrobe-view-layout {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.wardrobe-filters {
+  width: 250px;
+}
+
+.wardrobe-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.wardrobe-main h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.wardrobe-nav-buttons {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0;
+  justify-content: center;
+}

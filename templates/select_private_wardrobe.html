@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Wardrobe esistente{% endblock %}
+{% block content %}
+<section class="stycly-hero">
+  <div class="stycly-hero-content">
+    <h1>Wardrobe esistenti</h1>
+    <p>Seleziona un wardrobe privato per gestirlo:</p>
+    <div class="wardrobe-grid wardrobe-grid-3col">
+      {% if wardrobes %}
+        {% for wh in wardrobes %}
+        <div class="wardrobe-card" style="padding: 1rem 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="margin: 0; font-size: 1.1rem;">
+              {{ wh.nome.replace('wardrobe_', '').replace('_', ' ').title() }}
+            </h2>
+            <div style="display: flex; gap: 0.4rem;">
+              <!-- 👁️ View -->
+  <a href="{{ url_for('visualizza_private_wardrobe', nome_tabella=wh.nome) }}" class="capo-icon-btn" title="Visualizza wardrobe">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+      <path d="M12 5C7 5 3.3 8.8 2 12c1.3 3.2 5 7 10 7s8.7-3.8 10-7c-1.3-3.2-5-7-10-7z" fill="#7b9acc"/>
+      <circle cx="12" cy="12" r="3" fill="white" stroke="#1468e5" stroke-width="1.5"/>
+    </svg>
+  </a>
+              <!-- ✏️ Edit -->
+              <a href="{{ url_for('gestisci_private_wardrobe', nome_tabella=wh.nome) }}" class="capo-icon-btn" title="Gestisci wardrobe">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                  <path d="M14.7 2.29a1 1 0 0 1 1.42 0l1.59 1.59a1 1 0 0 1 0 1.42l-9.3 9.3-2.12.71.71-2.12 9.3-9.3zM3 17h14v2H3v-2z" fill="#1468e5"/>
+                </svg>
+              </a>
+
+              <!-- 🗑️ Delete -->
+              <button type="button"
+                      class="capo-icon-btn btn-delete-wardrobe"
+                      data-nome="{{ wh.nome }}"
+                      title="Elimina wardrobe">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path d="M3 6h18M10 11v6M14 11v6M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"
+                        stroke="#cc3d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>Nessun wardrobe creato.</p>
+      {% endif %}
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem;">
+      <a href="{{ url_for('private_wardrobe') }}" class="capo-icon-btn" title="Indietro">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <!-- ➕ Create -->
+        <a href="{{ url_for('create_private_wardrobe') }}" class="capo-icon-btn" title="Crea nuovo wardrobe">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="10" fill="#7b9acc"/>
+            <path d="M11 7v8M7 11h8" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </a>
+    </div>
+  </div>
+</section>
+
+<!-- Delete Confirmation Modal -->
+<div id="delete-wardrobe-modal" class="stycly-modal">
+  <div class="stycly-modal-content" style="max-width: 400px;">
+    <button class="stycly-modal-close" onclick="closeDeleteModal()">&times;</button>
+    <h2>Elimina wardrobe</h2>
+    <p id="delete-modal-text">Vuoi eliminare questo wardrobe in modo definitivo?</p>
+    <div class="stycly-modal-actions">
+      <form id="delete-wardrobe-form" method="POST">
+        <button type="submit" class="stycly-cta-btn" style="background-color: #cc3d3d; border-color: #cc3d3d;">Conferma</button>
+      </form>
+      <button type="button" class="stycly-cta-btn" onclick="closeDeleteModal()">Annulla</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function closeDeleteModal() {
+  document.getElementById("delete-wardrobe-modal").style.display = "none";
+}
+
+document.querySelectorAll('.btn-delete-wardrobe').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const nome = btn.dataset.nome;
+    const form = document.getElementById('delete-wardrobe-form');
+    form.action = `/elimina-wardrobe/${nome}`;
+    document.getElementById("delete-modal-text").textContent =
+      `Vuoi eliminare il wardrobe "${nome.replace('wardrobe_', '').replaceAll('_', ' ')}"?`;
+    document.getElementById("delete-wardrobe-modal").style.display = "flex";
+  });
+});
+
+document.getElementById("delete-wardrobe-modal").addEventListener('click', (e) => {
+  if (e.target.id === "delete-wardrobe-modal") closeDeleteModal();
+});
+</script>
+{% endblock %}
+

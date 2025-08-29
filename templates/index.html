@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Stycly - Home{% endblock %}
+{% block content %}
+<section class="stycly-hero">
+    <div class="stycly-hero-content">
+        <h1>
+            Crea il tuo guardaroba digitale<br>
+            <strong>e scopri il noleggio abiti</strong>
+        </h1>
+        <p>
+            Crea, organizza e gestisci i tuoi capi. Condividi e noleggia abiti per privati, agenzie e brand.<br>
+            Tutto in modo semplice, moderno e sicuro.
+        </p>
+        <button id="wardrobe-cta" class="stycly-cta-btn">Wardrobe</button>
+    </div>
+</section>
+
+<!-- POPUP MODAL -->
+<div id="wardrobe-modal" class="stycly-modal" style="display:none;">
+    <div class="stycly-modal-content">
+        <button class="stycly-modal-close" aria-label="Chiudi">&times;</button>
+        <h2>Scegli il wardrobe</h2>
+        <p>
+            Seleziona la modalità di wardrobe:<br>
+            <b>Privato</b> per la tua gestione personale,<br>
+            <b>Pubblico</b> per condividere e noleggiare capi con altri utenti e brand.
+        </p>
+        <div class="stycly-modal-actions">
+            <a href="{{ url_for('private_wardrobe') }}" id="modal-private-btn" class="stycly-cta-btn">Private Wardrobe</a>
+            <a href="{{ url_for('public_wardrobe') }}" id="modal-public-btn" class="stycly-cta-btn">Public Wardrobe</a>
+        </div>
+    </div>
+</div>
+
+<!-- DIVIDER SVG -->
+<div class="divider-bottom">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <defs>
+            <radialGradient id="radial" cx="30%" cy="30%" r="80%">
+                <stop offset="0%" stop-color="#7b9acc" stop-opacity="0.8" />
+                <stop offset="40%" stop-color="#1468e5" />
+                <stop offset="100%" stop-color="#1a2233" />
+            </radialGradient>
+        </defs>
+        <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="url(#radial)" id="squiggle"></path>
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="url(#radial)" id="squiggleAlt"></path>
+    </svg>
+</div>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}Visualizza Wardrobe - Stycly{% endblock %}
+
+{% block content %}
+<section class="stycly-hero">
+  <div class="wardrobe-view-layout">
+
+    <!-- Sidebar Filters -->
+    <aside class="wardrobe-filters">
+      <h3>Filtri</h3>
+
+      {% for filtro, opzioni in {
+        'tipologia': tipologie,
+        'taglia': taglie,
+        'colore': colori,
+        'brand': brands
+      }.items() %}
+      <div style="margin-bottom: 1.2rem;">
+        <label style="font-size: 0.9rem; font-weight: 500;">{{ filtro.capitalize() }}</label>
+        <select class="filter-select" data-filter="{{ filtro }}" style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+          <option value="">Tutti</option>
+          {% for val in opzioni %}
+            <option value="{{ val }}">{{ val }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endfor %}
+
+      <!-- Reset Filters Button -->
+      <button onclick="resetFilters()" style="
+        padding: 0.5rem 1rem;
+        background-color: #e6ecf9;
+        border: none;
+        border-radius: 6px;
+        color: #2b4ca3;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 1rem;
+        width: 100%;
+      ">
+        Reset filtri
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="wardrobe-main">
+      <h2>{{ nome_tabella.replace('wardrobe_', '').replace('_', ' ').title() }}</h2>
+      <p id="item-count" style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;"></p>
+
+      <div class="wardrobe-nav-buttons">
+        <a href="{{ url_for('select_private_wardrobe') }}" class="capo-icon-btn" title="Indietro">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M15 18l-6-6 6-6" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <a href="{{ url_for('home') }}" class="capo-icon-btn" title="Home">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M3 10L12 3l9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9z" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="wardrobe-grid wardrobe-grid-3col">
+        {% for capo in capi %}
+        <div class="capo-flip-card">
+          <div class="capo-flip-inner">
+            <div class="capo-flip-front" data-capo='{{ capo|tojson|safe }}'>
+              <img src="{{ url_for('immagini', filename=capo['immagine'].split('/')[-1]) }}" alt="fronte" class="capo-img">
+            </div>
+            <div class="capo-flip-back" data-capo='{{ capo|tojson|safe }}'>
+              {% if capo['immagine2'] %}
+              <img src="{{ url_for('immagini', filename=capo['immagine2'].split('/')[-1]) }}" alt="retro" class="capo-img">
+              {% else %}
+              <p style="text-align:center; font-size: 0.8rem;">Nessuna retro immagine</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal for Details -->
+<div id="detail-modal" class="stycly-modal" style="display:none;">
+  <div class="stycly-modal-content" style="max-width: 900px;">
+    <button class="stycly-modal-close" onclick="closeDetailPopup()">&times;</button>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+      <div style="flex: 1; text-align:center;">
+        <img id="popup-image" src="" alt="Capo" style="max-width: 100%; max-height: 380px; border-radius: 8px;">
+        <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center;">
+          <button onclick="showFront()" class="capo-icon-btn" title="Fronte">⬅</button>
+          <button onclick="showBack()" class="capo-icon-btn" title="Retro">➡</button>
+        </div>
+      </div>
+      <div id="popup-details" style="flex:1; font-size: 0.95rem;"></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+let frontImg = "", backImg = "";
+
+function openDetailPopup(capo) {
+  frontImg = capo.immagine;
+  backImg = capo.immagine2 || "";
+
+  const imgPath = (p) => p.startsWith('/') ? p : '/' + p;
+  document.getElementById('popup-image').src = imgPath(frontImg);
+  document.getElementById('popup-details').innerHTML = `
+    <p><b>Categoria:</b> ${capo.categoria}</p>
+    <p><b>Tipologia:</b> ${capo.tipologia}</p>
+    <p><b>Taglia:</b> ${capo.taglia}</p>
+    <p><b>Colore:</b> ${capo.colore}</p>
+    <p><b>Brand:</b> ${capo.brand}</p>
+    <p><b>Destinazione:</b> ${capo.destinazione}</p>
+    ${capo.fit ? `<p><b>Fit:</b> ${capo.fit}</p>` : ''}
+  `;
+  document.getElementById("detail-modal").style.display = "flex";
+}
+
+function closeDetailPopup() {
+  document.getElementById("detail-modal").style.display = "none";
+}
+
+function showFront() {
+  if (frontImg) document.getElementById('popup-image').src = frontImg.startsWith('/') ? frontImg : '/' + frontImg;
+}
+
+function showBack() {
+  if (backImg) document.getElementById('popup-image').src = backImg.startsWith('/') ? backImg : '/' + backImg;
+}
+
+// Filtering Logic
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.capo-flip-front, .capo-flip-back').forEach(div => {
+    div.addEventListener('click', function () {
+      const capo = JSON.parse(this.dataset.capo);
+      openDetailPopup(capo);
+    });
+  });
+
+  document.querySelectorAll('.filter-select').forEach(select => {
+    select.addEventListener('change', applyFilters);
+  });
+
+  applyFilters(); // Init count on load
+});
+
+function applyFilters() {
+  const filters = {};
+  document.querySelectorAll('.filter-select').forEach(select => {
+    const key = select.dataset.filter;
+    const val = select.value;
+    if (val) filters[key] = val;
+  });
+
+  let visibleCount = 0;
+  document.querySelectorAll('.capo-flip-card').forEach(card => {
+    const capo = JSON.parse(card.querySelector('.capo-flip-front').dataset.capo);
+    const match = Object.entries(filters).every(([key, val]) =>
+      capo[key]?.toLowerCase() === val.toLowerCase()
+    );
+    card.style.display = match ? 'flex' : 'none';
+    if (match) visibleCount++;
+  });
+
+  document.getElementById("item-count").textContent =
+    `${visibleCount} cap${visibleCount !== 1 ? 'i' : 'o'} trovati`;
+}
+
+function resetFilters() {
+  document.querySelectorAll('.filter-select').forEach(select => {
+    select.value = "";
+  });
+  applyFilters();
+}
+</script>
+{% endblock %}
+
