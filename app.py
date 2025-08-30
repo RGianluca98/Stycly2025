@@ -334,4 +334,5 @@ def visualizza_private_wardrobe(nome_tabella):
 
 if __name__ == '__main__':
     importa_csv()
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=True)
