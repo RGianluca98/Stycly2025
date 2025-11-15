@@ -66,45 +66,68 @@ SESSION_TIMEOUT_MINUTES = 60
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///guardaroba.db")
 engine = create_engine(DATABASE_URL)
 
+# crea tabelle definite in models.py (Capo / guardaroba "generale")
+Base.metadata.create_all(engine)
+
 
 def ensure_schema():
     """
-    Assicura che sul DB (soprattutto su Render/Postgres) esistano
-    le colonne introdotte dopo: users.password_hash, wardrobes.user_id.
-    Se la colonna esiste già, l'errore viene ignorato.
+    Si assicura che le tabelle users e wardrobes abbiano le colonne
+    aggiornate. Se mancano le colonne nuove, la tabella viene DROPPATA
+    e ricreata da BaseMaster.metadata.create_all().
+    ATTENZIONE: questo cancella eventuali vecchi utenti/wardrobe
+    con schema sbagliato (va bene per ora).
     """
     with engine.begin() as conn:
-        # Aggiungi password_hash a users se manca
-        try:
-            conn.execute(text(
-                "ALTER TABLE users ADD COLUMN password_hash VARCHAR(255);"
-            ))
-        except Exception:
-            # colonna già presente o tabella non ancora creata
-            pass
+        # ---- Tabella USERS ----
+        users_exists = conn.execute(text("""
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_name = 'users'
+        """)).first() is not None
 
-        # Aggiungi user_id a wardrobes se manca
-        try:
-            conn.execute(text(
-                "ALTER TABLE wardrobes ADD COLUMN user_id INTEGER;"
-            ))
-        except Exception:
-            # colonna già presente
-            pass
+        if users_exists:
+            has_password_hash = conn.execute(text("""
+                SELECT 1
+                FROM information_schema.columns
+                WHERE table_name = 'users'
+                  AND column_name = 'password_hash'
+            """)).first() is not None
+
+            # se NON c'è la colonna password_hash, droppiamo la tabella
+            if not has_password_hash:
+                conn.execute(text("DROP TABLE users CASCADE"))
+
+        # ---- Tabella WARDROBES ----
+        wardrobes_exists = conn.execute(text("""
+            SELECT 1
+            FROM information_schema.tables
+            WHERE table_name = 'wardrobes'
+        """)).first() is not None
+
+        if wardrobes_exists:
+            has_user_id = conn.execute(text("""
+                SELECT 1
+                FROM information_schema.columns
+                WHERE table_name = 'wardrobes'
+                  AND column_name = 'user_id'
+            """)).first() is not None
+
+            # se NON c'è la colonna user_id, droppiamo la tabella
+            if not has_user_id:
+                conn.execute(text("DROP TABLE wardrobes CASCADE"))
+
+    # Ora (ri)creiamo le tabelle "corrette" secondo i modelli User/Wardrobe
+    BaseMaster.metadata.create_all(engine)
 
 
-# crea tabelle definite in models.py (Capo / guardaroba)
-Base.metadata.create_all(engine)
-
-# crea tabelle definite qui (User, Wardrobe)
-BaseMaster.metadata.create_all(engine)
-
-# assicura che le tabelle abbiano le colonne più recenti
+# esegui la sistemazione dello schema
 ensure_schema()
 
 # sessione DB
 Session = sessionmaker(bind=engine)
 db_session = Session()
+
 
 
 # ----------------------------
