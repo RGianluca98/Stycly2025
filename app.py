@@ -355,7 +355,34 @@ def contact():
 
 @app.route('/public-wardrobe')
 def public_wardrobe():
-    return render_template('public_wardrobe.html')
+    """
+    Mostra TUTTI i capi di TUTTI i wardrobe di TUTTI gli utenti.
+    """
+    metadata = MetaData()
+    all_capi = []
+
+    # prendo tutti i wardrobe registrati nella tabella 'wardrobes'
+    wardrobes = db_session.query(Wardrobe).all()
+
+    for w in wardrobes:
+        try:
+            tbl = Table(w.nome, metadata, autoload_with=engine)
+        except Exception:
+            # se per qualche motivo la tabella non esiste più, salto
+            continue
+
+        with engine.connect() as conn:
+            rows = conn.execute(tbl.select()).fetchall()
+            columns = tbl.columns.keys()
+
+            for row in rows:
+                rd = dict(zip(columns, row))
+                # aggiungo anche info su quale wardrobe proviene
+                rd["wardrobe_name"] = w.nome
+                all_capi.append(rd)
+
+    return render_template("public_wardrobe.html", capi=all_capi)
+
 
 
 # ----------------------------
