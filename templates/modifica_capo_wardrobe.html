@@ -59,20 +59,19 @@
       <!-- Immagini -->
       <p><b>Immagine attuale fronte:</b></p>
       {% if capo['immagine'] %}
-        <img src="{{ url_for('immagini', filename=capo['immagine'].split('/')[-1]) }}" alt="img" style="max-width:140px;">
+        <img src="{{ url_for('immagini', filename=capo['immagine']) }}" alt="img" style="max-width:140px;">
       {% endif %}
       <br><label for="immagine">Sostituisci immagine fronte:</label>
       <input type="file" name="immagine" id="immagine" accept="image/*">
 
       <p><b>Immagine attuale retro:</b></p>
       {% if capo['immagine2'] %}
-        <img src="{{ url_for('immagini', filename=capo['immagine2'].split('/')[-1]) }}" alt="img" style="max-width:140px;">
+        <img src="{{ url_for('immagini', filename=capo['immagine2']) }}" alt="img" style="max-width:140px;">
       {% endif %}
       <br><label for="immagine2">Sostituisci immagine retro:</label>
       <input type="file" name="immagine2" id="immagine2" accept="image/*">
 
       <!-- Bottoni -->
-    
       <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem;">
         <button type="submit" class="capo-icon-btn" title="Salva modifiche" style="display: flex; gap: 0.4rem; align-items: center;">
           <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
@@ -147,3 +146,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 {% endblock %}
+

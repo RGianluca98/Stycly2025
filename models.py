@@ -12,8 +12,9 @@ class Capo(Base):
     taglia = Column(String)
     colore = Column(String)
     brand = Column(String)
-    immagine = Column(String)
-    immagine2 = Column(String)  # immagine retro
+    immagine = Column(String)   # solo nome file, es: "foto1.jpg"
+    immagine2 = Column(String)  # retro, opzionale
     destinazione = Column(String)
-    fit = Column(String)  # Add this line to class Capo
+    fit = Column(String)
+
 

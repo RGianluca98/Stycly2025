@@ -4,11 +4,12 @@
 {% block content %}
 <section class="stycly-hero">
   <div class="stycly-hero-content">
-    <h2 style="font-size: 1.5rem; margin-bottom: 0.4rem;">{{ nome_tabella.replace('wardrobe_', '').replace('_', ' ').title() }}</h2>
+    <h2 style="font-size: 1.5rem; margin-bottom: 0.4rem;">
+      {{ nome_tabella.replace('wardrobe_', '').replace('_', ' ').title() }}
+    </h2>
     <p style="font-size: 1rem;">Visualizza, modifica o aggiungi capi al guardaroba</p>
 
     <div style="display: flex; justify-content: center; gap: 1rem; margin: 1.5rem 0;">
-      
       <a href="{{ url_for('select_private_wardrobe') }}" class="capo-icon-btn" title="Indietro">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path d="M15 18l-6-6 6-6" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -27,11 +28,19 @@
       <div class="capo-flip-card">
         <div class="capo-flip-inner">
           <div class="capo-flip-front" data-capo='{{ capo|tojson|safe }}'>
-            <img src="{{ url_for('immagini', filename=capo['immagine'].split('/')[-1]) }}" alt="fronte" class="capo-img">
+            <img
+              src="{{ url_for('immagini', filename=capo['immagine']) }}"
+              alt="fronte"
+              class="capo-img"
+            >
           </div>
           <div class="capo-flip-back" data-capo='{{ capo|tojson|safe }}'>
             {% if capo['immagine2'] %}
-            <img src="{{ url_for('immagini', filename=capo['immagine2'].split('/')[-1]) }}" alt="retro" class="capo-img">
+            <img
+              src="{{ url_for('immagini', filename=capo['immagine2']) }}"
+              alt="retro"
+              class="capo-img"
+            >
             {% else %}
             <p style="text-align:center; font-size: 0.8rem;">Nessuna retro immagine</p>
             {% endif %}
@@ -45,13 +54,19 @@
             </svg>
           </button>
 
-<a href="{{ url_for('modifica_capo_wardrobe', nome_tabella=nome_tabella, capo_id=capo['id']) }}" class="capo-icon-btn" title="Modifica">
+          <a href="{{ url_for('modifica_capo_wardrobe', nome_tabella=nome_tabella, capo_id=capo['id']) }}"
+             class="capo-icon-btn" title="Modifica">
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
               <path d="M14.7 2.29a1 1 0 0 1 1.42 0l1.59 1.59a1 1 0 0 1 0 1.42l-9.3 9.3-2.12.71.71-2.12 9.3-9.3zM3 17h14v2H3v-2z" fill="#1468e5"/>
             </svg>
           </a>
 
-          <form method="POST" action="{{ url_for('elimina_capo_wardrobe', nome_tabella=nome_tabella, capo_id=capo['id']) }}" onsubmit="return confirm('Sei sicuro di voler eliminare questo capo?');" style="display:inline;">
+          <form
+            method="POST"
+            action="{{ url_for('elimina_capo_wardrobe', nome_tabella=nome_tabella, capo_id=capo['id']) }}"
+            onsubmit="return confirm('Sei sicuro di voler eliminare questo capo?');"
+            style="display:inline;"
+          >
             <button type="submit" class="capo-icon-btn" title="Elimina">
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none">
                 <path d="M3 6h18M10 11v6M14 11v6M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" stroke="#cc3d3d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -62,19 +77,17 @@
       </div>
       {% endfor %}
 
-      {% set totale = capi|length %}
-{% set card_totali = totale %}
-{% if card_totali % 5 == 3 %}
-  {% set riempimento = 2 %}
-{% elif card_totali % 5 == 4 %}
-  {% set riempimento = 1 %}
-{% elif card_totali % 5 == 0 %}
-  {% set riempimento = 5 %}
-{% else %}
-  {% set riempimento = 5 - (card_totali % 5) %}
-{% endif %}
-{% for i in range(riempimento) %}
-
+      {% set card_totali = capi|length %}
+      {% if card_totali % 5 == 3 %}
+        {% set riempimento = 2 %}
+      {% elif card_totali % 5 == 4 %}
+        {% set riempimento = 1 %}
+      {% elif card_totali % 5 == 0 %}
+        {% set riempimento = 5 %}
+      {% else %}
+        {% set riempimento = 5 - (card_totali % 5) %}
+      {% endif %}
+      {% for i in range(riempimento) %}
       <div class="capo-flip-card empty-card">
         <a href="{{ url_for('aggiungi_capo_wardrobe', nome_tabella=nome_tabella) }}" class="capo-icon-btn">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -98,7 +111,6 @@
         <button onclick="showFront()" class="capo-icon-btn" title="Fronte">⬅</button>
         <button onclick="showBack()" class="capo-icon-btn" title="Retro">➡</button>
       </div>
-
     </div>
     <div id="popup-details" style="flex:1; font-size: 0.95rem; padding: 0.5rem;"></div>
   </div>
@@ -110,21 +122,30 @@
 let frontImg = "";
 let backImg = "";
 
+// Base URL per le immagini servite da Flask
+const immaginiBaseUrl = "{{ url_for('immagini', filename='') }}".replace(/\/$/, '');
+
+function imgPath(name) {
+  if (!name) return "";
+  const clean = name.split('/').pop(); // se nel DB ci fosse "immagini/foo.jpg", prendo solo "foo.jpg"
+  return `${immaginiBaseUrl}/${clean}`;
+}
+
 function openDetailPopup(capo) {
-  frontImg = capo.immagine;
+  frontImg = capo.immagine || "";
   backImg = capo.immagine2 || "";
 
-  const imgPath = (path) => path.startsWith('/') ? path : '/' + path;
+  const imgEl = document.getElementById('popup-image');
+  imgEl.src = frontImg ? imgPath(frontImg) : "";
 
-  document.getElementById('popup-image').src = imgPath(frontImg);
   document.getElementById('popup-details').innerHTML = `
-    <p><b>Categoria:</b> ${capo.categoria}</p>
-    <p><b>Tipologia:</b> ${capo.tipologia}</p>
-    <p><b>Taglia:</b> ${capo.taglia}</p>
-    <p><b>Fit:</b> ${capo.fit}</p>
-    <p><b>Colore:</b> ${capo.colore}</p>
-    <p><b>Brand:</b> ${capo.brand}</p>
-    <p><b>Destinazione:</b> ${capo.destinazione}</p>
+    <p><b>Categoria:</b> ${capo.categoria || ''}</p>
+    <p><b>Tipologia:</b> ${capo.tipologia || ''}</p>
+    <p><b>Taglia:</b> ${capo.taglia || ''}</p>
+    <p><b>Fit:</b> ${capo.fit || ''}</p>
+    <p><b>Colore:</b> ${capo.colore || ''}</p>
+    <p><b>Brand:</b> ${capo.brand || ''}</p>
+    <p><b>Destinazione:</b> ${capo.destinazione || ''}</p>
   `;
   document.getElementById('detail-modal').style.display = 'flex';
 }
@@ -134,14 +155,17 @@ function closeDetailPopup() {
 }
 
 function showFront() {
-  if (frontImg) document.getElementById('popup-image').src = frontImg.startsWith('/') ? frontImg : '/' + frontImg;
+  if (frontImg) {
+    document.getElementById('popup-image').src = imgPath(frontImg);
+  }
 }
 
 function showBack() {
-  if (backImg) document.getElementById('popup-image').src = backImg.startsWith('/') ? backImg : '/' + backImg;
+  if (backImg) {
+    document.getElementById('popup-image').src = imgPath(backImg);
+  }
 }
 
-// Event binding per tutti i bottoni
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.btn-dettaglio').forEach(btn => {
     btn.addEventListener('click', function () {

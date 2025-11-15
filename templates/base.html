@@ -33,6 +33,7 @@
                 <span class="stycly-user-label">
                     Ciao, {{ session.get('username') }}
                 </span>
+                
                 <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a>
@@ -65,3 +66,4 @@
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+

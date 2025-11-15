@@ -48,14 +48,28 @@
       <p id="item-count" style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;"></p>
 
       <div class="wardrobe-nav-buttons">
+        <!-- Indietro -->
         <a href="{{ url_for('select_private_wardrobe') }}" class="capo-icon-btn" title="Indietro">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M15 18l-6-6 6-6" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
+
+        <!-- Export CSV di questo wardrobe -->
+        <a href="{{ url_for('export_wardrobe', nome_tabella=nome_tabella) }}"
+           class="capo-icon-btn"
+           title="Esporta questo wardrobe in CSV">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M5 20h14a1 1 0 0 0 1-1v-6M18 10l-6 6-6-6M12 4v12"
+                  stroke="#1468e5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+
+        <!-- Home -->
         <a href="{{ url_for('home') }}" class="capo-icon-btn" title="Home">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-            <path d="M3 10L12 3l9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9z" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 10L12 3l9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9z"
+                  stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </a>
       </div>
@@ -127,11 +141,13 @@ function closeDetailPopup() {
 }
 
 function showFront() {
-  if (frontImg) document.getElementById('popup-image').src = frontImg.startsWith('/') ? frontImg : '/' + frontImg;
+  if (frontImg) document.getElementById('popup-image').src =
+    frontImg.startsWith('/') ? frontImg : '/' + frontImg;
 }
 
 function showBack() {
-  if (backImg) document.getElementById('popup-image').src = backImg.startsWith('/') ? backImg : '/' + backImg;
+  if (backImg) document.getElementById('popup-image').src =
+    backImg.startsWith('/') ? backImg : '/' + backImg;
 }
 
 // Filtering Logic
@@ -180,4 +196,3 @@ function resetFilters() {
 }
 </script>
 {% endblock %}
-

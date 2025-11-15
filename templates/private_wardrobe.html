@@ -2,14 +2,10 @@
 {% block title %}Private Wardrobe - Stycly{% endblock %}
 {% block content %}
 <section class="stycly-hero">
- 
-
-    <div class="stycly-hero-content">
+  <div class="stycly-hero-content">
     <h1>Wardrobe privati</h1>
     <p>Crea, modifica e visualizza i tuoi guardaroba privati</p>
-    
 
-    <!-- White Card with Action Buttons -->
     <div class="wardrobe-card" style="padding: 1.5rem 2rem; max-width: 360px; margin: 2rem auto 0;">
       <div style="display: flex; justify-content: center; gap: 1.5rem;">
 
@@ -32,29 +28,19 @@
       </div>
     </div>
 
-    <!-- Navigation Buttons -->
     <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2.5rem;">
-      
-      <!-- 🔙 Back -->
       <a href="{{ url_for('home') }}" class="capo-icon-btn" title="Indietro">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path d="M15 18l-6-6 6-6" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
 
-      <!-- 🏠 Home -->
       <a href="{{ url_for('home') }}" class="capo-icon-btn" title="Home">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path d="M3 10L12 3l9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-9z" stroke="#7b9acc" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          
         </svg>
       </a>
-
     </div>
-
   </div>
 </section>
 {% endblock %}
-
-
-
