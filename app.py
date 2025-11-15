@@ -7,7 +7,6 @@ import csv
 from datetime import datetime, timedelta
 from functools import wraps
 
-
 from flask import (
     Flask, render_template, request, redirect, url_for,
     send_from_directory, session, flash, Response
@@ -17,7 +16,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from sqlalchemy import (
     create_engine, Table, Column, Integer, String,
-    MetaData, ForeignKey
+    MetaData, ForeignKey, text     # <- AGGIUNTO text
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -67,14 +66,45 @@ SESSION_TIMEOUT_MINUTES = 60
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///guardaroba.db")
 engine = create_engine(DATABASE_URL)
 
-# crea tabelle definite in models.py
-Base.metadata.create_all(engine)
 
-Session = sessionmaker(bind=engine)
-db_session = Session()
+def ensure_schema():
+    """
+    Assicura che sul DB (soprattutto su Render/Postgres) esistano
+    le colonne introdotte dopo: users.password_hash, wardrobes.user_id.
+    Se la colonna esiste già, l'errore viene ignorato.
+    """
+    with engine.begin() as conn:
+        # Aggiungi password_hash a users se manca
+        try:
+            conn.execute(text(
+                "ALTER TABLE users ADD COLUMN password_hash VARCHAR(255);"
+            ))
+        except Exception:
+            # colonna già presente o tabella non ancora creata
+            pass
+
+        # Aggiungi user_id a wardrobes se manca
+        try:
+            conn.execute(text(
+                "ALTER TABLE wardrobes ADD COLUMN user_id INTEGER;"
+            ))
+        except Exception:
+            # colonna già presente
+            pass
+
+
+# crea tabelle definite in models.py (Capo / guardaroba)
+Base.metadata.create_all(engine)
 
 # crea tabelle definite qui (User, Wardrobe)
 BaseMaster.metadata.create_all(engine)
+
+# assicura che le tabelle abbiano le colonne più recenti
+ensure_schema()
+
+# sessione DB
+Session = sessionmaker(bind=engine)
+db_session = Session()
 
 
 # ----------------------------
@@ -264,7 +294,6 @@ def login():
         session['username'] = user.username
         session['last_active'] = datetime.utcnow().isoformat()
 
-        
         return redirect(url_for('private_wardrobe'))
 
     return render_template('login.html')
@@ -273,7 +302,6 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    
     return redirect(url_for('home'))
 
 
@@ -678,8 +706,6 @@ def export_wardrobe(nome_tabella):
     )
 
 
-
-
 # ----------------------------
 #       AVVIO LOCALE
 # ----------------------------
@@ -688,4 +714,5 @@ if __name__ == '__main__':
     importa_csv()
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
 
