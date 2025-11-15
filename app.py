@@ -421,17 +421,50 @@ def private_wardrobe():
 @app.route('/create-private-wardrobe', methods=['GET', 'POST'])
 @login_required
 def create_private_wardrobe():
-    if request.method == 'POST':
-        nome_wardrobe = request.form['nome_wardrobe']
-        nome_tabella = f"wardrobe_{nome_wardrobe}"
-        nome_tabella = crea_tabella_wardrobe(nome_tabella)
+    user_id = session['user_id']
 
-        user_id = session['user_id']
-        db_session.add(Wardrobe(nome=nome_tabella, user_id=user_id))
-        db_session.commit()
+    if request.method == 'POST':
+        # normalizzo il nome
+        nome_raw = request.form['nome_wardrobe'].strip()
+        if not nome_raw:
+            flash("Inserisci un nome per il wardrobe.", "error")
+            return redirect(url_for('create_private_wardrobe'))
+
+        nome_tabella = f"wardrobe_{nome_raw}"
+        # stesso sanitizing usato in crea_tabella_wardrobe
+        nome_tabella = re.sub(r'\W+', '_', nome_tabella.lower())
+
+        # 1) controllo se esiste già in wardrobes
+        existing = db_session.query(Wardrobe).filter_by(nome=nome_tabella).first()
+        if existing:
+            flash(
+                "Esiste già un wardrobe con questo nome. "
+                "Scegli un altro nome o elimina quello esistente.",
+                "error"
+            )
+            return redirect(url_for('create_private_wardrobe'))
+
+        # 2) creo la tabella se non esiste
+        crea_tabella_wardrobe(nome_tabella)
+
+        # 3) inserisco la riga in wardrobes con gestione errore
+        new_w = Wardrobe(nome=nome_tabella, user_id=user_id)
+        db_session.add(new_w)
+        try:
+            db_session.commit()
+        except IntegrityError:
+            db_session.rollback()
+            flash(
+                "Esiste già un wardrobe con questo nome. "
+                "Scegli un altro nome o elimina quello esistente.",
+                "error"
+            )
+            return redirect(url_for('create_private_wardrobe'))
+
         return redirect(url_for('private_wardrobe'))
 
     return render_template('create_private_wardrobe.html')
+
 
 
 @app.route('/select-private-wardrobe', methods=['GET', 'POST'])
