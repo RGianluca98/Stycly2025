@@ -16,25 +16,48 @@
             <img src="{{ url_for('static', filename='stycly-logo.png') }}" alt="Stycly Logo">
         </a>
         <nav class="stycly-nav">
-  <a href="{{ url_for('home') }}">Home</a>
-  <div class="stycly-nav-dropdown-parent">
-    <button class="stycly-nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">Wardrobe</button>
-    <div class="stycly-nav-dropdown-menu">
-      <a href="{{ url_for('private_wardrobe') }}" id="private-wardrobe-link">Private Wardrobe</a>
-      <a href="{{ url_for('public_wardrobe') }}" id="public-wardrobe-link">Public Wardrobe</a>
-    </div>
-  </div>
-  <a href="{{ url_for('contact') }}">Contact</a>
-</nav>
+            <a href="{{ url_for('home') }}">Home</a>
 
+            <div class="stycly-nav-dropdown-parent">
+                <button class="stycly-nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">Wardrobe</button>
+                <div class="stycly-nav-dropdown-menu">
+                    <a href="{{ url_for('private_wardrobe') }}" id="private-wardrobe-link">Private Wardrobe</a>
+                    <a href="{{ url_for('public_wardrobe') }}" id="public-wardrobe-link">Public Wardrobe</a>
+                </div>
+            </div>
+
+            <a href="{{ url_for('contact') }}">Contact</a>
+
+            <!-- Area autenticazione -->
+            {% if session.get('user_id') %}
+                <span class="stycly-user-label">
+                    Ciao, {{ session.get('username') }}
+                </span>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </nav>
     </header>
+
+    <!-- MESSAGGI FLASH (success/error) -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="stycly-flash-container">
+          {% for category, message in messages %}
+            <div class="stycly-flash stycly-flash-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
     <!-- CONTENUTO PAGINA -->
     <main>
         {% block content %}{% endblock %}
     </main>
-
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>

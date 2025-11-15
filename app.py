@@ -3,10 +3,14 @@ import os
 import re
 import pandas as pd
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory, session, flash
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
+
 
 # --- SQLAlchemy setup ---
 BaseMaster = declarative_base()
@@ -16,17 +20,29 @@ class Wardrobe(BaseMaster):
     id = Column(Integer, primary_key=True)
     nome = Column(String, unique=True)
 
+class User(BaseMaster):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    password_hash = Column(String, nullable=False)
+
+
 from models import Base, Capo
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 app.config['UPLOAD_FOLDER'] = 'immagini'
 app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
 
-engine = create_engine('sqlite:///guardaroba.db')
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///guardaroba.db")
+engine = create_engine(DATABASE_URL)
+
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
-session = Session()
+db_session = Session()
+
 BaseMaster.metadata.create_all(engine)
 
 def allowed_file(filename):
@@ -37,7 +53,7 @@ def esporta_csv():
     df.to_csv('guardaroba.csv', index=False)
 
 def importa_csv():
-    if session.query(Capo).count() == 0:
+    if db_session.query(Capo).count() == 0:
         df = pd.read_csv('guardaroba.csv')
         for _, row in df.iterrows():
             capo = Capo(
@@ -50,11 +66,11 @@ def importa_csv():
                 destinazione=row['destinazione'],
                 immagine=row['immagine']
             )
-            session.add(capo)
-        session.commit()
+            db_session.add(capo)
+        db_session.commit()
 
 def ricalcola_id():
-    capi = session.query(Capo).order_by(Capo.id).all()
+    capi = db_session.query(Capo).order_by(Capo.id).all()
     dati_capi = [{
         'categoria': c.categoria,
         'tipologia': c.tipologia,
@@ -65,11 +81,11 @@ def ricalcola_id():
         'destinazione': c.destinazione,
         'immagine': c.immagine
     } for c in capi]
-    session.query(Capo).delete()
-    session.commit()
+    db_session.query(Capo).delete()
+    db_session.commit()
     for data in dati_capi:
-        session.add(Capo(**data))
-    session.commit()
+        db_session.add(Capo(**data))
+    db_session.commit()
 
 def crea_tabella_wardrobe(nome_tabella):
     nome_tabella = re.sub(r'\W+', '_', nome_tabella.lower())
@@ -90,13 +106,76 @@ def crea_tabella_wardrobe(nome_tabella):
     metadata.create_all(engine)
     return nome_tabella
 
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username').strip()
+        email = request.form.get('email').strip().lower()
+        password = request.form.get('password')
+
+        if not username or not email or not password:
+            flash("Tutti i campi sono obbligatori.", "error")
+            return redirect(url_for('register'))
+
+        # Controlla se utente esiste già
+        existing_user = db_session.query(User).filter(
+            (User.username == username) | (User.email == email)
+        ).first()
+        if existing_user:
+            flash("Username o email già registrati.", "error")
+            return redirect(url_for('register'))
+
+        user = User(
+            username=username,
+            email=email,
+            password_hash=generate_password_hash(password)
+        )
+        db_session.add(user)
+        db_session.commit()
+        flash("Registrazione completata, ora puoi fare login.", "success")
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        email_or_username = request.form.get('email_or_username').strip()
+        password = request.form.get('password')
+
+        # Cerca per email o username
+        user = db_session.query(User).filter(
+            (User.email == email_or_username.lower()) | (User.username == email_or_username)
+        ).first()
+
+        if not user or not check_password_hash(user.password_hash, password):
+            flash("Credenziali non valide.", "error")
+            return redirect(url_for('login'))
+
+        # Salva id utente in sessione
+        session['user_id'] = user.id
+        session['username'] = user.username
+        flash("Login effettuato.", "success")
+        return redirect(url_for('private_wardrobe'))
+
+    return render_template('login.html')
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    flash("Logout effettuato.", "success")
+    return redirect(url_for('home'))
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
 @app.route('/guardaroba')
 def guardaroba():
-    capi = session.query(Capo).all()
+    capi = db_session.query(Capo).all()
     return render_template('guardaroba.html', capi=capi)
 
 @app.route('/immagini/<path:filename>')
@@ -105,7 +184,7 @@ def immagini(filename):
 
 @app.route('/modifica/<int:capo_id>', methods=['GET', 'POST'])
 def modifica(capo_id):
-    capo = session.query(Capo).get(capo_id)
+    capo = db_session.query(Capo).get(capo_id)
     if not capo:
         return redirect(url_for('guardaroba'))
 
@@ -126,7 +205,7 @@ def modifica(capo_id):
             file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
             capo.immagine2 = f"immagini/{filename2}"
 
-        session.commit()
+        db_session.commit()
         ricalcola_id()
         esporta_csv()
         return redirect(url_for('guardaroba'))
@@ -135,13 +214,14 @@ def modifica(capo_id):
 
 @app.route('/elimina/<int:capo_id>', methods=['POST'])
 def elimina(capo_id):
-    capo = session.query(Capo).get(capo_id)
+    capo = db_session.query(Capo).get(capo_id)
     if capo:
-        session.delete(capo)
-        session.commit()
+        db_session.delete(capo)
+        db_session.commit()
         ricalcola_id()
         esporta_csv()
     return redirect(url_for('guardaroba'))
+
 
 @app.route('/contact')
 def contact():
@@ -149,6 +229,9 @@ def contact():
 
 @app.route('/private-wardrobe')
 def private_wardrobe():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
     metadata = MetaData()
     wardrobes_table = Table('wardrobes', metadata, autoload_with=engine)
     with engine.connect() as conn:
@@ -166,14 +249,14 @@ def create_private_wardrobe():
         nome_wardrobe = request.form['nome_wardrobe']
         nome_tabella = f"wardrobe_{nome_wardrobe}"
         nome_tabella = crea_tabella_wardrobe(nome_tabella)
-        session.add(Wardrobe(nome=nome_tabella))
-        session.commit()
+        db_session.add(Wardrobe(nome=nome_tabella))
+        db_session.commit()
         return redirect(url_for('private_wardrobe'))
     return render_template('create_private_wardrobe.html')
 
 @app.route('/select-private-wardrobe', methods=['GET', 'POST'])
 def select_private_wardrobe():
-    wardrobes = session.query(Wardrobe).all()
+    wardrobes = db_session.query(Wardrobe).all()
     return render_template('select_private_wardrobe.html', wardrobes=wardrobes)
 
 @app.route('/gestisci-private-wardrobe/<nome_tabella>')
@@ -302,6 +385,9 @@ def elimina_wardrobe(nome_tabella):
 
 @app.route('/visualizza-private-wardrobe/<nome_tabella>')
 def visualizza_private_wardrobe(nome_tabella):
+
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
     # Load wardrobe table dynamically
     metadata = MetaData()
     wardrobe_table = Table(nome_tabella, metadata, autoload_with=engine)
