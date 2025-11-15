@@ -33,7 +33,6 @@
                 <span class="stycly-user-label">
                     Ciao, {{ session.get('username') }}
                 </span>
-                
                 <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a>
@@ -41,19 +40,6 @@
             {% endif %}
         </nav>
     </header>
-
-    <!-- MESSAGGI FLASH (success/error) -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="stycly-flash-container">
-          {% for category, message in messages %}
-            <div class="stycly-flash stycly-flash-{{ category }}">
-              {{ message }}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
 
     <!-- CONTENUTO PAGINA -->
     <main>
@@ -64,6 +50,23 @@
     <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     {% block extra_js %}{% endblock %}
+
+    {# POPUP PER TUTTI I MESSAGGI FLASH #}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <script>
+          document.addEventListener('DOMContentLoaded', function () {
+            const flashMessages = {{ messages|tojson }};
+            flashMessages.forEach(function (item) {
+              const category = item[0]; // es. "error", "success"
+              const message = item[1];
+              alert(message); // qui puoi in futuro sostituire con un tuo modal carino
+            });
+          });
+        </script>
+      {% endif %}
+    {% endwith %}
 </body>
 </html>
+
 

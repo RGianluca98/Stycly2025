@@ -424,17 +424,17 @@ def create_private_wardrobe():
     user_id = session['user_id']
 
     if request.method == 'POST':
-        # normalizzo il nome
-        nome_raw = request.form['nome_wardrobe'].strip()
+        # prendo il nome inserito dall'utente
+        nome_raw = request.form.get('nome_wardrobe', '').strip()
         if not nome_raw:
             flash("Inserisci un nome per il wardrobe.", "error")
             return redirect(url_for('create_private_wardrobe'))
 
+        # normalizzo il nome per la tabella (come fai già altrove)
         nome_tabella = f"wardrobe_{nome_raw}"
-        # stesso sanitizing usato in crea_tabella_wardrobe
         nome_tabella = re.sub(r'\W+', '_', nome_tabella.lower())
 
-        # 1) controllo se esiste già in wardrobes
+        # controllo se esiste già un wardrobe con lo stesso nome
         existing = db_session.query(Wardrobe).filter_by(nome=nome_tabella).first()
         if existing:
             flash(
@@ -444,10 +444,10 @@ def create_private_wardrobe():
             )
             return redirect(url_for('create_private_wardrobe'))
 
-        # 2) creo la tabella se non esiste
+        # creo la tabella se non esiste
         crea_tabella_wardrobe(nome_tabella)
 
-        # 3) inserisco la riga in wardrobes con gestione errore
+        # salvo nella tabella wardrobes
         new_w = Wardrobe(nome=nome_tabella, user_id=user_id)
         db_session.add(new_w)
         try:
@@ -464,6 +464,7 @@ def create_private_wardrobe():
         return redirect(url_for('private_wardrobe'))
 
     return render_template('create_private_wardrobe.html')
+
 
 
 
