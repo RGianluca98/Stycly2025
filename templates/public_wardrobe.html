@@ -121,16 +121,21 @@
 {% block extra_js %}
 <script>
 let frontImg = "";
-let backImg = "";
+let backImg  = "";
+
+// Costruisce l'URL corretto per l'immagine partendo dal nome file
+function buildImageURL(filename) {
+  if (!filename) return "";
+  const cleanName = filename.toString().split("/").pop();  // prendo solo "nomefile.jpg"
+  return "/immagini/" + cleanName;                         // usa la route Flask /immagini/<file>
+}
 
 // --- popup dettagli ---
 function openDetailPopup(capo) {
   frontImg = capo.immagine;
   backImg  = capo.immagine2 || "";
 
-  const imgPath = (p) => p && p.length ? (p.startsWith('/') ? p : '/' + p) : "";
-
-  document.getElementById('popup-image').src = imgPath(frontImg);
+  document.getElementById('popup-image').src = buildImageURL(frontImg);
   document.getElementById('popup-details').innerHTML = `
     <p><b>Wardrobe:</b> ${capo.wardrobe_name.replace('wardrobe_', '').replaceAll('_', ' ')}</p>
     <p><b>Categoria:</b> ${capo.categoria || ''}</p>
@@ -150,15 +155,13 @@ function closeDetailPopup() {
 
 function showFront() {
   if (frontImg) {
-    const p = frontImg.startsWith('/') ? frontImg : '/' + frontImg;
-    document.getElementById('popup-image').src = p;
+    document.getElementById('popup-image').src = buildImageURL(frontImg);
   }
 }
 
 function showBack() {
   if (backImg) {
-    const p = backImg.startsWith('/') ? backImg : '/' + backImg;
-    document.getElementById('popup-image').src = p;
+    document.getElementById('popup-image').src = buildImageURL(backImg);
   }
 }
 
