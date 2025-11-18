@@ -1,74 +1,135 @@
-// Navbar dropdown
-document.querySelectorAll('.stycly-nav-dropdown-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        const parent = btn.closest('.stycly-nav-dropdown-parent');
-        parent.classList.toggle('open');
-    });
-});
-document.addEventListener("DOMContentLoaded", () => {
-  const header = document.querySelector(".stycly-header");
-  const burger = document.querySelector(".stycly-nav-hamburger");
+// main.js
 
-  if (burger && header) {
+document.addEventListener("DOMContentLoaded", () => {
+  // -----------------------------
+  // NAVBAR: dropdown "Wardrobe"
+  // -----------------------------
+  document.querySelectorAll(".stycly-nav-dropdown-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const parent = btn.closest(".stycly-nav-dropdown-parent");
+      const isOpen = parent.classList.contains("open");
+      document
+        .querySelectorAll(".stycly-nav-dropdown-parent")
+        .forEach((p) => p.classList.remove("open"));
+      if (!isOpen) {
+        parent.classList.add("open");
+      }
+    });
+  });
+
+  // Chiudi dropdown cliccando fuori
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".stycly-nav-dropdown-parent")) {
+      document
+        .querySelectorAll(".stycly-nav-dropdown-parent")
+        .forEach((p) => p.classList.remove("open"));
+    }
+  });
+
+  // -----------------------------
+  // NAVBAR: hamburger (mobile)
+  // -----------------------------
+  const burger = document.querySelector(".stycly-nav-hamburger");
+  const nav = document.querySelector(".stycly-nav");
+
+  if (burger && nav) {
     burger.addEventListener("click", () => {
-      header.classList.toggle("nav-open");
+      burger.classList.toggle("active");
+      nav.classList.toggle("open");
+    });
+
+    // chiudi il menu quando clicchi su un link
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        burger.classList.remove("active");
+        nav.classList.remove("open");
+      });
+    });
+
+    // se si torna a desktop, assicuriamoci che la nav sia visibile
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 700) {
+        nav.classList.remove("open");
+        burger.classList.remove("active");
+      }
     });
   }
 
-  // chiudi il menu quando clicchi un link
-  document.querySelectorAll(".stycly-nav a").forEach(link => {
-    link.addEventListener("click", () => {
-      header.classList.remove("nav-open");
+  // -----------------------------
+  // MODALE HOME: scelta Wardrobe
+  // -----------------------------
+  const wardrobeModal = document.getElementById("wardrobe-modal");
+  const wardrobeCta = document.getElementById("wardrobe-cta");
+  const wardrobeCloseBtn = wardrobeModal
+    ? wardrobeModal.querySelector(".stycly-modal-close")
+    : null;
+
+  if (wardrobeModal && wardrobeCta && wardrobeCloseBtn) {
+    wardrobeCta.addEventListener("click", () => {
+      wardrobeModal.style.display = "flex";
     });
-  });
-});
 
+    wardrobeCloseBtn.addEventListener("click", () => {
+      wardrobeModal.style.display = "none";
+    });
 
-// Hamburger menu (mobile)
-const hamburger = document.querySelector('.stycly-nav-hamburger');
-const nav = document.querySelector('.stycly-nav');
-function toggleNav() {
-    if (window.innerWidth <= 600) {
-        nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+    wardrobeModal.addEventListener("click", (e) => {
+      if (e.target === wardrobeModal) {
+        wardrobeModal.style.display = "none";
+      }
+    });
+  }
+
+  // -----------------------------
+  // MODALE AUTH: Area riservata
+  // -----------------------------
+  const authModal = document.getElementById("auth-modal");
+  const openAuthBtn = document.getElementById("open-auth-modal");
+  const authContainer = document.getElementById("container");
+  const signUpButton = document.getElementById("signUp");
+  const signInButton = document.getElementById("signIn");
+
+  if (openAuthBtn && authModal && authContainer) {
+    // apri modale
+    openAuthBtn.addEventListener("click", () => {
+      authModal.style.display = "flex";
+      authContainer.classList.remove("right-panel-active");
+    });
+
+    // chiudi cliccando fuori
+    authModal.addEventListener("click", (e) => {
+      if (e.target === authModal) {
+        authModal.style.display = "none";
+      }
+    });
+  }
+
+  if (signUpButton && authContainer) {
+    signUpButton.addEventListener("click", () => {
+      authContainer.classList.add("right-panel-active");
+    });
+  }
+
+  if (signInButton && authContainer) {
+    signInButton.addEventListener("click", () => {
+      authContainer.classList.remove("right-panel-active");
+    });
+  }
+
+  // -----------------------------
+  // GSAP wave animation
+  // -----------------------------
+  if (window.gsap && window.MorphSVGPlugin) {
+    const firstWave = document.getElementById("squiggle");
+    if (firstWave) {
+      window.gsap.to(firstWave, {
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "power2.inOut",
+        morphSVG: "#squiggleAlt",
+      });
     }
-}
-if (hamburger && nav) {
-    hamburger.addEventListener('click', toggleNav);
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 600) nav.style.display = 'flex';
-        else nav.style.display = 'none';
-    });
-}
-
-// Modal popup
-const modal = document.getElementById('wardrobe-modal');
-const cta = document.getElementById('wardrobe-cta');
-const closeBtn = document.querySelector('.stycly-modal-close');
-if (cta && modal && closeBtn) {
-    cta.addEventListener('click', function() {
-        modal.style.display = 'flex';
-    });
-    closeBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) modal.style.display = 'none';
-    });
-}
-
-// GSAP wave animation
-document.addEventListener("DOMContentLoaded", () => {
-    if (window.gsap && window.MorphSVGPlugin) {
-        const firstWave = document.getElementById("squiggle");
-        if (firstWave) {
-            window.gsap.to(firstWave, {
-                duration: 2,
-                repeat: -1,
-                yoyo: true,
-                ease: "power2.inOut",
-                morphSVG: "#squiggleAlt"
-            });
-        }
-    }
+  }
 });

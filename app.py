@@ -1,7 +1,6 @@
 import json
 import os
 import re
-import pandas as pd
 import io
 import csv
 from datetime import datetime, timedelta
@@ -16,10 +15,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from sqlalchemy import (
     create_engine, Table, Column, Integer, String,
-    MetaData, ForeignKey, text     # <- AGGIUNTO text
+    MetaData, ForeignKey, text
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
 
 # ----------------------------
 #       SQLALCHEMY MODELS
@@ -43,10 +43,6 @@ class User(BaseMaster):
     password_hash = Column(String, nullable=False)
 
 
-# Modello della tabella guardaroba "generale"
-from models import Base, Capo
-
-
 # ----------------------------
 #       FLASK CONFIG
 # ----------------------------
@@ -66,58 +62,53 @@ SESSION_TIMEOUT_MINUTES = 60
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///guardaroba.db")
 engine = create_engine(DATABASE_URL)
 
-# crea tabelle definite in models.py (Capo / guardaroba "generale")
-Base.metadata.create_all(engine)
-
 
 def ensure_schema():
     """
     Si assicura che le tabelle users e wardrobes abbiano le colonne
     aggiornate. Se mancano le colonne nuove, la tabella viene DROPPATA
     e ricreata da BaseMaster.metadata.create_all().
-    ATTENZIONE: questo cancella eventuali vecchi utenti/wardrobe
-    con schema sbagliato (va bene per ora).
+    Per sicurezza usiamo information_schema solo su Postgres.
     """
-    with engine.begin() as conn:
-        # ---- Tabella USERS ----
-        users_exists = conn.execute(text("""
-            SELECT 1
-            FROM information_schema.tables
-            WHERE table_name = 'users'
-        """)).first() is not None
-
-        if users_exists:
-            has_password_hash = conn.execute(text("""
+    if engine.dialect.name == "postgresql":
+        with engine.begin() as conn:
+            # ---- Tabella USERS ----
+            users_exists = conn.execute(text("""
                 SELECT 1
-                FROM information_schema.columns
+                FROM information_schema.tables
                 WHERE table_name = 'users'
-                  AND column_name = 'password_hash'
             """)).first() is not None
 
-            # se NON c'è la colonna password_hash, droppiamo la tabella
-            if not has_password_hash:
-                conn.execute(text("DROP TABLE users CASCADE"))
+            if users_exists:
+                has_password_hash = conn.execute(text("""
+                    SELECT 1
+                    FROM information_schema.columns
+                    WHERE table_name = 'users'
+                      AND column_name = 'password_hash'
+                """)).first() is not None
 
-        # ---- Tabella WARDROBES ----
-        wardrobes_exists = conn.execute(text("""
-            SELECT 1
-            FROM information_schema.tables
-            WHERE table_name = 'wardrobes'
-        """)).first() is not None
+                if not has_password_hash:
+                    conn.execute(text("DROP TABLE users CASCADE"))
 
-        if wardrobes_exists:
-            has_user_id = conn.execute(text("""
+            # ---- Tabella WARDROBES ----
+            wardrobes_exists = conn.execute(text("""
                 SELECT 1
-                FROM information_schema.columns
+                FROM information_schema.tables
                 WHERE table_name = 'wardrobes'
-                  AND column_name = 'user_id'
             """)).first() is not None
 
-            # se NON c'è la colonna user_id, droppiamo la tabella
-            if not has_user_id:
-                conn.execute(text("DROP TABLE wardrobes CASCADE"))
+            if wardrobes_exists:
+                has_user_id = conn.execute(text("""
+                    SELECT 1
+                    FROM information_schema.columns
+                    WHERE table_name = 'wardrobes'
+                      AND column_name = 'user_id'
+                """)).first() is not None
 
-    # Ora (ri)creiamo le tabelle "corrette" secondo i modelli User/Wardrobe
+                if not has_user_id:
+                    conn.execute(text("DROP TABLE wardrobes CASCADE"))
+
+    # (ri)creiamo le tabelle secondo i modelli User/Wardrobe
     BaseMaster.metadata.create_all(engine)
 
 
@@ -129,7 +120,6 @@ Session = sessionmaker(bind=engine)
 db_session = Session()
 
 
-
 # ----------------------------
 #       FUNZIONI UTILI
 # ----------------------------
@@ -139,61 +129,6 @@ def allowed_file(filename: str) -> bool:
         '.' in filename
         and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
     )
-
-
-def esporta_csv():
-    """Esporta la tabella 'guardaroba' in guardaroba.csv (backup locale)."""
-    try:
-        df = pd.read_sql_table('guardaroba', con=engine)
-        df.to_csv('guardaroba.csv', index=False)
-    except Exception:
-        # se la tabella non esiste o altro, non bloccare l'app
-        pass
-
-
-def importa_csv():
-    """Importa dati iniziali da guardaroba.csv se la tabella è vuota."""
-    try:
-        if db_session.query(Capo).count() == 0 and os.path.exists('guardaroba.csv'):
-            df = pd.read_csv('guardaroba.csv')
-            for _, row in df.iterrows():
-                capo = Capo(
-                    categoria=row['categoria'],
-                    tipologia=row['tipologia'],
-                    taglia=row['taglia'],
-                    fit=row.get('fit'),
-                    colore=row['colore'],
-                    brand=row['brand'],
-                    destinazione=row['destinazione'],
-                    immagine=row['immagine']
-                )
-                db_session.add(capo)
-            db_session.commit()
-    except Exception:
-        # non blocchiamo l'avvio se manca il file o c'è un problema
-        pass
-
-
-def ricalcola_id():
-    """Ricompatta gli ID nella tabella guardaroba (Capo)."""
-    capi = db_session.query(Capo).order_by(Capo.id).all()
-    dati_capi = [{
-        'categoria': c.categoria,
-        'tipologia': c.tipologia,
-        'taglia': c.taglia,
-        'colore': c.colore,
-        'fit': c.fit,
-        'brand': c.brand,
-        'destinazione': c.destinazione,
-        'immagine': c.immagine
-    } for c in capi]
-
-    db_session.query(Capo).delete()
-    db_session.commit()
-
-    for data in dati_capi:
-        db_session.add(Capo(**data))
-    db_session.commit()
 
 
 def crea_tabella_wardrobe(nome_tabella: str) -> str:
@@ -232,7 +167,7 @@ def login_required(view_func):
         # Non loggato
         if not user_id:
             flash("Devi fare login per accedere a questa pagina.", "error")
-            return redirect(url_for("login"))
+            return redirect(url_for("home"))
 
         # Controllo timeout sessione
         if last_active:
@@ -242,11 +177,11 @@ def login_required(view_func):
                 if delta > timedelta(minutes=SESSION_TIMEOUT_MINUTES):
                     session.clear()
                     flash("Sessione scaduta, effettua di nuovo il login.", "error")
-                    return redirect(url_for("login"))
+                    return redirect(url_for("home"))
             except Exception:
                 session.clear()
                 flash("La sessione è scaduta, effettua di nuovo il login.", "error")
-                return redirect(url_for("login"))
+                return redirect(url_for("home"))
 
         # aggiorno last_active
         session["last_active"] = datetime.utcnow().isoformat()
@@ -261,65 +196,67 @@ def login_required(view_func):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip().lower()
-        password = request.form.get('password')
+    # gestiamo solo POST dal modal; GET → home
+    if request.method == 'GET':
+        return redirect(url_for('home'))
 
-        if not username or not email or not password:
-            flash("Tutti i campi sono obbligatori.", "error")
-            return redirect(url_for('register'))
+    username = request.form.get('username', '').strip()
+    email = request.form.get('email', '').strip().lower()
+    password = request.form.get('password')
 
-        if len(password) < 6:
-            flash("La password deve avere almeno 6 caratteri.", "error")
-            return redirect(url_for('register'))
+    if not username or not email or not password:
+        flash("Tutti i campi sono obbligatori.", "error")
+        return redirect(url_for('home'))
 
-        existing_user = db_session.query(User).filter(
-            (User.username == username) | (User.email == email)
-        ).first()
-        if existing_user:
-            flash("Username o email già registrati.", "error")
-            return redirect(url_for('register'))
+    if len(password) < 6:
+        flash("La password deve avere almeno 6 caratteri.", "error")
+        return redirect(url_for('home'))
 
-        user = User(
-            username=username,
-            email=email,
-            password_hash=generate_password_hash(password)
-        )
-        db_session.add(user)
-        db_session.commit()
-        flash("Registrazione completata, ora puoi fare login.", "success")
-        return redirect(url_for('login'))
+    existing_user = db_session.query(User).filter(
+        (User.username == username) | (User.email == email)
+    ).first()
+    if existing_user:
+        flash("Username o email già registrati.", "error")
+        return redirect(url_for('home'))
 
-    return render_template('register.html')
+    user = User(
+        username=username,
+        email=email,
+        password_hash=generate_password_hash(password)
+    )
+    db_session.add(user)
+    db_session.commit()
+    flash("Registrazione completata, ora effettua il login dall'Area Riservata.", "success")
+    return redirect(url_for('home'))
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        email_or_username = request.form.get('email_or_username', '').strip()
-        password = request.form.get('password')
+    # gestiamo solo POST dal modal; GET → home
+    if request.method == 'GET':
+        return redirect(url_for('home'))
 
-        if not email_or_username or not password:
-            flash("Inserisci credenziali valide.", "error")
-            return redirect(url_for('login'))
+    email_or_username = request.form.get('email_or_username', '').strip()
+    password = request.form.get('password')
 
-        user = db_session.query(User).filter(
-            (User.email == email_or_username.lower()) | (User.username == email_or_username)
-        ).first()
+    if not email_or_username or not password:
+        flash("Inserisci credenziali valide.", "error")
+        return redirect(url_for('home'))
 
-        if not user or not check_password_hash(user.password_hash, password):
-            flash("Credenziali non valide.", "error")
-            return redirect(url_for('login'))
+    user = db_session.query(User).filter(
+        (User.email == email_or_username.lower()) | (User.username == email_or_username)
+    ).first()
 
-        session.clear()
-        session['user_id'] = user.id
-        session['username'] = user.username
-        session['last_active'] = datetime.utcnow().isoformat()
+    if not user or not check_password_hash(user.password_hash, password):
+        flash("Credenziali non valide.", "error")
+        return redirect(url_for('home'))
 
-        return redirect(url_for('private_wardrobe'))
+    session.clear()
+    session['user_id'] = user.id
+    session['username'] = user.username
+    session['last_active'] = datetime.utcnow().isoformat()
 
-    return render_template('login.html')
+    return redirect(url_for('private_wardrobe'))
 
 
 @app.route('/logout')
@@ -335,12 +272,6 @@ def logout():
 @app.route('/')
 def home():
     return render_template('index.html')
-
-
-@app.route('/guardaroba')
-def guardaroba():
-    capi = db_session.query(Capo).all()
-    return render_template('guardaroba.html', capi=capi)
 
 
 @app.route('/immagini/<path:filename>')
@@ -377,60 +308,10 @@ def public_wardrobe():
 
             for row in rows:
                 rd = dict(zip(columns, row))
-                # aggiungo anche info su quale wardrobe proviene
                 rd["wardrobe_name"] = w.nome
                 all_capi.append(rd)
 
     return render_template("public_wardrobe.html", capi=all_capi)
-
-
-
-# ----------------------------
-#       CRUD CAPO "GENERALE"
-# ----------------------------
-
-@app.route('/modifica/<int:capo_id>', methods=['GET', 'POST'])
-def modifica(capo_id):
-    capo = db_session.query(Capo).get(capo_id)
-    if not capo:
-        return redirect(url_for('guardaroba'))
-
-    if request.method == 'POST':
-        for field in ['categoria', 'tipologia', 'taglia', 'fit', 'colore', 'brand', 'destinazione']:
-            setattr(capo, field, request.form[field])
-
-        file = request.files.get('immagine')
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-            file.save(filepath)
-            capo.immagine = f"immagini/{filename}"
-
-        file2 = request.files.get('immagine2')
-        if file2 and allowed_file(file2.filename):
-            filename2 = secure_filename(file2.filename)
-            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-            file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
-            capo.immagine2 = f"immagini/{filename2}"
-
-        db_session.commit()
-        ricalcola_id()
-        esporta_csv()
-        return redirect(url_for('guardaroba'))
-
-    return render_template('modifica_capo_wardrobe.html', capo=capo)
-
-
-@app.route('/elimina/<int:capo_id>', methods=['POST'])
-def elimina(capo_id):
-    capo = db_session.query(Capo).get(capo_id)
-    if capo:
-        db_session.delete(capo)
-        db_session.commit()
-        ricalcola_id()
-        esporta_csv()
-    return redirect(url_for('guardaroba'))
 
 
 # ----------------------------
@@ -451,17 +332,14 @@ def create_private_wardrobe():
     user_id = session['user_id']
 
     if request.method == 'POST':
-        # prendo il nome inserito dall'utente
         nome_raw = request.form.get('nome_wardrobe', '').strip()
         if not nome_raw:
             flash("Inserisci un nome per il wardrobe.", "error")
             return redirect(url_for('create_private_wardrobe'))
 
-        # normalizzo il nome per la tabella (come fai già altrove)
         nome_tabella = f"wardrobe_{nome_raw}"
         nome_tabella = re.sub(r'\W+', '_', nome_tabella.lower())
 
-        # controllo se esiste già un wardrobe con lo stesso nome
         existing = db_session.query(Wardrobe).filter_by(nome=nome_tabella).first()
         if existing:
             flash(
@@ -471,10 +349,8 @@ def create_private_wardrobe():
             )
             return redirect(url_for('create_private_wardrobe'))
 
-        # creo la tabella se non esiste
         crea_tabella_wardrobe(nome_tabella)
 
-        # salvo nella tabella wardrobes
         new_w = Wardrobe(nome=nome_tabella, user_id=user_id)
         db_session.add(new_w)
         try:
@@ -493,8 +369,6 @@ def create_private_wardrobe():
     return render_template('create_private_wardrobe.html')
 
 
-
-
 @app.route('/select-private-wardrobe', methods=['GET', 'POST'])
 @login_required
 def select_private_wardrobe():
@@ -506,7 +380,6 @@ def select_private_wardrobe():
 @app.route('/gestisci-private-wardrobe/<nome_tabella>')
 @login_required
 def gestisci_private_wardrobe(nome_tabella):
-    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -525,7 +398,6 @@ def gestisci_private_wardrobe(nome_tabella):
 @app.route('/aggiungi-capo-wardrobe/<nome_tabella>', methods=['GET', 'POST'])
 @login_required
 def aggiungi_capo_wardrobe(nome_tabella):
-    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -571,7 +443,6 @@ def aggiungi_capo_wardrobe(nome_tabella):
 @app.route('/modifica-capo-wardrobe/<nome_tabella>/<int:capo_id>', methods=['GET', 'POST'])
 @login_required
 def modifica_capo_wardrobe(nome_tabella, capo_id):
-    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -643,7 +514,6 @@ def modifica_capo_wardrobe(nome_tabella, capo_id):
 @app.route('/elimina_capo_wardrobe/<nome_tabella>/<int:capo_id>', methods=['POST'])
 @login_required
 def elimina_capo_wardrobe(nome_tabella, capo_id):
-    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -660,7 +530,6 @@ def elimina_capo_wardrobe(nome_tabella, capo_id):
 @app.route('/elimina-wardrobe/<nome_tabella>', methods=['POST'])
 @login_required
 def elimina_wardrobe(nome_tabella):
-    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -684,7 +553,6 @@ def elimina_wardrobe(nome_tabella):
 @app.route('/visualizza-private-wardrobe/<nome_tabella>')
 @login_required
 def visualizza_private_wardrobe(nome_tabella):
-    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -733,13 +601,9 @@ def export_wardrobe(nome_tabella):
     metadata = MetaData()
     wardrobe_table = Table(w.nome, metadata, autoload_with=engine)
 
-    # Usiamo StringIO per costruire il CSV in memoria
     output = io.StringIO()
-
-    # IMPORTANTE: separatore ';' per Excel in italiano
     writer = csv.writer(output, delimiter=';', quoting=csv.QUOTE_MINIMAL)
 
-    # Intestazioni colonne (ordine chiaro e fisso)
     writer.writerow([
         "wardrobe_name",
         "capo_id",
@@ -754,7 +618,6 @@ def export_wardrobe(nome_tabella):
         "immagine2",
     ])
 
-    # Righe del guardaroba
     with engine.connect() as conn:
         rows = conn.execute(wardrobe_table.select()).fetchall()
         columns = wardrobe_table.columns.keys()
@@ -778,8 +641,7 @@ def export_wardrobe(nome_tabella):
     csv_data = output.getvalue()
     output.close()
 
-    # Aggiungiamo BOM per Excel (gestione corretta UTF-8)
-    csv_data = '\ufeff' + csv_data
+    csv_data = '\ufeff' + csv_data  # BOM per Excel
 
     filename = f"{w.nome}_stycly.csv"
 
@@ -795,8 +657,8 @@ def export_wardrobe(nome_tabella):
 # ----------------------------
 
 if __name__ == '__main__':
-    importa_csv()
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
 
 

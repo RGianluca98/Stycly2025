@@ -13,7 +13,6 @@
 </head>
 <body>
 
-
     <!-- NAVBAR -->
     <header class="stycly-header">
         <!-- Logo -->
@@ -62,92 +61,62 @@
     </main>
 
     <!-- LOGIN/REGISTER MODALE -->
-<div class="auth-modal" id="auth-modal">
-  <div class="container" id="container">
-    <div class="form-container sign-up-container">
-      <form method="post" action="{{ url_for('register') }}">
-        <h1>Create Account</h1>
-        <div class="social-container">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-google-plus-g"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <div class="auth-modal" id="auth-modal">
+      <div class="container" id="container">
+        <div class="form-container sign-up-container">
+          <form method="post" action="{{ url_for('register') }}">
+            <h1>Create Account</h1>
+            <div class="social-container">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-google-plus-g"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <span>or use your email for registration</span>
+            <input type="text" name="username" placeholder="Name" />
+            <input type="email" name="email" placeholder="Email" />
+            <input type="password" name="password" placeholder="Password" />
+            <button type="submit">Sign Up</button>
+          </form>
         </div>
-        <span>or use your email for registration</span>
-        <input type="text" name="username" placeholder="Name" />
-        <input type="email" name="email" placeholder="Email" />
-        <input type="password" name="password" placeholder="Password" />
-        <button type="submit">Sign Up</button>
-      </form>
-    </div>
 
-    <div class="form-container sign-in-container">
-      <form method="post" action="{{ url_for('login') }}">
-        <h1>Sign in</h1>
-        <div class="social-container">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-google-plus-g"></i></a>
-          <a href="#"><i class="fab fa-linkedin-in"></i></a>
+        <div class="form-container sign-in-container">
+          <form method="post" action="{{ url_for('login') }}">
+            <h1>Sign in</h1>
+            <div class="social-container">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-google-plus-g"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <span>or use your account</span>
+            <input type="text" name="email_or_username" placeholder="Email" />
+            <input type="password" name="password" placeholder="Password" />
+            <a href="#">Forgot your password?</a>
+            <button type="submit">Sign In</button>
+          </form>
         </div>
-        <span>or use your account</span>
-        <input type="text" name="email_or_username" placeholder="Email" />
-        <input type="password" name="password" placeholder="Password" />
-        <a href="#">Forgot your password?</a>
-        <button type="submit">Sign In</button>
-      </form>
-    </div>
 
-    <div class="overlay-container">
-      <div class="overlay">
-        <div class="overlay-panel overlay-left">
-          <h1>Welcome Back!</h1>
-          <p>To keep connected with us please login with your personal info</p>
-          <button class="ghost" id="signIn">Sign In</button>
-        </div>
-        <div class="overlay-panel overlay-right">
-          <h1>Hello, Friend!</h1>
-          <p>Enter your personal details and start journey with us</p>
-          <button class="ghost" id="signUp">Sign Up</button>
+        <div class="overlay-container">
+          <div class="overlay">
+            <div class="overlay-panel overlay-left">
+              <h1>Welcome Back!</h1>
+              <p>To keep connected with us please login with your personal info</p>
+              <button class="ghost" id="signIn">Sign In</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+              <h1>Hello, Friend!</h1>
+              <p>Enter your personal details and start journey with us</p>
+              <button class="ghost" id="signUp">Sign Up</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
 
     <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
     <script src="{{ url_for('static', filename='main.js') }}"></script>
-
-    <!-- JS: Gestione modale login/register -->
-   <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const modal = document.getElementById('auth-modal');
-  const container = document.getElementById('container');
-  const openBtn = document.getElementById('open-auth-modal');
-  const signUpButton = document.getElementById('signUp');
-  const signInButton = document.getElementById('signIn');
-
-  openBtn?.addEventListener('click', () => {
-    modal.style.display = 'flex';
-    container.classList.remove("right-panel-active");
-  });
-
-  modal?.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-    }
-  });
-
-  signUpButton?.addEventListener('click', () => {
-    container.classList.add("right-panel-active");
-  });
-
-  signInButton?.addEventListener('click', () => {
-    container.classList.remove("right-panel-active");
-  });
-});
-</script>
-
+    {% block extra_js %}{% endblock %}
 </body>
 </html>
+
