@@ -5,93 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Stycly{% endblock %}</title>
 
-    <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='stycly-favicon.png') }}">
 
-    <!-- FONT -->
-    <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600&display=swap" rel="stylesheet">
-    <!-- Font Awesome per social icone header -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Font principali -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- CSS principale -->
+    <!-- Font Awesome per icone social / eventuali icone menu -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous"
+          referrerpolicy="no-referrer" />
+
+    <!-- Stili Stycly -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     {% block extra_head %}{% endblock %}
 </head>
-<body>
 
-<!-- HEADER CON MENU A BLOB -->
-<header class="stycly-header overlay-header">
-    <!-- Logo centrale -->
-    <div class="stycly-logo-wrapper">
-        <a href="{{ url_for('home') }}">
+<body>
+    <!-- HEADER / NAV -->
+    <header class="stycly-header overlay-header">
+        <!-- Logo -->
+        <a href="{{ url_for('index') }}" class="stycly-logo-link">
             <img class="timlogo"
                  src="{{ url_for('static', filename='stycly-logo.png') }}"
-                 alt="Stycly logo">
+                 alt="Stycly">
         </a>
-    </div>
 
-    <!-- Overlay nav + blob -->
-    <div class="nav-modal">
-        <div class="blob"></div>
-        <nav class="overlay-nav">
-            <ul>
-                {% if not session.get('user_id') %}
-                    <!-- NON LOGGATO -->
-                    <li><a href="{{ url_for('home') }}">HOME</a></li>
-                    <li><a href="{{ url_for('public_wardrobe') }}">PRODUCTS</a></li>
-                    <li><a href="{{ url_for('home') }}#about">ABOUT US</a></li>
-                    <li><a href="{{ url_for('contact') }}">CONTACT</a></li>
-                    <li><a href="{{ url_for('login') }}">AREA RISERVATA</a></li>
-                {% else %}
-                    <!-- LOGGATO -->
-                    <li><a href="{{ url_for('home') }}">HOME</a></li>
-                    <li><a href="{{ url_for('public_wardrobe') }}">PRODUCTS</a></li>
-                    <li><a href="{{ url_for('home') }}#about">ABOUT US</a></li>
+        <!-- Menu overlay “blob” -->
+        <div class="nav-modal">
+            <div class="blob"></div>
+            <nav class="overlay-nav">
+                <ul>
+                    <!-- voci sempre visibili -->
+                    <li><a href="{{ url_for('index') }}">HOME</a></li>
+
+                    <!-- PRODUCTS = public wardrobe -->
+                    <li><a href="{{ url_for('products') }}">PRODUCTS</a></li>
+                    {# Se la tua route per il public wardrobe ha altro nome, cambia 'products' qui sopra #}
+
+                    <li><a href="{{ url_for('about') }}">ABOUT US</a></li>
                     <li><a href="{{ url_for('contact') }}">CONTACT</a></li>
 
-                    <li class="nav-username-item">
-                        <span class="nav-username">
-                            {{ session.get('username') }}
-                        </span>
-                    </li>
-                    <li><a href="{{ url_for('private_wardrobe') }}">MY WARDROBE</a></li>
-                    <li><a href="{{ url_for('logout') }}">LOGOUT</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </div>
+                    {# --- Stato non loggato --- #}
+                    {% if not session.get('username') %}
+                        <li><a href="{{ url_for('area_riservata') }}">AREA RISERVATA</a></li>
+                        {# Cambia 'area_riservata' con il nome della route login/register #}
 
-    <!-- Area destra con social + burger -->
-    <div class="head">
-        
+                    {# --- Stato loggato --- #}
+                    {% else %}
+                        <!-- Nome utente (solo label, senza link o con link a profilo se vuoi) -->
+                        <li><a href="#">{{ session.get('username') }}</a></li>
 
-        <div class="tile burger" aria-label="Apri menu" role="button">
-            <div class="meat">
-                <div class="line one"></div>
-                <div class="line two"></div>
-                <div class="line three"></div>
+                        <!-- MY WARDROBE = private_wardrobe -->
+                        <li><a href="{{ url_for('private_wardrobe') }}">MY WARDROBE</a></li>
+
+                        <!-- Logout -->
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Social + Burger -->
+        <div class="head">
+            <a href="#" class="tile socialmedia"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="tile socialmedia"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="tile socialmedia"><i class="fa-brands fa-tiktok"></i></a>
+
+            <!-- Burger che apre/chiude il blob menu -->
+            <div class="tile burger">
+                <div class="meat">
+                    <div class="line one"></div>
+                    <div class="line two"></div>
+                    <div class="line three"></div>
+                </div>
             </div>
         </div>
+    </header>
+
+    <!-- CONTENUTO PAGINA -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- WAVE DECORATIVA IN BASSO (facoltativa, se la usavi già) -->
+    <div class="divider-bottom">
+        <svg viewBox="0 0 1440 120" xmlns="http://www.w3.org/2000/svg">
+            <path id="squiggle"
+                  fill="#C9E2F5"
+                  d="M0,64L80,80C160,96,320,128,480,133.3C640,139,800,117,960,96C1120,75,1280,53,1360,42.7L1440,32L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" />
+            <path id="squiggleAlt"
+                  fill="#C9E2F5"
+                  style="visibility:hidden"
+                  d="M0,96L80,106.7C160,117,320,139,480,144C640,149,800,139,960,122.7C1120,107,1280,85,1360,74.7L1440,64L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" />
+        </svg>
     </div>
-</header>
 
-<main>
-    {% block content %}{% endblock %}
-</main>
-
-<!-- ONDA IN BASSO (opzionale, puoi rimuovere se non ti serve) -->
-<div class="divider-bottom">
-    <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
-        <path d="M0,80 C320,140 480,40 720,80 C960,120 1120,40 1440,80 L1440,120 L0,120 Z"
-              fill="#ffffff"></path>
-    </svg>
-</div>
-
-<script src="{{ url_for('static', filename='main.js') }}"></script>
-{% block extra_js %}{% endblock %}
+    <!-- JS principale -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
 </body>
 </html>
+
 
 

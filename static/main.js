@@ -1,102 +1,63 @@
-// main.js
+// MAIN.JS - Gestione header "blob", menu e modale
 
 document.addEventListener("DOMContentLoaded", () => {
-  // -----------------------------
-  // NAVBAR: hamburger (mobile)
-  // -----------------------------
-  const burger = document.querySelector(".stycly-nav-hamburger");
-  const nav = document.querySelector(".stycly-nav");
+  // HEADER BLOB MENU
+  const header = document.querySelector(".stycly-header.overlay-header");
+  const burger = document.querySelector(".burger");
 
-  if (burger && nav) {
+  if (burger && header) {
     burger.addEventListener("click", () => {
-      burger.classList.toggle("active");
-      nav.classList.toggle("open");
+      header.classList.toggle("clicked");
     });
+  }
 
-    // chiudi il menu quando clicchi su un link
-    nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        burger.classList.remove("active");
-        nav.classList.remove("open");
+  // Selezione voci menu nel blob
+  const navItems = document.querySelectorAll(".overlay-nav ul li");
+
+  navItems.forEach((li) => {
+    li.addEventListener("click", () => {
+      // evidenzia quella cliccata (se vuoi lo stile selected/notselected)
+      navItems.forEach((item) => {
+        item.classList.remove("selected");
+        item.classList.add("notselected");
       });
+      li.classList.add("selected");
+      li.classList.remove("notselected");
+
+      // chiudi il menu dopo il click (utile su mobile)
+      if (header && header.classList.contains("clicked")) {
+        header.classList.remove("clicked");
+      }
+    });
+  });
+
+  // MODAL CTA HOME (se usi ancora il popup con id wardrobe-modal)
+  const modal = document.getElementById("wardrobe-modal");
+  const cta = document.getElementById("wardrobe-cta");
+  const closeBtn = modal ? modal.querySelector(".stycly-modal-close") : null;
+
+  if (cta && modal && closeBtn) {
+    cta.addEventListener("click", () => {
+      modal.style.display = "flex";
     });
 
-    // se si torna a desktop, assicuriamoci che la nav sia pulita
-    window.addEventListener("resize", () => {
-      if (window.innerWidth > 700) {
-        nav.classList.remove("open");
-        burger.classList.remove("active");
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
       }
     });
   }
 
-  // -----------------------------
-  // MODALE HOME: scelta Wardrobe (se presente in index.html)
-  // -----------------------------
-  const wardrobeModal = document.getElementById("wardrobe-modal");
-  const wardrobeCta = document.getElementById("wardrobe-cta");
-  const wardrobeCloseBtn = wardrobeModal
-    ? wardrobeModal.querySelector(".stycly-modal-close")
-    : null;
-
-  if (wardrobeModal && wardrobeCta && wardrobeCloseBtn) {
-    wardrobeCta.addEventListener("click", () => {
-      wardrobeModal.style.display = "flex";
-    });
-
-    wardrobeCloseBtn.addEventListener("click", () => {
-      wardrobeModal.style.display = "none";
-    });
-
-    wardrobeModal.addEventListener("click", (e) => {
-      if (e.target === wardrobeModal) {
-        wardrobeModal.style.display = "none";
-      }
-    });
-  }
-
-  // -----------------------------
-  // MODALE AUTH: Area riservata
-  // -----------------------------
-  const authModal = document.getElementById("auth-modal");
-  const openAuthBtn = document.getElementById("open-auth-modal");
-  const authContainer = document.getElementById("container");
-  const signUpButton = document.getElementById("signUp");
-  const signInButton = document.getElementById("signIn");
-
-  if (openAuthBtn && authModal && authContainer) {
-    // apri modale
-    openAuthBtn.addEventListener("click", () => {
-      authModal.style.display = "flex";
-      authContainer.classList.remove("right-panel-active");
-    });
-
-    // chiudi cliccando fuori
-    authModal.addEventListener("click", (e) => {
-      if (e.target === authModal) {
-        authModal.style.display = "none";
-      }
-    });
-  }
-
-  if (signUpButton && authContainer) {
-    signUpButton.addEventListener("click", () => {
-      authContainer.classList.add("right-panel-active");
-    });
-  }
-
-  if (signInButton && authContainer) {
-    signInButton.addEventListener("click", () => {
-      authContainer.classList.remove("right-panel-active");
-    });
-  }
-
-  // -----------------------------
-  // GSAP wave animation
-  // -----------------------------
+  // GSAP wave animation (se stai usando GSAP + MorphSVG)
   if (window.gsap && window.MorphSVGPlugin) {
     const firstWave = document.getElementById("squiggle");
-    if (firstWave) {
+    const altWave = document.getElementById("squiggleAlt");
+
+    if (firstWave && altWave) {
       window.gsap.to(firstWave, {
         duration: 2,
         repeat: -1,
@@ -107,4 +68,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
-
