@@ -16,6 +16,7 @@
     --f-3xl: 3.2rem;
 }
 
+/* --- GLOBAL --- */
 html, body {
     font-family: var(--font-main);
     background: linear-gradient(45deg, #e3e7ee 0%, #f5f7fa 100%);
@@ -27,6 +28,12 @@ html, body {
     overflow-x: hidden;
 }
 
+body {
+    position: relative;
+    min-height: 100vh;
+    padding-bottom: 120px; /* spazio per la wave */
+}
+
 /* --- NAVBAR --- */
 .stycly-header {
     width: 100%;
@@ -34,25 +41,24 @@ html, body {
     box-shadow: 0 2px 12px rgba(123,154,204,0.07);
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     position: relative;
     z-index: 10;
     min-height: 68px;
+    padding: 0 16px;
 }
 
 .stycly-logo img {
     height: 44px;
     width: auto;
     display: block;
-    margin-left: 18px;
 }
 
+/* desktop nav */
 .stycly-nav {
     display: flex;
     align-items: center;
     gap: 1.2rem;
-    margin-left: auto;
-    margin-right: 18px;
     position: relative;
 }
 
@@ -114,12 +120,18 @@ html, body {
     color: var(--col-hover);
 }
 
-/* Mostra dropdown su hover/click */
+/* Mostra dropdown quando il parent ha la classe .open */
 .stycly-nav-dropdown-parent.open .stycly-nav-dropdown-menu {
     display: flex;
 }
 
-/* --- HAMBURGER --- */
+/* Etichetta utente loggato */
+.stycly-user-label {
+    font-size: 0.9rem;
+    color: #4a5670;
+}
+
+/* --- HAMBURGER (mobile) --- */
 .stycly-nav-hamburger {
     display: none;
     flex-direction: column;
@@ -133,6 +145,7 @@ html, body {
     margin-left: 12px;
     z-index: 101;
 }
+
 .stycly-nav-hamburger span {
     display: block;
     height: 4px;
@@ -143,9 +156,20 @@ html, body {
     transition: all 0.2s;
 }
 
+/* Stato "X" quando attivo (classe .active gestita da JS) */
+.stycly-nav-hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.stycly-nav-hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.stycly-nav-hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
 /* --- HERO --- */
 .stycly-hero {
-   min-height: 70vh;
+    min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -168,6 +192,7 @@ html, body {
     font-weight: 600;
     margin-bottom: 0.5rem;
 }
+
 .stycly-hero-content strong {
     font-size: 3rem;
     color: #7b9acc;
@@ -202,6 +227,7 @@ html, body {
     text-decoration: none;
     display: inline-block;
 }
+
 .stycly-cta-btn:hover,
 .stycly-cta-btn:focus {
     background-color: var(--col-hover);
@@ -211,59 +237,62 @@ html, body {
 
 /* --- MODAL POPUP --- */
 .stycly-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: none; /* default hidden */
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
 }
 
 .stycly-modal-content {
-  background: #fff;
-  padding: 2rem;
-  border-radius: 10px;
-  position: relative;
-  max-width: 90%;
-  max-height: 90%;
-  overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .stycly-modal-close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: #333;
-  cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
 }
+
+.stycly-modal-close:hover {
+    color: var(--col-hover);
+}
+
 .stycly-modal-content h2 {
     font-size: var(--f-lg);
     color: var(--col-primario);
     margin-bottom: 18px;
     font-weight: 600;
 }
+
 .stycly-modal-content p {
     font-size: var(--f-md);
     color: #4a5670;
     margin-bottom: 24px;
 }
+
 .stycly-modal-actions {
     display: flex;
     justify-content: center;
     gap: 18px;
     margin-top: 8px;
-}
-
-.stycly-modal-close:hover {
-    color: var(--col-hover);
 }
 
 /* --- DIVIDER SVG --- */
@@ -275,24 +304,437 @@ html, body {
     z-index: 0;
     pointer-events: none;
 }
+
 .divider-bottom svg {
-     width: 100vw;
+    width: 100vw;
     height: 120px;
     display: block;
-}
-body {
-    position: relative;
-    min-height: 100vh;
-    padding-bottom: 120px; /* spazio per la wave */
 }
 
 /* --- ANIMATION --- */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px);}
-    to { opacity: 1; transform: translateY(0);}
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* --- RESPONSIVE --- */
+/* --- WARDROBE GRID (GESTIONE / PRIVATE) --- */
+.wardrobe-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 180px);
+    gap: 2rem;
+    justify-content: center;
+}
+
+/* layout più fluido su tablet */
+@media (max-width: 1024px) {
+    .wardrobe-grid {
+        grid-template-columns: repeat(3, 160px);
+        gap: 1.5rem;
+    }
+}
+
+/* layout 2 colonne su schermi piccoli */
+@media (max-width: 768px) {
+    .wardrobe-grid {
+        grid-template-columns: repeat(2, minmax(140px, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* layout 1 colonna su mobile stretto */
+@media (max-width: 480px) {
+    .wardrobe-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+}
+
+/* --- WARDROBE CARD --- */
+.wardrobe-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(20,104,229,0.08);
+    padding: 2rem 2.5rem;
+    min-width: 260px;
+    max-width: 320px;
+    text-align: center;
+    transition: box-shadow 0.2s;
+    position: relative;
+}
+
+.wardrobe-card h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.3rem;
+    color: #1468e5;
+}
+
+.wardrobe-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+}
+
+.wardrobe-card .stycly-cta-btn {
+    margin: 0.2rem 0.3rem;
+}
+
+.wardrobe-card:hover {
+    box-shadow: 0 8px 32px rgba(20,104,229,0.18);
+}
+
+/* --- CAPO CARD (SIMPLE) --- */
+.capo-card {
+    width: 180px;
+    background: #ffffff;
+    border: 1px solid #e0e4ea;
+    border-radius: 12px;
+    padding: 1rem;
+    font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: box-shadow 0.15s;
+}
+
+.capo-card:hover {
+    box-shadow: 0 6px 18px rgba(123, 154, 204, 0.08);
+}
+
+.capo-img-wrapper {
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.capo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.capo-titolo {
+    font-weight: 600;
+    color: var(--col-primario);
+    margin-bottom: 0.3rem;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+.capo-info {
+    font-size: 0.85rem;
+    color: #4a5670;
+    margin-bottom: 0.8rem;
+    text-align: center;
+}
+
+.capo-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.4rem;
+}
+
+/* --- ICON BUTTON --- */
+.capo-icon-btn {
+    width: 38px;
+    height: 38px;
+    border: none;
+    background: #f0f2f6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.capo-icon-btn:hover {
+    background: #e3e7ee;
+    border: 1px solid #1468e5;
+    transform: translateY(-2px);
+}
+
+/* --- FLIP CARD (FRONTE/RETRO) --- */
+.capo-flip-card {
+    width: 180px;
+    height: 240px;
+    perspective: 1000px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.08);
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+.capo-flip-inner {
+    width: 100%;
+    height: 180px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+}
+
+.capo-flip-card:hover .capo-flip-inner {
+    transform: rotateY(180deg);
+}
+
+.capo-flip-front,
+.capo-flip-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+}
+
+.capo-flip-back {
+    transform: rotateY(180deg);
+}
+
+/* empty card per aggiunta */
+.empty-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f7f8fa;
+    cursor: pointer;
+}
+
+.empty-card .capo-icon-btn {
+    margin: 0;
+}
+
+/* FLIP CARD responsive */
+@media (max-width: 768px) {
+    .capo-flip-card {
+        width: 160px;
+        height: 220px;
+        margin: 0.3rem auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .capo-flip-card {
+        width: 100%;
+        max-width: 260px;
+        height: 230px;
+        margin: 0.4rem auto;
+    }
+}
+
+/* --- FORM GUIDATO + PSEUDO SELECT --- */
+.form-guidato .field {
+    max-width: 280px;
+    margin: 1rem auto;
+    position: relative;
+}
+
+.field .psuedo_select .options {
+    list-style: none;
+    padding-left: 0;
+}
+
+label.field {
+    position: relative;
+    display: block;
+    font-size: var(--f-sm);
+    margin: 1rem 0;
+    padding-top: 1.5rem;
+}
+
+label.field span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: var(--f-sm);
+    color: #666;
+    transition: all .2s ease;
+}
+
+label.field.focused span {
+    top: -1.2rem;
+    font-size: 0.85rem;
+    color: var(--col-accent);
+}
+
+.psuedo_select {
+    min-width: auto;
+    width: 100%;
+    position: relative;
+    border-bottom: 2px solid #ccc;
+    padding: .6rem 2.5rem .6rem .2rem;
+    cursor: pointer;
+}
+
+.psuedo_select .option {
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.psuedo_select::after {
+    content: "";
+    position: absolute;
+    right: .4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #666;
+    transition: transform .2s;
+}
+
+label.field.focused .psuedo_select {
+    border-bottom-color: var(--col-accent);
+}
+
+label.field.focused .psuedo_select::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.options {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: var(--col-white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .2s ease;
+    z-index: 10;
+}
+
+.options.open {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.option {
+    padding: .6rem .8rem;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: var(--col-secondario);
+}
+
+/* --- LAYOUT VISUALIZZA WARDROBE (FILTRI + GRID) --- */
+.wardrobe-view-layout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.wardrobe-filters {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.wardrobe-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.wardrobe-main h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+}
+
+.wardrobe-nav-buttons {
+    display: flex;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    justify-content: center;
+}
+
+/* Grid a 3 colonne riutilizzata in varie pagine */
+.wardrobe-grid-3col {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+    justify-content: center;
+    gap: 2rem;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+    .wardrobe-view-layout {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1.5rem;
+    }
+
+    .wardrobe-filters {
+        width: 100%;
+        order: -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        background: #ffffffcc;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .wardrobe-filters > div {
+        flex: 1 1 45%;
+        min-width: 140px;
+    }
+
+    .wardrobe-main {
+        width: 100%;
+    }
+
+    .wardrobe-grid-3col {
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+    .wardrobe-view-layout {
+        padding: 1.2rem 0.6rem;
+    }
+
+    .wardrobe-filters {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .wardrobe-filters > div {
+        flex: 1 1 100%;
+    }
+
+    .wardrobe-main h2 {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .wardrobe-grid-3col {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .wardrobe-card {
+        margin: 0 auto;
+        width: 100%;
+        max-width: 320px;
+    }
+}
+
+/* --- RESPONSIVE GENERALE --- */
 @media (max-width: 900px) {
     .stycly-hero-content {
         max-width: 98vw;
@@ -303,18 +745,8 @@ body {
         padding: 24px 8px 18px 8px;
     }
 }
-@media (max-width: 700px) {
-    .stycly-header {
-        flex-direction: column;
-        min-height: 56px;
-    }
-    .stycly-logo img {
-        margin: 0 auto;
-    }
-    .stycly-nav {
-        gap: 0.5rem;
-        margin-right: 0;
-    }
+
+@media (max-width: 768px) {
     .stycly-hero-content h1 {
         font-size: var(--f-lg);
     }
@@ -322,356 +754,300 @@ body {
         font-size: var(--f-xl);
     }
 }
-@media (max-width: 600px) {
-    .stycly-nav {
-        display: none;
+
+/* Nav mobile: hamburger visibile, menu nascosto di default */
+@media (max-width: 700px) {
+    .stycly-header {
+        padding: 0 10px;
+        min-height: 56px;
     }
+
+    .stycly-logo img {
+        height: 40px;
+    }
+
     .stycly-nav-hamburger {
         display: flex;
-        margin-left: auto;
     }
-    .stycly-header {
-        justify-content: space-between;
-        padding: 0 8px;
+
+    .stycly-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        flex-direction: column;
+        background: #ffffff;
+        padding: 0.8rem 0.6rem 1rem 0.6rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        gap: 0.4rem;
     }
+
+    .stycly-nav.open {
+        display: flex;
+    }
+
+    .stycly-nav > a,
+    .stycly-nav-dropdown-btn {
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+    }
+
+    .stycly-nav-dropdown-parent {
+        width: 100%;
+    }
+
+    .stycly-nav-dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+        margin-left: 0.5rem;
+    }
+
+    .stycly-nav-dropdown-menu a {
+        padding: 6px 12px;
+        font-size: 0.95rem;
+    }
+
+    .stycly-hero {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
     .stycly-hero-content {
-        padding: 0 2vw;
+        padding: 0 1rem;
     }
-    .stycly-modal-content {
-        min-width: 90vw;
-        padding: 18px 2vw 12px 2vw;
+
+    .stycly-hero-content p {
+        font-size: 0.95rem;
     }
 }
-/* ... existing root and general styles stay the same ... */
 
-/* --- WARDROBE GRID (was: warehouse-grid) --- */
-.wardrobe-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 180px);
-  gap: 2rem;
-  justify-content: center;
+@media (max-width: 480px) {
+    .stycly-hero-content h1 {
+        font-size: 1.6rem;
+    }
+
+    .stycly-hero-content strong {
+        font-size: 1.9rem;
+    }
 }
 
-/* --- WARDROBE CARD (was: warehouse-card) --- */
-.wardrobe-card {
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px rgba(20,104,229,0.08);
-  padding: 2rem 2.5rem;
-  min-width: 260px;
-  max-width: 320px;
-  text-align: center;
-  transition: box-shadow 0.2s;
-  position: relative;
-}
-
-.wardrobe-card h2 {
-  margin-bottom: 0.5rem;
-  font-size: 1.3rem;
-  color: #1468e5;
-}
-
-.wardrobe-card p {
-  color: #666;
-  font-size: 0.95rem;
-  margin-bottom: 1.2rem;
-}
-
-.wardrobe-card .stycly-cta-btn {
-  margin: 0.2rem 0.3rem;
-}
-
-.wardrobe-card:hover {
-  box-shadow: 0 8px 32px rgba(20,104,229,0.18);
-}
-
-/* --- CAPO CARD (unchanged) --- */
-.capo-card {
-  width: 180px;
-  background: #ffffff;
-  border: 1px solid #e0e4ea;
-  border-radius: 12px;
-  padding: 1rem;
-  font-size: 0.95rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: box-shadow 0.15s;
-}
-
-.capo-card:hover {
-  box-shadow: 0 6px 18px rgba(123, 154, 204, 0.08);
-}
-
-.capo-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;  /* oppure: cover | fill */
-  border-radius: 6px;
-}
-
-.capo-img-wrapper {
-  width: 100%;
-  height: 140px;
-  overflow: hidden;
+/*form login e register*/
+/* === TPL: Template Sign In/Up === */
+.tpl-container {
+  background-color: #fff;
   border-radius: 10px;
-}
-
-.capo-titolo {
-  font-weight: 600;
-  color: var(--col-primario);
-  margin-bottom: 0.3rem;
-  text-align: center;
-  font-size: 1.05rem;
-}
-
-.capo-info {
-  font-size: 0.85rem;
-  color: #4a5670;
-  margin-bottom: 0.8rem;
-  text-align: center;
-}
-
-.capo-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.4rem;
-}
-
-.capo-icon-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem;
-  transition: transform 0.2s;
-}
-
-.capo-icon-btn:hover {
-  transform: scale(1.1);
-}
-
-
-/* Keep all other styles unchanged unless you want me to simplify more */
-
-
-/* Riduci larghezza e allinea label + select personalizzata */
-.form-guidato .field {
-  max-width: 280px;
-  margin: 1rem auto;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+              0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
+  overflow: hidden;
+  width: 768px;
+  max-width: 100%;
+  min-height: 480px;
+  margin: 3rem auto;
+  font-family: 'Montserrat', sans-serif;
 }
 
-/* Rimuove i bullet point */
-.field .psuedo_select .options {
-  list-style: none;
-  padding-left: 0;
-}
-
-/* Pseudo‑select personalizzato */
-label.field {
-  position: relative;
-  display: block;
-  font-size: var(--f-sm);
-  margin: 1rem 0;
-  padding-top: 1.5rem;
-}
-label.field span {
+.tpl-form-container {
   position: absolute;
   top: 0;
-  left: 0;
-  font-size: var(--f-sm);
-  color: #666;
-  transition: all .2s ease;
-}
-label.field.focused span {
-  top: -1.2rem;
-  font-size: 0.85rem;
-  color: var(--col-accent);
-}
-.psuedo_select {
-    min-width: auto;
-  width: 100%;
-  position: relative;
-  border-bottom: 2px solid #ccc;
-  padding: .6rem 2.5rem .6rem .2rem;
-  cursor: pointer;
-}
-
-/* Rende le opzioni più compatte e leggibili */
-.psuedo_select .option {
-  padding: 6px 10px;
-  font-size: 0.95rem;
-  text-align: left;
-}
-
-.psuedo_select::after {
-  content: "";
-  position: absolute;
-  right: .4rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0; height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-top: 6px solid #666;
-  transition: transform .2s;
-}
-label.field.focused .psuedo_select {
-  border-bottom-color: var(--col-accent);
-}
-label.field.focused .psuedo_select::after {
-  transform: translateY(-50%) rotate(180deg);
-}
-.options {
-  position: absolute;
-  left: 0; right: 0;
-  background: var(--col-white);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .2s ease;
-  z-index: 10;
-}
-.options.open {
-  max-height: 200px;
-  overflow-y: auto;
-}
-.option {
-  padding: .6rem .8rem;
-  cursor: pointer;
-}
-.option:hover {
-  background: var(--col-secondario);
-}
-.capo-flip-card {
-  width: 180px;
-  height: 240px;
-  perspective: 1000px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.08);
-  padding: 0.5rem;
-  margin: 0.5rem;
-}
-
-.capo-flip-inner {
-  width: 100%;
-  height: 180px;
-  position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.5s;
-}
-
-.capo-flip-card:hover .capo-flip-inner {
-  transform: rotateY(180deg);
-}
-
-.capo-flip-front,
-.capo-flip-back {
-  position: absolute;
-  width: 100%;
   height: 100%;
-  backface-visibility: hidden;
+  transition: all 0.6s ease-in-out;
 }
 
-.capo-flip-back {
-  transform: rotateY(180deg);
+.tpl-sign-up-container,
+.tpl-sign-in-container {
+  left: 0;
+  width: 50%;
+  z-index: 2;
 }
 
+.tpl-container.tpl-right-panel-active .tpl-sign-in-container {
+  transform: translateX(100%);
+}
 
+.tpl-sign-up-container {
+  opacity: 0;
+  z-index: 1;
+}
 
-.capo-actions {
+.tpl-container.tpl-right-panel-active .tpl-sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: tpl-show 0.6s;
+}
+
+@keyframes tpl-show {
+  0%, 49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+  50%, 100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+
+.tpl-overlay-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 100;
+  transition: transform 0.6s ease-in-out;
+}
+
+.tpl-container.tpl-right-panel-active .tpl-overlay-container {
+  transform: translateX(-100%);
+}
+
+.tpl-overlay {
+  background: linear-gradient(to right, #FF4B2B, #FF416C);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  color: #fff;
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.tpl-container.tpl-right-panel-active .tpl-overlay {
+  transform: translateX(50%);
+}
+
+.tpl-overlay-panel {
+  position: absolute;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.4rem;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transition: transform 0.6s ease-in-out;
 }
 
-.capo-icon-btn {
-  width: 38px;
-  height: 38px;
+.tpl-overlay-left {
+  transform: translateX(-20%);
+}
+
+.tpl-container.tpl-right-panel-active .tpl-overlay-left {
+  transform: translateX(0);
+}
+
+.tpl-overlay-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.tpl-container.tpl-right-panel-active .tpl-overlay-right {
+  transform: translateX(20%);
+}
+
+.tpl-social-container {
+  margin: 20px 0;
+}
+
+.tpl-social-container a {
+  border: 1px solid #DDD;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 5px;
+  height: 40px;
+  width: 40px;
+}
+
+.tpl-form-container form {
+  background-color: #FFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+}
+
+.tpl-form-container input {
+  background-color: #eee;
   border: none;
-  background: #f0f2f6;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
 }
 
-.capo-icon-btn:hover {
-  background: #e3e7ee;
-  border: 1px solid #1468e5;
-  transform: translateY(-2px);
-}
-
-.empty-card {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f7f8fa;
+.tpl-form-container button {
+  border-radius: 20px;
+  border: 1px solid #FF4B2B;
+  background-color: #FF4B2B;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 12px 45px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  transition: transform 80ms ease-in;
   cursor: pointer;
 }
 
-.empty-card .capo-icon-btn {
-  margin: 0;
+.tpl-form-container button.ghost {
+  background-color: transparent;
+  border-color: #fff;
 }
 
-#image-modal img {
-  border-radius: 6px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+.tpl-form-container button:focus {
+  outline: none;
 }
-.wardrobe-grid-3col {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(300px, 1fr));
+
+.tpl-auth-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 9999;
+  display: none;
   justify-content: center;
-  gap: 2rem;
+  align-items: center;
+  padding: 1rem;
 }
 
-@media (max-width: 900px) {
-  .wardrobe-grid-3col {
-    grid-template-columns: repeat(2, minmax(220px, 1fr));
+.tpl-auth-wrapper {
+  max-width: 768px;
+  width: 100%;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+}
+@media (max-width: 768px) {
+  .tpl-container {
+    width: 100%;
+    min-width: unset;
+    border-radius: 0;
+  }
+
+  .tpl-form-container form {
+    padding: 0 20px;
+  }
+
+  .tpl-auth-wrapper {
+    border-radius: 0;
   }
 }
 
-@media (max-width: 600px) {
-  .wardrobe-grid-3col {
-    grid-template-columns: 1fr;
-  }
-}
-.wardrobe-view-layout {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  gap: 2rem;
-  max-width: 1300px;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-}
 
-.wardrobe-filters {
-  width: 250px;
-}
-
-.wardrobe-main {
-  flex: 1;
-  min-width: 0;
-}
-
-.wardrobe-main h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.3rem;
-}
-
-.wardrobe-nav-buttons {
-  display: flex;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  justify-content: center;
-}
+/* Tutti gli stili tpl-* del template che ti ho fornito vanno inclusi in questo file */

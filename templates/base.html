@@ -7,22 +7,39 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='stycly-favicon.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
+<p style="background: yellow; text-align: center; font-weight: bold;">DEBUG: Modifiche visibili</p>
+
+
     <!-- NAVBAR -->
     <header class="stycly-header">
+        <!-- Logo -->
         <a href="{{ url_for('home') }}" class="stycly-logo">
             <img src="{{ url_for('static', filename='stycly-logo.png') }}" alt="Stycly Logo">
         </a>
+
+        <!-- Bottone hamburger (mostrato solo su mobile via CSS) -->
+        <button class="stycly-nav-hamburger" aria-label="Apri/chiudi menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <!-- Menu di navigazione -->
         <nav class="stycly-nav">
             <a href="{{ url_for('home') }}">Home</a>
 
             <div class="stycly-nav-dropdown-parent">
-                <button class="stycly-nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">Wardrobe</button>
+                <button class="stycly-nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">
+                    Wardrobe
+                </button>
                 <div class="stycly-nav-dropdown-menu">
                     <a href="{{ url_for('private_wardrobe') }}" id="private-wardrobe-link">Private Wardrobe</a>
-                    <a href="{{ url_for('public_wardrobe') }}" id="public-wardrobe-link">Public Wardrobe</a>
+                    <a href="{{ url_for('public_wardrobe') }}" id="public_wardrobe-link">Public Wardrobe</a>
                 </div>
             </div>
 
@@ -35,8 +52,7 @@
                 </span>
                 <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Register</a>
+                <button id="open-auth-modal" class="stycly-cta-btn">Area riservata</button>
             {% endif %}
         </nav>
     </header>
@@ -46,21 +62,106 @@
         {% block content %}{% endblock %}
     </main>
 
+    <!-- LOGIN/REGISTER MODALE -->
+    <div class="tpl-auth-modal" id="tpl-auth-modal">
+        <div class="tpl-auth-wrapper" id="tpl-container">
+            <!-- LOGIN -->
+            <div class="tpl-form-container tpl-sign-in-container">
+                <form method="post" action="{{ url_for('login') }}">
+                    <h1>Sign in</h1>
+                    <div class="tpl-social-container">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your account</span>
+                    <input type="text" name="email_or_username" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Password" />
+                    <a href="#">Forgot your password?</a>
+                    <button type="submit">Sign In</button>
+                </form>
+            </div>
+
+            <!-- REGISTRAZIONE -->
+            <div class="tpl-form-container tpl-sign-up-container">
+                <form method="post" action="{{ url_for('register') }}">
+                    <h1>Create Account</h1>
+                    <div class="tpl-social-container">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-google-plus-g"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <span>or use your email for registration</span>
+                    <input type="text" name="username" placeholder="Name" />
+                    <input type="email" name="email" placeholder="Email" />
+                    <input type="password" name="password" placeholder="Password" />
+                    <button type="submit">Sign Up</button>
+                </form>
+            </div>
+
+            <!-- OVERLAY -->
+            <div class="tpl-overlay-container">
+                <div class="tpl-overlay">
+                    <div class="tpl-overlay-panel tpl-overlay-left">
+                        <h1>Welcome Back!</h1>
+                        <p>To keep connected with us please login with your personal info</p>
+                        <button class="ghost" id="tpl-signIn">Sign In</button>
+                    </div>
+                    <div class="tpl-overlay-panel tpl-overlay-right">
+                        <h1>Hello, Friend!</h1>
+                        <p>Enter your personal details and start journey with us</p>
+                        <button class="ghost" id="tpl-signUp">Sign Up</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://assets.codepen.io/16327/MorphSVGPlugin3.min.js"></script>
     <script src="{{ url_for('static', filename='main.js') }}"></script>
+
+    <!-- JS: Gestione modale login/register -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('tpl-auth-modal');
+            const btn = document.getElementById('open-auth-modal');
+            const container = document.getElementById('tpl-container');
+
+            const tplSignUp = document.getElementById('tpl-signUp');
+            const tplSignIn = document.getElementById('tpl-signIn');
+
+            btn?.addEventListener('click', () => {
+                modal.style.display = 'flex';
+                container.classList.remove("tpl-right-panel-active");
+            });
+
+            modal?.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+
+            tplSignUp?.addEventListener('click', () => {
+                container.classList.add("tpl-right-panel-active");
+            });
+
+            tplSignIn?.addEventListener('click', () => {
+                container.classList.remove("tpl-right-panel-active");
+            });
+        });
+    </script>
+
     {% block extra_js %}{% endblock %}
 
-    {# POPUP PER TUTTI I MESSAGGI FLASH #}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <script>
           document.addEventListener('DOMContentLoaded', function () {
             const flashMessages = {{ messages|tojson }};
             flashMessages.forEach(function (item) {
-              const category = item[0]; // es. "error", "success"
-              const message = item[1];
-              alert(message); // qui puoi in futuro sostituire con un tuo modal carino
+              alert(item[1]); // Puoi personalizzarlo con un toast
             });
           });
         </script>
@@ -68,5 +169,3 @@
     {% endwith %}
 </body>
 </html>
-
-

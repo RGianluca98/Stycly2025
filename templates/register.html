@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Registrati{% endblock %}
 {% block content %}
-<h1>Registrazione</h1>
-<form method="post">
+<h1>Registrazione semplice</h1>
+<form method="post" action="{{ url_for('register') }}">
   <label>Username</label>
   <input type="text" name="username" required>
 
@@ -15,5 +15,77 @@
   <button type="submit">Registrati</button>
 </form>
 <a href="{{ url_for('login') }}">Hai già un account? Login</a>
-{% endblock %}
 
+<!-- Fancy Register/Login Form -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<div class="tpl-container" id="tpl-container">
+  <div class="tpl-form-container tpl-sign-up-container">
+    <form method="post" action="{{ url_for('register') }}">
+      <h1>Crea Account</h1>
+      <div class="tpl-social-container">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>oppure registrati con email</span>
+      <input type="text" name="username" placeholder="Nome" />
+      <input type="email" name="email" placeholder="Email" />
+      <input type="password" name="password" placeholder="Password" />
+      <button>Registrati</button>
+    </form>
+  </div>
+
+  <div class="tpl-form-container tpl-sign-in-container">
+    <form method="post" action="{{ url_for('login') }}">
+      <h1>Accedi</h1>
+      <div class="tpl-social-container">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-google-plus-g"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+      <span>oppure usa le tue credenziali</span>
+      <input type="text" name="email_or_username" placeholder="Email o Username" />
+      <input type="password" name="password" placeholder="Password" />
+      <a href="#">Hai dimenticato la password?</a>
+      <button>Accedi</button>
+    </form>
+  </div>
+
+  <div class="tpl-overlay-container">
+    <div class="tpl-overlay">
+      <div class="tpl-overlay-panel tpl-overlay-left">
+        <h1>Ben tornato!</h1>
+        <p>Per restare connesso, effettua il login</p>
+        <button class="ghost" id="tpl-signIn">Accedi</button>
+      </div>
+      <div class="tpl-overlay-panel tpl-overlay-right">
+        <h1>Ciao, amico!</h1>
+        <p>Inserisci i tuoi dati personali per registrarti</p>
+        <button class="ghost" id="tpl-signUp">Registrati</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const tplContainer = document.getElementById('tpl-container');
+  const tplSignUp = document.getElementById('tpl-signUp');
+  const tplSignIn = document.getElementById('tpl-signIn');
+
+  if (tplSignUp && tplContainer) {
+    tplSignUp.addEventListener('click', () => {
+      tplContainer.classList.add("tpl-right-panel-active");
+    });
+  }
+
+  if (tplSignIn && tplContainer) {
+    tplSignIn.addEventListener('click', () => {
+      tplContainer.classList.remove("tpl-right-panel-active");
+    });
+  }
+});
+</script>
+{% endblock %}

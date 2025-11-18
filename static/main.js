@@ -6,11 +6,24 @@ document.querySelectorAll('.stycly-nav-dropdown-btn').forEach(btn => {
         parent.classList.toggle('open');
     });
 });
-document.addEventListener('click', function(e) {
-    document.querySelectorAll('.stycly-nav-dropdown-parent').forEach(parent => {
-        if (!parent.contains(e.target)) parent.classList.remove('open');
+document.addEventListener("DOMContentLoaded", () => {
+  const header = document.querySelector(".stycly-header");
+  const burger = document.querySelector(".stycly-nav-hamburger");
+
+  if (burger && header) {
+    burger.addEventListener("click", () => {
+      header.classList.toggle("nav-open");
     });
+  }
+
+  // chiudi il menu quando clicchi un link
+  document.querySelectorAll(".stycly-nav a").forEach(link => {
+    link.addEventListener("click", () => {
+      header.classList.remove("nav-open");
+    });
+  });
 });
+
 
 // Hamburger menu (mobile)
 const hamburger = document.querySelector('.stycly-nav-hamburger');
