@@ -946,20 +946,7 @@ label.field.focused .psuedo_select::after {
 .overlay-right { right: 0; transform: translateX(0); }
 .container.right-panel-active .overlay-right { transform: translateX(20%); }
 
-.social-container {
-  margin: 20px 0;
-}
 
-.social-container a {
-  border: 1px solid #ddd;
-  border-radius: 50%;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 40px;
-  margin: 0 5px;
-}
 
 form {
   background-color: #fff;
