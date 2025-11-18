@@ -300,28 +300,9 @@ def home():
 
 @app.route('/products')
 def products():
-    return render_template('products.html')
-
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-
-@app.route('/immagini/<path:filename>')
-def immagini(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-
-@app.route('/public-wardrobe')
-def public_wardrobe():
     """
-    Mostra TUTTI i capi di TUTTI i wardrobe di TUTTI gli utenti.
+    Products = vecchio Public Wardrobe:
+    mostra TUTTI i capi di TUTTI i wardrobe degli utenti.
     """
     metadata = MetaData()
     all_capi = []
@@ -344,6 +325,29 @@ def public_wardrobe():
                 all_capi.append(rd)
 
     return render_template("public_wardrobe.html", capi=all_capi)
+
+
+@app.route('/public-wardrobe')
+def public_wardrobe():
+    """
+    Alias legacy: reindirizza a /products.
+    """
+    return redirect(url_for('products'))
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+@app.route('/immagini/<path:filename>')
+def immagini(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 
 # ----------------------------
@@ -377,9 +381,6 @@ def private_wardrobe():
         username=user.username
     )
 
-
-# le route seguenti restano per la gestione tecnica dei capi/tabelle
-# (agganciare i link dalla pagina My Wardrobe)
 
 @app.route('/create-private-wardrobe', methods=['GET', 'POST'])
 @login_required
@@ -664,3 +665,4 @@ def export_wardrobe(nome_tabella):
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
