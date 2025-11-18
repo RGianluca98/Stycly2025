@@ -2,32 +2,6 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   // -----------------------------
-  // NAVBAR: dropdown "Wardrobe"
-  // -----------------------------
-  document.querySelectorAll(".stycly-nav-dropdown-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      const parent = btn.closest(".stycly-nav-dropdown-parent");
-      const isOpen = parent.classList.contains("open");
-      document
-        .querySelectorAll(".stycly-nav-dropdown-parent")
-        .forEach((p) => p.classList.remove("open"));
-      if (!isOpen) {
-        parent.classList.add("open");
-      }
-    });
-  });
-
-  // Chiudi dropdown cliccando fuori
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".stycly-nav-dropdown-parent")) {
-      document
-        .querySelectorAll(".stycly-nav-dropdown-parent")
-        .forEach((p) => p.classList.remove("open"));
-    }
-  });
-
-  // -----------------------------
   // NAVBAR: hamburger (mobile)
   // -----------------------------
   const burger = document.querySelector(".stycly-nav-hamburger");
@@ -47,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // se si torna a desktop, assicuriamoci che la nav sia visibile
+    // se si torna a desktop, assicuriamoci che la nav sia pulita
     window.addEventListener("resize", () => {
       if (window.innerWidth > 700) {
         nav.classList.remove("open");
@@ -57,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // -----------------------------
-  // MODALE HOME: scelta Wardrobe
+  // MODALE HOME: scelta Wardrobe (se presente in index.html)
   // -----------------------------
   const wardrobeModal = document.getElementById("wardrobe-modal");
   const wardrobeCta = document.getElementById("wardrobe-cta");
@@ -133,3 +107,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+

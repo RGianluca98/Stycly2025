@@ -30,24 +30,15 @@
         <!-- Menu di navigazione -->
         <nav class="stycly-nav">
             <a href="{{ url_for('home') }}">Home</a>
-
-            <div class="stycly-nav-dropdown-parent">
-                <button class="stycly-nav-dropdown-btn" aria-haspopup="true" aria-expanded="false">
-                    Wardrobe
-                </button>
-                <div class="stycly-nav-dropdown-menu">
-                    <a href="{{ url_for('private_wardrobe') }}" id="private-wardrobe-link">Private Wardrobe</a>
-                    <a href="{{ url_for('public_wardrobe') }}" id="public_wardrobe-link">Public Wardrobe</a>
-                </div>
-            </div>
-
+            <a href="{{ url_for('products') }}">Products</a>
+            <a href="{{ url_for('about') }}">About Us</a>
             <a href="{{ url_for('contact') }}">Contact</a>
 
-            <!-- Area autenticazione -->
             {% if session.get('user_id') %}
                 <span class="stycly-user-label">
-                    Ciao, {{ session.get('username') }}
+                    {{ session.get('username') }}
                 </span>
+                <a href="{{ url_for('private_wardrobe') }}">My Wardrobe</a>
                 <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}
                 <button id="open-auth-modal">Area riservata</button>
@@ -66,7 +57,11 @@
         <div class="form-container sign-up-container">
           <form method="post" action="{{ url_for('register') }}">
             <h1>Create Account</h1>
-            
+            <div class="social-container">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-google-plus-g"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
             <span>or use your email for registration</span>
             <input type="text" name="username" placeholder="Name" />
             <input type="email" name="email" placeholder="Email" />
@@ -78,9 +73,13 @@
         <div class="form-container sign-in-container">
           <form method="post" action="{{ url_for('login') }}">
             <h1>Sign in</h1>
-            
+            <div class="social-container">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-google-plus-g"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
             <span>or use your account</span>
-            <input type="text" name="email_or_username" placeholder="Email" />
+            <input type="text" name="email_or_username" placeholder="Email or Username" />
             <input type="password" name="password" placeholder="Password" />
             <a href="#">Forgot your password?</a>
             <button type="submit">Sign In</button>

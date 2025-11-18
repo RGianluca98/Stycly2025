@@ -66,9 +66,8 @@ engine = create_engine(DATABASE_URL)
 def ensure_schema():
     """
     Si assicura che le tabelle users e wardrobes abbiano le colonne
-    aggiornate. Se mancano le colonne nuove, la tabella viene DROPPATA
-    e ricreata da BaseMaster.metadata.create_all().
-    Per sicurezza usiamo information_schema solo su Postgres.
+    aggiornate. Se mancano colonne critiche su Postgres, droppa e ricrea.
+    Su SQLite non usa information_schema.
     """
     if engine.dialect.name == "postgresql":
         with engine.begin() as conn:
@@ -152,6 +151,30 @@ def crea_tabella_wardrobe(nome_tabella: str) -> str:
     return nome_tabella
 
 
+def get_personal_wardrobe(user: User) -> Wardrobe:
+    """
+    Restituisce (o crea) il wardrobe personale dell'utente,
+    con nome del tipo: wardrobe_<username_normalizzato>
+    """
+    raw_name = f"wardrobe_{user.username}"
+    nome_tabella = re.sub(r'\W+', '_', raw_name.lower())
+
+    w = db_session.query(Wardrobe).filter_by(
+        nome=nome_tabella,
+        user_id=user.id
+    ).first()
+
+    if not w:
+        # crea tabella fisica
+        crea_tabella_wardrobe(nome_tabella)
+        # registra nel DB master
+        w = Wardrobe(nome=nome_tabella, user_id=user.id)
+        db_session.add(w)
+        db_session.commit()
+
+    return w
+
+
 # ----------------------------
 #       SESSIONE / LOGIN
 # ----------------------------
@@ -164,12 +187,10 @@ def login_required(view_func):
         user_id = session.get("user_id")
         last_active = session.get("last_active")
 
-        # Non loggato
         if not user_id:
             flash("Devi fare login per accedere a questa pagina.", "error")
             return redirect(url_for("home"))
 
-        # Controllo timeout sessione
         if last_active:
             try:
                 last_active_dt = datetime.fromisoformat(last_active)
@@ -183,7 +204,6 @@ def login_required(view_func):
                 flash("La sessione è scaduta, effettua di nuovo il login.", "error")
                 return redirect(url_for("home"))
 
-        # aggiorno last_active
         session["last_active"] = datetime.utcnow().isoformat()
         return view_func(*args, **kwargs)
 
@@ -226,6 +246,7 @@ def register():
     )
     db_session.add(user)
     db_session.commit()
+
     flash("Registrazione completata, ora effettua il login dall'Area Riservata.", "success")
     return redirect(url_for('home'))
 
@@ -251,6 +272,9 @@ def login():
         flash("Credenziali non valide.", "error")
         return redirect(url_for('home'))
 
+    # assicuriamo l'esistenza del wardrobe personale
+    get_personal_wardrobe(user)
+
     session.clear()
     session['user_id'] = user.id
     session['username'] = user.username
@@ -274,6 +298,16 @@ def home():
     return render_template('index.html')
 
 
+@app.route('/products')
+def products():
+    return render_template('products.html')
+
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
 @app.route('/immagini/<path:filename>')
 def immagini(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -292,14 +326,12 @@ def public_wardrobe():
     metadata = MetaData()
     all_capi = []
 
-    # prendo tutti i wardrobe registrati nella tabella 'wardrobes'
     wardrobes = db_session.query(Wardrobe).all()
 
     for w in wardrobes:
         try:
             tbl = Table(w.nome, metadata, autoload_with=engine)
         except Exception:
-            # se per qualche motivo la tabella non esiste più, salto
             continue
 
         with engine.connect() as conn:
@@ -321,65 +353,59 @@ def public_wardrobe():
 @app.route('/private-wardrobe')
 @login_required
 def private_wardrobe():
+    """
+    Unico wardrobe personale per utente.
+    Pagina: "<username> Personal Wardrobe" + grid di capi + card "+" per aggiungere.
+    """
     user_id = session['user_id']
-    wardrobes = db_session.query(Wardrobe).filter_by(user_id=user_id).all()
-    return render_template('private_wardrobe.html', wardrobes=wardrobes)
+    user = db_session.query(User).get(user_id)
 
+    # recupera (o crea) il wardrobe personale
+    w = get_personal_wardrobe(user)
+
+    metadata = MetaData()
+    wardrobe_table = Table(w.nome, metadata, autoload_with=engine)
+    with engine.connect() as conn:
+        rows = conn.execute(wardrobe_table.select()).fetchall()
+        columns = wardrobe_table.columns.keys()
+        capi = [dict(zip(columns, row)) for row in rows]
+
+    return render_template(
+        'private_wardrobe.html',
+        capi=capi,
+        nome_tabella=w.nome,
+        username=user.username
+    )
+
+
+# le route seguenti restano per la gestione tecnica dei capi/tabelle
+# (agganciare i link dalla pagina My Wardrobe)
 
 @app.route('/create-private-wardrobe', methods=['GET', 'POST'])
 @login_required
 def create_private_wardrobe():
-    user_id = session['user_id']
-
-    if request.method == 'POST':
-        nome_raw = request.form.get('nome_wardrobe', '').strip()
-        if not nome_raw:
-            flash("Inserisci un nome per il wardrobe.", "error")
-            return redirect(url_for('create_private_wardrobe'))
-
-        nome_tabella = f"wardrobe_{nome_raw}"
-        nome_tabella = re.sub(r'\W+', '_', nome_tabella.lower())
-
-        existing = db_session.query(Wardrobe).filter_by(nome=nome_tabella).first()
-        if existing:
-            flash(
-                "Esiste già un wardrobe con questo nome. "
-                "Scegli un altro nome o elimina quello esistente.",
-                "error"
-            )
-            return redirect(url_for('create_private_wardrobe'))
-
-        crea_tabella_wardrobe(nome_tabella)
-
-        new_w = Wardrobe(nome=nome_tabella, user_id=user_id)
-        db_session.add(new_w)
-        try:
-            db_session.commit()
-        except IntegrityError:
-            db_session.rollback()
-            flash(
-                "Esiste già un wardrobe con questo nome. "
-                "Scegli un altro nome o elimina quello esistente.",
-                "error"
-            )
-            return redirect(url_for('create_private_wardrobe'))
-
-        return redirect(url_for('private_wardrobe'))
-
-    return render_template('create_private_wardrobe.html')
+    """
+    NON più usata in UI (niente link nel menu).
+    La teniamo solo per compatibilità, ma idealmente da rimuovere in futuro.
+    """
+    flash("La creazione di nuovi wardrobe non è più disponibile.", "info")
+    return redirect(url_for('private_wardrobe'))
 
 
 @app.route('/select-private-wardrobe', methods=['GET', 'POST'])
 @login_required
 def select_private_wardrobe():
-    user_id = session['user_id']
-    wardrobes = db_session.query(Wardrobe).filter_by(user_id=user_id).all()
-    return render_template('select_private_wardrobe.html', wardrobes=wardrobes)
+    """
+    Non più necessaria con un solo wardrobe personale.
+    Reindirizziamo alla pagina principale del wardrobe.
+    """
+    return redirect(url_for('private_wardrobe'))
 
 
 @app.route('/gestisci-private-wardrobe/<nome_tabella>')
 @login_required
 def gestisci_private_wardrobe(nome_tabella):
+    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -435,7 +461,7 @@ def aggiungi_capo_wardrobe(nome_tabella):
         tbl = Table(nome_tabella, metadata, autoload_with=engine)
         with engine.begin() as conn:
             conn.execute(tbl.insert().values(**values))
-        return redirect(url_for('gestisci_private_wardrobe', nome_tabella=nome_tabella))
+        return redirect(url_for('private_wardrobe'))
 
     return render_template('aggiungi_capo_wardrobe.html', nome_tabella=nome_tabella, **data)
 
@@ -461,7 +487,7 @@ def modifica_capo_wardrobe(nome_tabella, capo_id):
         ).first()
 
     if not capo:
-        return redirect(url_for('gestisci_private_wardrobe', nome_tabella=nome_tabella))
+        return redirect(url_for('private_wardrobe'))
 
     capo_dict = dict(capo._mapping)
 
@@ -496,7 +522,7 @@ def modifica_capo_wardrobe(nome_tabella, capo_id):
                 .values(**values)
             )
 
-        return redirect(url_for('gestisci_private_wardrobe', nome_tabella=nome_tabella))
+        return redirect(url_for('private_wardrobe'))
 
     return render_template(
         'modifica_capo_wardrobe.html',
@@ -524,12 +550,16 @@ def elimina_capo_wardrobe(nome_tabella, capo_id):
     wardrobe_table = Table(nome_tabella, metadata, autoload_with=engine)
     with engine.begin() as conn:
         conn.execute(wardrobe_table.delete().where(wardrobe_table.c.id == capo_id))
-    return redirect(url_for('gestisci_private_wardrobe', nome_tabella=nome_tabella))
+    return redirect(url_for('private_wardrobe'))
 
 
 @app.route('/elimina-wardrobe/<nome_tabella>', methods=['POST'])
 @login_required
 def elimina_wardrobe(nome_tabella):
+    """
+    Con un solo wardrobe personale, in pratica questa route non dovrebbe servire.
+    La lascio per compatibilità, ma idealmente da non esporre nella UI.
+    """
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -547,40 +577,16 @@ def elimina_wardrobe(nome_tabella):
     except Exception:
         pass
 
-    return redirect(url_for('select_private_wardrobe'))
+    return redirect(url_for('private_wardrobe'))
 
 
 @app.route('/visualizza-private-wardrobe/<nome_tabella>')
 @login_required
 def visualizza_private_wardrobe(nome_tabella):
-    user_id = session['user_id']
-    w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
-    if not w:
-        flash("Non hai accesso a questo wardrobe.", "error")
-        return redirect(url_for('private_wardrobe'))
-
-    metadata = MetaData()
-    wardrobe_table = Table(nome_tabella, metadata, autoload_with=engine)
-
-    with engine.connect() as conn:
-        rows = conn.execute(wardrobe_table.select()).fetchall()
-        columns = wardrobe_table.columns.keys()
-        capi = [dict(zip(columns, row)) for row in rows]
-
-    with open('static/data/form_data.json') as f:
-        form_data = json.load(f)
-
-    all_tipologie = sorted({tip for cat in form_data['tipologie'].values() for tip in cat})
-
-    return render_template(
-        'visualizza_private_wardrobe.html',
-        capi=capi,
-        nome_tabella=nome_tabella,
-        tipologie=all_tipologie,
-        taglie=form_data['taglie'],
-        colori=form_data['colori'],
-        brands=form_data['brands']
-    )
+    """
+    Se qualcuno ci arriva, reindirizziamo al wardrobe personale.
+    """
+    return redirect(url_for('private_wardrobe'))
 
 
 # ----------------------------
@@ -592,7 +598,6 @@ def visualizza_private_wardrobe(nome_tabella):
 def export_wardrobe(nome_tabella):
     user_id = session['user_id']
 
-    # Controllo che il wardrobe appartenga all'utente loggato
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
         flash("Non hai accesso a questo wardrobe.", "error")
@@ -659,6 +664,3 @@ def export_wardrobe(nome_tabella):
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
-
-
-
