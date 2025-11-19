@@ -1,81 +1,99 @@
-// MAIN.JS - Gestione header "blob", menu overlay e modal login/register
+document.addEventListener('DOMContentLoaded', () => {
+  // -------------------------
+  // NAVBAR / HAMBURGER
+  // -------------------------
+  const navToggle = document.getElementById('navToggle');
+  const mainNav   = document.getElementById('mainNav');
 
-document.addEventListener("DOMContentLoaded", () => {
-  // HEADER BLOB MENU
-  const header = document.querySelector(".stycly-header.overlay-header");
-  const burger = document.querySelector(".burger");
+  if (navToggle && mainNav) {
+    // apre/chiude menu mobile
+    navToggle.addEventListener('click', () => {
+      navToggle.classList.toggle('active');
+      mainNav.classList.toggle('open');
+    });
 
-  if (burger && header) {
-    burger.addEventListener("click", () => {
-      header.classList.toggle("clicked");
+    // quando clicchi un link del menu, chiudi il menu (su mobile)
+    mainNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('active');
+        mainNav.classList.remove('open');
+      });
     });
   }
 
-  // Selezione voci menu nel blob (solo highlight + chiusura)
-  const navItems = document.querySelectorAll(".overlay-nav ul li");
+  // -------------------------
+  // MODAL AREA RISERVATA
+  // -------------------------
+  const authModal     = document.getElementById('authModal');
+  const authContainer = document.getElementById('authContainer');
+  const authClose     = document.getElementById('authClose');
+  const areaLink      = document.getElementById('area-riservata-link');
+  const goToLogin     = document.getElementById('goToLogin');
+  const goToRegister  = document.getElementById('goToRegister');
 
-  navItems.forEach((li) => {
-    li.addEventListener("click", () => {
-      navItems.forEach((item) => {
-        item.classList.remove("selected");
-        item.classList.add("notselected");
-      });
-      li.classList.add("selected");
-      li.classList.remove("notselected");
+  function openAuthModal(showRegister = false) {
+    if (!authModal || !authContainer) return;
+    authModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 
-      // chiudi il menu dopo il click (se non è AREA RISERVATA)
-      const link = li.querySelector("a");
-      if (link && !link.dataset.authOpen && header.classList.contains("clicked")) {
-        header.classList.remove("clicked");
+    if (showRegister) {
+      authContainer.classList.add('right-panel-active');
+    } else {
+      authContainer.classList.remove('right-panel-active');
+    }
+  }
+
+  function closeAuthModal() {
+    if (!authModal || !authContainer) return;
+    authModal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // click su "AREA RISERVATA" nella navbar
+  if (areaLink) {
+    areaLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      openAuthModal(false); // di default mostra il blocco LOGIN
+    });
+  }
+
+  // bottone X per chiudere
+  if (authClose) {
+    authClose.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeAuthModal();
+    });
+  }
+
+  // chiusura cliccando fuori dal box
+  if (authModal) {
+    authModal.addEventListener('click', (e) => {
+      if (e.target === authModal) {
+        closeAuthModal();
       }
     });
+  }
+
+  // ESC per chiudere
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAuthModal();
+    }
   });
 
-  // --------- MODAL LOGIN / REGISTER (AREA RISERVATA) ---------
-  const areaRiservataLink = document.querySelector('[data-auth-open="true"]');
-  const authModal = document.getElementById("auth-modal");
-  const authContainer = document.getElementById("auth-container");
-  const authCloseBtn = document.getElementById("auth-close-btn");
-  const signUpBtn = document.getElementById("signUp");
-  const signInBtn = document.getElementById("signIn");
-
-  // Apri modal
-  if (areaRiservataLink && authModal) {
-    areaRiservataLink.addEventListener("click", (e) => {
+  // switch LOGIN / REGISTER
+  if (goToLogin) {
+    goToLogin.addEventListener('click', (e) => {
       e.preventDefault();
-      authModal.style.display = "flex";
-      // chiudo il menu overlay se è aperto
-      if (header && header.classList.contains("clicked")) {
-        header.classList.remove("clicked");
-      }
+      authContainer.classList.remove('right-panel-active');
     });
   }
 
-  // Chiudi modal (bottone X)
-  if (authCloseBtn && authModal) {
-    authCloseBtn.addEventListener("click", () => {
-      authModal.style.display = "none";
-    });
-  }
-
-  // Chiudi modal cliccando sullo sfondo scuro
-  if (authModal) {
-    authModal.addEventListener("click", (e) => {
-      if (e.target === authModal) {
-        authModal.style.display = "none";
-      }
-    });
-  }
-
-  // Switch SignUp / SignIn
-  if (signUpBtn && authContainer) {
-    signUpBtn.addEventListener("click", () => {
-      authContainer.classList.add("right-panel-active");
-    });
-  }
-  if (signInBtn && authContainer) {
-    signInBtn.addEventListener("click", () => {
-      authContainer.classList.remove("right-panel-active");
+  if (goToRegister) {
+    goToRegister.addEventListener('click', (e) => {
+      e.preventDefault();
+      authContainer.classList.add('right-panel-active');
     });
   }
 });
+
