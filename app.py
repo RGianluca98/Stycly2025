@@ -15,8 +15,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from sqlalchemy import (
     create_engine, Table, Column, Integer, String,
-    MetaData, ForeignKey, text
+    MetaData, ForeignKey, text, inspect
 )
+
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
@@ -386,7 +387,7 @@ def create_private_wardrobe():
     flash("La creazione di nuovi wardrobe non è più disponibile.", "info")
     return redirect(url_for('private_wardrobe'))
 
-
+# ---------------------------- da capire se eliminare
 @app.route('/select-private-wardrobe', methods=['GET', 'POST'])
 @login_required
 def select_private_wardrobe():
@@ -394,7 +395,7 @@ def select_private_wardrobe():
     Non più necessaria con un solo wardrobe personale.
     Reindirizziamo alla pagina principale del wardrobe.
     """
-    return redirect(url_for('private_wardrobe'))
+    return redirect(url_for('private_wardrobe')) 
 
 
 @app.route('/gestisci-private-wardrobe/<nome_tabella>')
@@ -655,42 +656,83 @@ def export_wardrobe(nome_tabella):
 # ----------------------------
 #       ADMIN: PULIZIA CAPI
 # ----------------------------
-
+"""
 @app.route('/admin/clear-all-items')
 def admin_clear_all_items():
-    """
-    Svuota TUTTE le tabelle wardrobe_* (tutti i capi),
-    ma NON cancella utenti né record nella tabella wardrobes.
-    Route da usare UNA VOLTA sola e poi rimuovere.
-    """
-    # piccola protezione con chiave
+    
     key = request.args.get('key')
-    expected = os.environ.get("ADMIN_CLEAR_KEY", "dev-reset")
+   expected = os.environ.get("ADMIN_CLEAR_KEY", "dev-reset")
 
     if key != expected:
-        return "Not allowed", 403
+       return "Not allowed", 403
 
-    metadata = MetaData()
-    wardrobes = db_session.query(Wardrobe).all()
+   metadata = MetaData()
+   wardrobes = db_session.query(Wardrobe).all()
 
-    total_deleted = 0
-    table_count = 0
+   total_deleted = 0
+   table_count = 0
 
     for w in wardrobes:
-        try:
-            tbl = Table(w.nome, metadata, autoload_with=engine)
-        except Exception:
-            # se la tabella non esiste o dà errore, passa oltre
-            continue
+      try:
+          tbl = Table(w.nome, metadata, autoload_with=engine)
+       except Exception:
+        # se la tabella non esiste o dà errore, passa oltre
+           continue
 
         with engine.begin() as conn:
             result = conn.execute(tbl.delete())
             # rowcount potrebbe essere None su alcuni DB, gestiamolo
             if hasattr(result, "rowcount") and result.rowcount is not None:
-                total_deleted += result.rowcount
-        table_count += 1
+               total_deleted += result.rowcount
+       table_count += 1
 
     return f"OK: cancellati {total_deleted} capi da {table_count} wardrobe."
+"""
+# ----------------------------
+#       ADMIN: RESET COMPLETO DB
+# ----------------------------
+
+@app.route('/admin/reset-all')
+def admin_reset_all():
+    """
+    Reset completo:
+    - DROPA tutte le tabelle wardrobe_*
+    - SVUOTA le tabelle 'wardrobes' e 'users'
+    - NON tocca la struttura (schemi) del DB
+    Route da usare UNA SOLA VOLTA e POI ELIMINARE.
+    """
+    key = request.args.get('key')
+    expected = os.environ.get("ADMIN_RESET_KEY", "dev-reset-all")
+
+    if key != expected:
+        return "Not allowed", 403
+
+    metadata = MetaData()
+    inspector = inspect(engine)
+    table_names = inspector.get_table_names()
+
+    dropped_tables = 0
+
+    # 1) Droppa tutte le tabelle wardrobe_*
+    for tname in table_names:
+        if tname.startswith("wardrobe_"):
+            try:
+                tbl = Table(tname, metadata, autoload_with=engine)
+                tbl.drop(engine, checkfirst=True)
+                dropped_tables += 1
+            except Exception:
+                continue
+
+    # 2) Svuota le tabelle master wardrobes e users
+    with engine.begin() as conn:
+        conn.execute(text("DELETE FROM wardrobes"))
+        conn.execute(text("DELETE FROM users"))
+
+    # 3) Pulisce eventuale sessione corrente
+    session.clear()
+
+    return f"OK: droppate {dropped_tables} tabelle wardrobe_*, svuotate 'users' e 'wardrobes'."
+
 
 # ----------------------------
 #       AVVIO LOCALE
