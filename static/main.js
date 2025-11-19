@@ -1,4 +1,4 @@
-// MAIN.JS - Gestione header "blob", menu e modale
+// MAIN.JS - Gestione header "blob", menu overlay e modal login/register
 
 document.addEventListener("DOMContentLoaded", () => {
   // HEADER BLOB MENU
@@ -11,12 +11,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Selezione voci menu nel blob
+  // Selezione voci menu nel blob (solo highlight + chiusura)
   const navItems = document.querySelectorAll(".overlay-nav ul li");
 
   navItems.forEach((li) => {
     li.addEventListener("click", () => {
-      // evidenzia quella cliccata (optional)
       navItems.forEach((item) => {
         item.classList.remove("selected");
         item.classList.add("notselected");
@@ -24,47 +23,59 @@ document.addEventListener("DOMContentLoaded", () => {
       li.classList.add("selected");
       li.classList.remove("notselected");
 
-      // chiudi il menu dopo il click
-      if (header && header.classList.contains("clicked")) {
+      // chiudi il menu dopo il click (se non è AREA RISERVATA)
+      const link = li.querySelector("a");
+      if (link && !link.dataset.authOpen && header.classList.contains("clicked")) {
         header.classList.remove("clicked");
       }
     });
   });
 
-  // MODAL CTA HOME (se usi ancora il popup con id wardrobe-modal)
-  const modal = document.getElementById("wardrobe-modal");
-  const cta = document.getElementById("wardrobe-cta");
-  const closeBtn = modal ? modal.querySelector(".stycly-modal-close") : null;
+  // --------- MODAL LOGIN / REGISTER (AREA RISERVATA) ---------
+  const areaRiservataLink = document.querySelector('[data-auth-open="true"]');
+  const authModal = document.getElementById("auth-modal");
+  const authContainer = document.getElementById("auth-container");
+  const authCloseBtn = document.getElementById("auth-close-btn");
+  const signUpBtn = document.getElementById("signUp");
+  const signInBtn = document.getElementById("signIn");
 
-  if (cta && modal && closeBtn) {
-    cta.addEventListener("click", () => {
-      modal.style.display = "flex";
-    });
-
-    closeBtn.addEventListener("click", () => {
-      modal.style.display = "none";
-    });
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.style.display = "none";
+  // Apri modal
+  if (areaRiservataLink && authModal) {
+    areaRiservataLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      authModal.style.display = "flex";
+      // chiudo il menu overlay se è aperto
+      if (header && header.classList.contains("clicked")) {
+        header.classList.remove("clicked");
       }
     });
   }
 
-  // GSAP wave animation (se stai usando GSAP + MorphSVG)
-  if (window.gsap && window.MorphSVGPlugin) {
-    const firstWave = document.getElementById("squiggle");
-    const altWave = document.getElementById("squiggleAlt");
+  // Chiudi modal (bottone X)
+  if (authCloseBtn && authModal) {
+    authCloseBtn.addEventListener("click", () => {
+      authModal.style.display = "none";
+    });
+  }
 
-    if (firstWave && altWave) {
-      window.gsap.to(firstWave, {
-        duration: 2,
-        repeat: -1,
-        yoyo: true,
-        ease: "power2.inOut",
-        morphSVG: "#squiggleAlt",
-      });
-    }
+  // Chiudi modal cliccando sullo sfondo scuro
+  if (authModal) {
+    authModal.addEventListener("click", (e) => {
+      if (e.target === authModal) {
+        authModal.style.display = "none";
+      }
+    });
+  }
+
+  // Switch SignUp / SignIn
+  if (signUpBtn && authContainer) {
+    signUpBtn.addEventListener("click", () => {
+      authContainer.classList.add("right-panel-active");
+    });
+  }
+  if (signInBtn && authContainer) {
+    signInBtn.addEventListener("click", () => {
+      authContainer.classList.remove("right-panel-active");
+    });
   }
 });

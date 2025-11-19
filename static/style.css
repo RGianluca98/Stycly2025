@@ -1,26 +1,19 @@
 /* --- FONT & ROOT --- */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@500;600;700&family=Baloo+2:wght@500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap");
 
 :root {
     /* Palette Stycly */
-    --st-baby-blue:   #7DB2E0;  /* primario */
-    --st-sky-blue:    #C9E2F5;  /* sfondi leggeri / hover */
-    --st-soft-navy:   #3A4C69;  /* testi / titoli */
-    --st-beige:       #E8D4C0;  /* dettagli */
-    --st-white:       #FFFFFF;
-    --st-grey-light:  #F2F4F7;  /* sezioni alternate */
-    --st-accent-cta:  #F7D774;  /* “Noleggia ora” ecc. */
-
-    /* Variabili generiche, mappate sulla palette */
-    --col-primario:   var(--st-soft-navy);
-    --col-secondario: var(--st-grey-light);
-    --col-accent:     var(--st-baby-blue);
-    --col-hover:      #5F96C9;          /* baby blue un po’ più scuro */
-    --col-white:      var(--st-white);
-    --col-beige:      var(--st-beige);
+    --col-primario: #3A4C69;     /* Soft Navy per testi */
+    --col-secondario: #C9E2F5;   /* Light Sky Blue */
+    --col-babyblue: #7DB2E0;     /* Baby Blue principale */
+    --col-beige: #E8D4C0;        /* Warm Beige dettagli */
+    --col-accent: #F7D774;       /* Soft Yellow CTA speciali */
+    --col-bg: #FFFFFF;           /* background base */
+    --col-grey: #F2F4F7;         /* neutro chiaro */
+    --col-white: #FFFFFF;
 
     --font-main: 'Poppins', Arial, sans-serif;
-    --font-display: 'Fredoka', 'Baloo 2', 'Poppins', Arial, sans-serif;
+    --font-title: 'Fredoka', system-ui, sans-serif;
 
     --f-sm: 0.95rem;
     --f-md: 1.1rem;
@@ -33,7 +26,7 @@
 /* --- GLOBAL --- */
 html, body {
     font-family: var(--font-main);
-    background: linear-gradient(180deg, #FFFFFF 0%, #F2F4F7 100%);
+    background: var(--col-bg);
     color: var(--col-primario);
     margin: 0;
     padding: 0;
@@ -44,122 +37,91 @@ html, body {
 
 body {
     position: relative;
-    min-height: 100vh;
-    padding-bottom: 120px; /* spazio per la wave */
 }
 
-/* Titoli stile kids-friendly */
-h1, h2, h3, .stycly-heading {
-    font-family: var(--font-display);
-    color: var(--st-soft-navy);
+/* --- HEADER NAV BLOB --- */
+header * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* ---------------------------------
-   HEADER + BLOB MENU OVERLAY
-----------------------------------*/
-
-.stycly-header.overlay-header {
-    height: 110px;
+.stycly-header {
+    height: 80px;
     width: 100%;
     position: relative;
-    background-color: var(--st-white);
-    box-shadow: 0 2px 5px rgba(0,0,0,.08);
+    background-color: var(--col-white);
+    box-shadow: 0px 2px 8px rgba(0,0,0,.08);
     display: flex;
     align-items: center;
-    justify-content: center;
-    padding: 0 16px;
-    z-index: 20;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 10;
 }
 
-/* wrapper logo centrale */
-.stycly-logo-wrapper {
-    text-align: center;
-    flex: 1;
-}
-
-/* logo stile template blob */
 .timlogo {
-    width: 190px;
-    max-width: 60vw;
+    height: 46px;
+    width: auto;
     display: block;
-    margin: 0 auto;
-    padding-top: 12px;
 }
 
-/* zona destra: social + burger */
+/* Head contiene solo il burger */
 .head {
-    position: absolute;
-    top: 30px;
-    right: 20px;
+    position: relative;
 }
 
+/* Burger */
 .head .tile {
     display: inline-block;
-    height: 44px;
-    width: 44px;
-    margin-left: 6px;
+    height: 50px;
+    width: 50px;
     transition: all .3s ease-in;
-}
-
-.head .tile.socialmedia {
-    color: var(--st-soft-navy);
-    font-size: 32px;
-    text-align: center;
-    line-height: 44px;
-}
-
-.overlay-header.clicked .head .tile.socialmedia {
-    color: var(--st-white);
 }
 
 .head .burger {
-    margin-left: 20px;
-    padding: 5px;
     cursor: pointer;
     background-color: transparent;
+    padding: 5px;
 }
 
-/* hamburger */
 .meat {
-    height: 34px;
-    width: 34px;
+    height: 40px;
+    width: 40px;
     position: relative;
     transition: all .3s ease-in;
 }
 
-.overlay-header.clicked .head .burger .meat {
-    transform: rotate(180deg);
-}
-
 .meat .line {
-    height: 3px;
-    width: 34px;
-    background-color: var(--st-soft-navy);
+    height: 4px;
+    width: 40px;
+    background-color: var(--col-primario);
     border-radius: 3px;
     position: absolute;
     transition: all .3s ease-in;
 }
 
-.meat .line.one { top: 4px; left: 0; }
-.meat .line.two { top: 16px; left: 0; }
-.meat .line.three { top: 28px; left: 0; }
+.meat .line.one { top: 5px; left: 0; }
+.meat .line.two { top: 18px; left: 0; }
+.meat .line.three { top: 31px; left: 0; }
 
-.overlay-header.clicked .burger .line {
-    background-color: var(--st-white);
+/* Stato header.clicked -> X bianca su blob */
+header.clicked .burger .line {
+    background-color: #ffffff;
 }
-.overlay-header.clicked .burger .line.one {
+
+header.clicked .burger .line.one {
     transform: rotate(45deg);
-    top: 16px;
+    top: 18px;
 }
-.overlay-header.clicked .burger .line.two {
+header.clicked .burger .line.two {
     transform: rotate(-45deg);
-    top: 16px;
+    top: 18px;
 }
-.overlay-header.clicked .burger .line.three {
+header.clicked .burger .line.three {
     opacity: 0;
 }
 
-/* NAV MODAL + BLOB */
+/* Nav overlay blob */
 .nav-modal {
     position: fixed;
     top: 0;
@@ -170,13 +132,13 @@ h1, h2, h3, .stycly-heading {
     opacity: 0;
     transition: all .3s ease-in;
     pointer-events: none;
-    z-index: 15;
+    z-index: 9;
 }
 
-.overlay-header.clicked .nav-modal {
+header.clicked .nav-modal {
     visibility: visible;
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: initial;
 }
 
 .nav-modal .blob {
@@ -185,153 +147,78 @@ h1, h2, h3, .stycly-heading {
     height: 10px;
     border-radius: 100%;
     margin: 0 auto;
-    background-color: var(--st-baby-blue);
+    background-color: var(--col-babyblue);
     position: relative;
     top: 50%;
     transform: translateY(-50%);
     transition: all .3s ease-in;
 }
 
-.overlay-header.clicked .nav-modal .blob {
+header.clicked .nav-modal .blob {
     width: 100vw;
     height: 100vh;
     border-radius: 0;
 }
 
-/* menu overlay */
+/* Menu interno */
 .overlay-nav {
     position: fixed;
-    left: 16%;
-    top: 26%;
-    color: var(--st-white);
+    left: 20%;
+    top: 30%;
+    color: white;
     opacity: 0;
     transition: all .3s ease-in;
     transition-delay: .3s;
 }
 
-.overlay-header.clicked .overlay-nav {
+header.clicked .overlay-nav {
     opacity: 1;
 }
 
 .overlay-nav a {
-    color: var(--st-white);
+    color: #ffffff;
     text-decoration: none;
-    font-family: var(--font-display);
-    font-weight: 500;
-    font-size: 26px;
-    letter-spacing: 0.08em;
+    font-family: var(--font-title);
+    font-size: 28px;
 }
 
 .overlay-nav ul li {
     list-style: none;
     text-align: right;
-    border-right: 4px solid var(--st-white);
+    border-right: 6px solid #ffffff;
     padding-bottom: 10px;
-    padding-right: 12px;
+    padding-right: 10px;
     position: relative;
 }
 
-/* voce username non linkata */
-.nav-username-item {
-    border-right: none;
-}
-.nav-username {
-    font-size: 20px;
-    text-transform: uppercase;
-    opacity: 0.9;
-}
-
-/* eventuali sotto-menu */
 .overlay-nav ul li ul {
-    position: absolute;
-    right: -280px;
-    top: -4px;
-    display: none;
-}
-.overlay-nav ul li.selected ul {
-    display: block;
-}
-.overlay-nav ul li ul li {
-    border: none;
-    padding-bottom: 10px;
-    padding-left: 10px;
-    height: 48px;
-    width: 260px;
-}
-.overlay-nav ul li ul li a {
-    display: block;
-    height: 48px;
-    font-size: 18px;
-    text-align: left;
-    padding: 10px;
+    display: none; /* se serviranno submenu in futuro */
 }
 
 .overlay-nav ul li.notselected a {
     opacity: .5;
 }
-.overlay-nav ul li.selected ul li a {
+
+.overlay-nav ul li.selected a {
     opacity: 1;
 }
 
-/* disattivo vecchia nav orizzontale */
-.stycly-nav,
-.stycly-nav-hamburger {
-    display: none !important;
-}
-
-/* HEADER RESPONSIVE */
+/* Responsive header */
 @media screen and (max-width: 820px) {
-    .timlogo {
-        width: 150px;
-        padding-top: 18px;
-    }
+    .timlogo { margin-left: 10px; }
 }
 
 @media screen and (max-width: 580px) {
-    .timlogo {
-        width: 130px;
-        padding-top: 24px;
-    }
-
-    .overlay-nav {
-        left: 12%;
-        top: 28%;
-    }
-
-    .overlay-nav a {
-        font-size: 18px;
-    }
-    .overlay-nav ul li ul {
-        right: -220px;
-    }
-    .overlay-nav ul li ul li a {
-        font-size: 16px;
-        height: 40px;
-    }
+    .overlay-nav a { font-size: 18px; }
 }
 
-@media screen and (max-width: 500px) {
-    .timlogo {
-        display: none; /* come nel template originale */
-    }
-}
-
-@media screen and (max-width: 320px) {
-    .head .tile.socialmedia {
-        display: none;
-    }
-}
-
-/* --- HERO --- */
+/* --- HERO (HOME, molto pulito) --- */
 .stycly-hero {
     min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-    position: relative;
-    z-index: 1;
+    padding: 3rem 1rem;
 }
 
 .stycly-hero-content {
@@ -339,43 +226,45 @@ h1, h2, h3, .stycly-heading {
     max-width: 700px;
     margin: 0 auto;
     text-align: center;
-    align-items: center;
 }
 
 .stycly-hero-content h1 {
-    font-size: 2.2rem;
+    font-family: var(--font-title);
+    font-size: 2.3rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
+    color: var(--col-primario);
 }
 
 .stycly-hero-content strong {
+    font-family: var(--font-title);
     font-size: 3rem;
-    color: var(--st-baby-blue);
+    color: var(--col-babyblue);
     font-weight: 700;
-    margin: -0.7rem 0 1rem 0;
+    margin: -0.4rem 0 1rem 0;
     display: block;
 }
 
 .stycly-hero-content p {
     font-size: var(--f-md);
-    color: var(--st-soft-navy);
+    color: #4a5670;
     margin-bottom: 1.2rem;
     line-height: 1.5;
 }
 
-/* bottoni base: baby blue */
+/* Bottone generico CTA (es. “Vedi Products”) */
 .stycly-cta-btn {
     font: inherit;
     font-size: var(--f-md);
     padding: 0.7rem 2.2rem;
-    border: 2px solid var(--st-baby-blue);
-    background-color: var(--st-baby-blue);
-    color: var(--st-white);
+    border: 2px solid var(--col-babyblue);
+    background-color: var(--col-babyblue);
+    color: var(--col-white);
     cursor: pointer;
     border-radius: 35px;
     font-weight: 600;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(123,154,204,0.12);
+    box-shadow: 0 2px 8px rgba(123,154,204,0.10);
     letter-spacing: 0.5px;
     outline: none;
     margin-top: 0.5rem;
@@ -386,105 +275,13 @@ h1, h2, h3, .stycly-heading {
 
 .stycly-cta-btn:hover,
 .stycly-cta-btn:focus {
-    background-color: var(--col-hover);
-    border-color: var(--col-hover);
-    color: var(--st-white);
-}
-
-/* CTA speciali: giallo */
-.stycly-cta-btn--special {
-    background-color: var(--st-accent-cta);
-    border-color: var(--st-accent-cta);
-    color: var(--st-soft-navy);
-}
-
-.stycly-cta-btn--special:hover,
-.stycly-cta-btn--special:focus {
-    filter: brightness(0.97);
-    box-shadow: 0 3px 10px rgba(247,215,116,0.45);
-}
-
-/* --- MODAL POPUP --- */
-.stycly-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 1000;
-}
-
-.stycly-modal-content {
-    background: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    position: relative;
-    max-width: 90%;
-    max-height: 90%;
-    overflow-y: auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.stycly-modal-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: transparent;
-    border: none;
-    font-size: 1.5rem;
-    color: #333;
-    cursor: pointer;
-}
-
-.stycly-modal-close:hover {
-    color: var(--col-hover);
-}
-
-.stycly-modal-content h2 {
-    font-size: var(--f-lg);
+    background-color: var(--col-accent);
+    border-color: var(--col-accent);
     color: var(--col-primario);
-    margin-bottom: 18px;
-    font-weight: 600;
 }
 
-.stycly-modal-content p {
-    font-size: var(--f-md);
-    color: #4a5670;
-    margin-bottom: 24px;
-}
-
-.stycly-modal-actions {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    margin-top: 8px;
-}
-
-/* --- DIVIDER SVG --- */
-.divider-bottom {
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100vw;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.divider-bottom svg {
-    width: 100vw;
-    height: 120px;
-    display: block;
-}
-
-/* --- ANIMATION --- */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
+/* --- MODAL POPUP WARDROBE
+   (RIMOSSO: non più utilizzato) */
 
 /* --- WARDROBE GRID (GESTIONE / PRIVATE) --- */
 .wardrobe-grid {
@@ -494,7 +291,6 @@ h1, h2, h3, .stycly-heading {
     justify-content: center;
 }
 
-/* layout più fluido su tablet */
 @media (max-width: 1024px) {
     .wardrobe-grid {
         grid-template-columns: repeat(3, 160px);
@@ -502,7 +298,6 @@ h1, h2, h3, .stycly-heading {
     }
 }
 
-/* layout 2 colonne su schermi piccoli */
 @media (max-width: 768px) {
     .wardrobe-grid {
         grid-template-columns: repeat(2, minmax(140px, 1fr));
@@ -510,7 +305,6 @@ h1, h2, h3, .stycly-heading {
     }
 }
 
-/* layout 1 colonna su mobile stretto */
 @media (max-width: 480px) {
     .wardrobe-grid {
         grid-template-columns: 1fr;
@@ -520,7 +314,7 @@ h1, h2, h3, .stycly-heading {
 
 /* --- WARDROBE CARD --- */
 .wardrobe-card {
-    background: var(--st-white);
+    background: #fff;
     border-radius: 18px;
     box-shadow: 0 4px 24px rgba(20,104,229,0.08);
     padding: 2rem 2.5rem;
@@ -534,7 +328,7 @@ h1, h2, h3, .stycly-heading {
 .wardrobe-card h2 {
     margin-bottom: 0.5rem;
     font-size: 1.3rem;
-    color: var(--st-baby-blue);
+    color: var(--col-babyblue);
 }
 
 .wardrobe-card p {
@@ -554,7 +348,7 @@ h1, h2, h3, .stycly-heading {
 /* --- CAPO CARD (SIMPLE) --- */
 .capo-card {
     width: 180px;
-    background: var(--st-white);
+    background: #ffffff;
     border: 1px solid #e0e4ea;
     border-radius: 12px;
     padding: 1rem;
@@ -574,7 +368,6 @@ h1, h2, h3, .stycly-heading {
     height: 140px;
     overflow: hidden;
     border-radius: 10px;
-    background: var(--st-grey-light);
 }
 
 .capo-img {
@@ -623,7 +416,7 @@ h1, h2, h3, .stycly-heading {
 
 .capo-icon-btn:hover {
     background: #e3e7ee;
-    border: 1px solid var(--st-baby-blue);
+    border: 1px solid var(--col-babyblue);
     transform: translateY(-2px);
 }
 
@@ -730,7 +523,7 @@ label.field span {
 label.field.focused span {
     top: -1.2rem;
     font-size: 0.85rem;
-    color: var(--col-accent);
+    color: var(--col-babyblue);
 }
 
 .psuedo_select {
@@ -763,7 +556,7 @@ label.field.focused span {
 }
 
 label.field.focused .psuedo_select {
-    border-bottom-color: var(--col-accent);
+    border-bottom-color: var(--col-babyblue);
 }
 
 label.field.focused .psuedo_select::after {
@@ -774,7 +567,7 @@ label.field.focused .psuedo_select::after {
     position: absolute;
     left: 0;
     right: 0;
-    background: var(--st-white);
+    background: var(--col-white);
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     max-height: 0;
     overflow: hidden;
@@ -829,7 +622,6 @@ label.field.focused .psuedo_select::after {
     justify-content: center;
 }
 
-/* Grid a 3 colonne riutilizzata in varie pagine */
 .wardrobe-grid-3col {
     display: grid;
     grid-template-columns: repeat(3, minmax(260px, 1fr));
@@ -837,7 +629,6 @@ label.field.focused .psuedo_select::after {
     gap: 2rem;
 }
 
-/* Tablet */
 @media (max-width: 900px) {
     .wardrobe-view-layout {
         flex-direction: column;
@@ -872,7 +663,6 @@ label.field.focused .psuedo_select::after {
     }
 }
 
-/* Mobile */
 @media (max-width: 600px) {
     .wardrobe-view-layout {
         padding: 1.2rem 0.6rem;
@@ -904,15 +694,11 @@ label.field.focused .psuedo_select::after {
     }
 }
 
-/* --- RESPONSIVE GENERALE --- */
+/* --- RESPONSIVE GENERALE HERO --- */
 @media (max-width: 900px) {
     .stycly-hero-content {
         max-width: 98vw;
         padding: 0 2vw;
-    }
-    .stycly-modal-content {
-        min-width: 220px;
-        padding: 24px 8px 18px 8px;
     }
 }
 
@@ -929,7 +715,6 @@ label.field.focused .psuedo_select::after {
     .stycly-hero-content h1 {
         font-size: 1.6rem;
     }
-
     .stycly-hero-content strong {
         font-size: 1.9rem;
     }
@@ -947,9 +732,10 @@ label.field.focused .psuedo_select::after {
   padding: 1rem;
 }
 
-.container {
+/* contenitore principale */
+.auth-container {
   background-color: #fff;
-  border-radius: 10px;
+  border-radius: 16px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
               0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
@@ -957,9 +743,27 @@ label.field.focused .psuedo_select::after {
   width: 768px;
   max-width: 100%;
   min-height: 480px;
-  font-family: 'Montserrat', sans-serif;
+  font-family: var(--font-main);
 }
 
+/* bottone X chiudi */
+.auth-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  border: none;
+  background: transparent;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #555;
+  z-index: 110;
+}
+
+.auth-close-btn:hover {
+  color: var(--col-primario);
+}
+
+/* pannelli form */
 .form-container {
   position: absolute;
   top: 0;
@@ -973,7 +777,7 @@ label.field.focused .psuedo_select::after {
   z-index: 2;
 }
 
-.container.right-panel-active .sign-in-container {
+.auth-container.right-panel-active .sign-in-container {
   transform: translateX(100%);
 }
 
@@ -984,7 +788,7 @@ label.field.focused .psuedo_select::after {
   z-index: 1;
 }
 
-.container.right-panel-active .sign-up-container {
+.auth-container.right-panel-active .sign-up-container {
   transform: translateX(100%);
   opacity: 1;
   z-index: 5;
@@ -996,6 +800,7 @@ label.field.focused .psuedo_select::after {
   50%, 100% { opacity: 1; z-index: 5; }
 }
 
+/* overlay blu */
 .overlay-container {
   position: absolute;
   top: 0;
@@ -1007,12 +812,12 @@ label.field.focused .psuedo_select::after {
   z-index: 100;
 }
 
-.container.right-panel-active .overlay-container {
+.auth-container.right-panel-active .overlay-container {
   transform: translateX(-100%);
 }
 
 .overlay {
-  background: linear-gradient(to right, #FF4B2B, #FF416C);
+  background: linear-gradient(to right, var(--col-babyblue), var(--col-primario));
   color: #fff;
   position: relative;
   left: -100%;
@@ -1022,7 +827,7 @@ label.field.focused .psuedo_select::after {
   transition: transform 0.6s ease-in-out;
 }
 
-.container.right-panel-active .overlay {
+.auth-container.right-panel-active .overlay {
   transform: translateX(50%);
 }
 
@@ -1041,12 +846,23 @@ label.field.focused .psuedo_select::after {
 }
 
 .overlay-left { transform: translateX(-20%); }
-.container.right-panel-active .overlay-left { transform: translateX(0); }
+.auth-container.right-panel-active .overlay-left { transform: translateX(0); }
 
 .overlay-right { right: 0; transform: translateX(0); }
-.container.right-panel-active .overlay-right { transform: translateX(20%); }
+.auth-container.right-panel-active .overlay-right { transform: translateX(20%); }
 
-form {
+.overlay-panel h2 {
+  font-family: var(--font-title);
+  margin-bottom: 0.5rem;
+}
+
+.overlay-text {
+  font-size: 0.95rem;
+  margin-top: 0.2rem;
+}
+
+/* form */
+.auth-container form {
   background-color: #fff;
   display: flex;
   flex-direction: column;
@@ -1057,30 +873,85 @@ form {
   text-align: center;
 }
 
-input {
+.auth-container form h2 {
+  font-family: var(--font-title);
+  color: var(--col-primario);
+}
+
+.auth-subtitle {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 0.5rem;
+}
+
+.auth-container input {
   background-color: #eee;
   border: none;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
+  border-radius: 6px;
 }
 
-button {
+/* bottoni */
+.auth-container button,
+.auth-container button.ghost {
   border-radius: 20px;
-  border: 1px solid #FF4B2B;
-  background-color: #FF4B2B;
-  color: #fff;
   font-size: 12px;
   font-weight: bold;
-  padding: 12px 45px;
+  padding: 12px 32px;
   letter-spacing: 1px;
   text-transform: uppercase;
   margin-top: 1rem;
   cursor: pointer;
-  transition: transform 80ms ease-in;
+  transition: transform 80ms ease-in, background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.auth-container button {
+  border: 1px solid var(--col-babyblue);
+  background-color: var(--col-babyblue);
+  color: #fff;
+}
+
+.auth-container button:hover {
+  background-color: var(--col-accent);
+  border-color: var(--col-accent);
+  color: var(--col-primario);
 }
 
 button.ghost {
   background-color: transparent;
   border-color: #fff;
+  color: #fff;
+}
+
+button.ghost:hover {
+  background-color: #fff;
+  color: var(--col-primario);
+}
+
+/* responsive modal auth */
+@media (max-width: 768px) {
+  .auth-container {
+    width: 100%;
+    min-height: 520px;
+  }
+
+  .overlay-container {
+    display: none;
+  }
+
+  .sign-in-container,
+  .sign-up-container {
+    width: 100%;
+  }
+
+  .auth-container.right-panel-active .sign-in-container,
+  .auth-container.right-panel-active .sign-up-container {
+    transform: translateX(0);
+  }
+
+  .auth-container form {
+    padding: 0 32px;
+  }
 }
