@@ -732,6 +732,11 @@ label.field.focused .psuedo_select::after {
   padding: 1rem;
 }
 
+.nav-area-riservata {
+    letter-spacing: 0.08em;
+}
+
+
 /* contenitore principale */
 .auth-container {
   background-color: #fff;
