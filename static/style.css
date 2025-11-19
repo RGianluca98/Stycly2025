@@ -1,19 +1,18 @@
 /* --- FONT & ROOT --- */
-@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 :root {
-    /* Palette aggiornata */
-    --col-primario: #3A4C69;      /* Soft Navy */
-    --col-secondario: #F2F4F7;    /* Light Grey */
-    --col-accent: #7DB2E0;        /* Baby Blue */
-    --col-hover: #5D96CC;         /* Baby Blue più scuro */
-    --col-white: #FFFFFF;
-    --col-beige: #E8D4C0;
-    --col-accent-yellow: #F7D774;
+    /* Palette Stycly */
+    --col-primario: #3A4C69;     /* testi principali */
+    --col-secondario: #F2F4F7;   /* sfondi chiari / card */
+    --col-accent: #7DB2E0;       /* bottoni, elementi primari */
+    --col-accent-soft: #C9E2F5;  /* hover leggeri, badge */
+    --col-beige: #E8D4C0;        /* dettagli decorativi */
+    --col-hover: #1468e5;
+    --col-white: #fff;
+    --col-cta: #F7D774;          /* CTA speciali */
 
     --font-main: 'Poppins', Arial, sans-serif;
-    --font-title: 'Fredoka', 'Poppins', Arial, sans-serif;
-
     --f-sm: 0.95rem;
     --f-md: 1.1rem;
     --f-lg: 1.4rem;
@@ -25,7 +24,7 @@
 /* --- GLOBAL --- */
 html, body {
     font-family: var(--font-main);
-    background: var(--col-white);
+    background: #ffffff;
     color: var(--col-primario);
     margin: 0;
     padding: 0;
@@ -37,212 +36,165 @@ html, body {
 body {
     position: relative;
     min-height: 100vh;
+    padding-bottom: 0; /* niente spazio extra per le onde */
 }
 
-/* ---------------- HEADER / NAV "BLOB" ---------------- */
-
-header * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-header {
-    height: 120px;
+/* --- NAVBAR --- */
+.stycly-header {
     width: 100%;
-    position: relative;
-    background-color: var(--col-white);
-    box-shadow: 0 2px 5px rgba(0,0,0,.08);
-}
-
-/* logo */
-.timlogo {
-    width: 180px;
-    display: block;
-    margin: 0 auto;
-    padding-top: 15px;
-}
-
-/* burger */
-.head {
-    position: absolute;
-    top: 35px;
-    right: 50px;
-}
-
-.head .tile {
-    display: inline-block;
-    height: 50px;
-    width: 50px;
-    margin-left: 5px;
-    transition: all .3s ease-in;
-}
-
-.head .burger {
-    margin-left: 25px;
-    padding: 5px;
-    cursor: pointer;
-    background-color: transparent;
-}
-
-.meat {
-    height: 40px;
-    width: 40px;
-    position: relative;
-    transition: all .3s ease-in;
-}
-
-header.clicked .head .burger .meat {
-    transform: rotate(180deg);
-}
-
-.meat .line {
-    height: 4px;
-    width: 40px;
-    background-color: var(--col-primario);
-    border-radius: 3px;
-    position: absolute;
-    transition: all .3s ease-in;
-}
-
-.meat .line.one { top: 5px; left: 0; }
-.meat .line.two { top: 18px; left: 0; }
-.meat .line.three { top: 31px; left: 0; }
-
-header.clicked .burger .line {
-    background-color: var(--col-white);
-}
-header.clicked .burger .line.one {
-    transform: rotate(45deg);
-    top: 18px;
-}
-header.clicked .burger .line.two {
-    transform: rotate(-45deg);
-    top: 18px;
-}
-header.clicked .burger .line.three {
-    opacity: 0;
-}
-header.clicked .burger:hover .meat {
-    transform: rotate(270deg);
-}
-
-/* nav modal */
-.nav-modal {
-    position: fixed;
+    background: var(--col-white);
+    box-shadow: 0 2px 12px rgba(123,154,204,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    visibility: hidden;
-    opacity: 0;
-    transition: all .3s ease-in;
-    pointer-events: none;
-    z-index: 900;
-}
-header.clicked .nav-modal {
-    visibility: visible;
-    opacity: 1;
-    pointer-events: initial;
+    z-index: 10;
+    min-height: 68px;
+    padding: 0 16px;
 }
 
-.nav-modal .blob {
+.stycly-logo img {
+    height: 44px;
+    width: auto;
     display: block;
-    width: 10px;
-    height: 10px;
-    border-radius: 100%;
-    margin: 0 auto;
-    background-color: var(--col-accent);
+}
+
+/* desktop nav */
+.stycly-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
     position: relative;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: all .3s ease-in;
-}
-header.clicked .nav-modal .blob {
-    width: 100vw;
-    height: 100vh;
-    border-radius: 0;
 }
 
-/* menu */
-nav {
-    position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--col-white);
-    opacity: 0;
-    transition: all .3s ease-in;
-    transition-delay: .25s;
-}
-
-header.clicked nav {
-    opacity: 1;
-}
-
-nav a {
-    color: var(--col-white);
+.stycly-nav > a,
+.stycly-nav-dropdown-btn {
+    font-size: var(--f-md);
+    color: var(--col-primario);
     text-decoration: none;
-    font-family: var(--font-title);
+    background: none;
+    border: none;
+    font-family: var(--font-main);
     font-weight: 500;
-    font-size: 26px;
-    letter-spacing: 0.05em;
-}
-
-nav ul li {
-    list-style: none;
-    text-align: left;
-    border-right: 6px solid var(--col-white);
-    padding-bottom: 10px;
-    padding-right: 10px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: color 0.18s;
     position: relative;
 }
 
-nav ul li ul {
-    display: none; /* non usiamo i sotto-menu per ora */
+.stycly-nav > a:hover,
+.stycly-nav-dropdown-btn:hover {
+    color: var(--col-accent);
 }
 
-nav ul li.selected ul {
+.stycly-nav-dropdown-parent {
+    position: relative;
+}
+
+.stycly-nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 110%;
+    left: 0;
+    background: var(--col-white);
+    box-shadow: 0 8px 32px rgba(123,154,204,0.13);
+    border-radius: 10px;
+    min-width: 180px;
+    flex-direction: column;
+    padding: 8px 0;
+    z-index: 100;
+    animation: fadeIn 0.18s;
+}
+
+.stycly-nav-dropdown-menu a {
+    color: var(--col-primario);
+    text-decoration: none;
+    padding: 12px 24px;
+    font-size: var(--f-md);
+    font-weight: 500;
+    border: none;
+    background: none;
+    text-align: left;
+    transition: background 0.18s, color 0.18s;
+    border-radius: 0;
     display: block;
 }
 
-nav ul li.notselected a {
-    opacity: 0.5;
+.stycly-nav-dropdown-menu a:hover {
+    background: #e3e7ee;
+    color: var(--col-accent);
 }
 
-/* Mobile header tweaks */
-@media screen and (max-width: 820px) {
-    .timlogo { margin-left: 50px; }
-}
-@media screen and (max-width: 580px) {
-    .timlogo { width: 130px; padding-top: 30px; }
-    nav a { font-size: 18px; }
-}
-@media screen and (max-width: 500px) {
-    .timlogo { display: none; }
+/* Mostra dropdown quando il parent ha la classe .open */
+.stycly-nav-dropdown-parent.open .stycly-nav-dropdown-menu {
+    display: flex;
 }
 
-/* ---------------- HERO ---------------- */
+/* Etichetta utente loggato */
+.stycly-user-label {
+    font-size: 0.9rem;
+    color: #4a5670;
+}
 
+/* --- HAMBURGER (mobile) --- */
+.stycly-nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;
+    z-index: 101;
+}
+
+.stycly-nav-hamburger span {
+    display: block;
+    height: 4px;
+    width: 28px;
+    background: var(--col-primario);
+    margin: 4px 0;
+    border-radius: 2px;
+    transition: all 0.2s;
+}
+
+/* Stato "X" quando attivo (classe .active gestita da JS) */
+.stycly-nav-hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.stycly-nav-hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.stycly-nav-hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* --- HERO --- */
 .stycly-hero {
-    min-height: calc(100vh - 120px);
+    min-height: calc(100vh - 80px); /* viewport meno header */
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem 1.5rem;
-    box-sizing: border-box;
-    background: linear-gradient(135deg, #C9E2F5 0%, #F2F4F7 40%, #FFFFFF 100%);
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+    background: #ffffff;
 }
 
 .stycly-hero-content {
     width: 100%;
-    max-width: 720px;
+    max-width: 700px;
     margin: 0 auto;
     text-align: center;
+    align-items: center;
 }
 
 .stycly-hero-content h1 {
-    font-family: var(--font-title);
     font-size: 2.2rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -250,35 +202,36 @@ nav ul li.notselected a {
 }
 
 .stycly-hero-content strong {
-    font-family: var(--font-title);
-    font-size: 2.1rem;
+    font-size: 2.2rem;
     color: var(--col-accent);
     font-weight: 700;
-    margin: 0.2rem 0 1.2rem 0;
+    margin: 0.2rem 0 1rem 0;
     display: block;
 }
 
 .stycly-hero-content p {
     font-size: var(--f-md);
-    color: var(--col-primario);
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
+    color: #4a5670;
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
 }
 
 .stycly-cta-btn {
     font: inherit;
     font-size: var(--f-md);
-    padding: 0.7rem 2.4rem;
+    padding: 0.7rem 2.2rem;
     border: 2px solid var(--col-accent);
     background-color: var(--col-accent);
     color: var(--col-white);
     cursor: pointer;
-    border-radius: 999px;
+    border-radius: 35px;
     font-weight: 600;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(123,154,204,0.18);
+    box-shadow: 0 2px 8px rgba(123,154,204,0.10);
     letter-spacing: 0.5px;
     outline: none;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
     text-decoration: none;
     display: inline-block;
 }
@@ -287,10 +240,76 @@ nav ul li.notselected a {
 .stycly-cta-btn:focus {
     background-color: var(--col-hover);
     border-color: var(--col-hover);
+    color: var(--col-white);
 }
 
-/* --------------- WARDROBE CARDS / GRIGLIE --------------- */
+/* --- MODAL POPUP (generico) --- */
+.stycly-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
 
+.stycly-modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stycly-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.stycly-modal-close:hover {
+    color: var(--col-hover);
+}
+
+.stycly-modal-content h2 {
+    font-size: var(--f-lg);
+    color: var(--col-primario);
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+
+.stycly-modal-content p {
+    font-size: var(--f-md);
+    color: #4a5670;
+    margin-bottom: 24px;
+}
+
+.stycly-modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 8px;
+}
+
+/* --- ANIMATION --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* --- WARDROBE GRID (GESTIONE / PRIVATE) --- */
 .wardrobe-grid {
     display: grid;
     grid-template-columns: repeat(5, 180px);
@@ -322,11 +341,11 @@ nav ul li.notselected a {
     }
 }
 
-/* card generica */
+/* --- WARDROBE CARD --- */
 .wardrobe-card {
     background: #fff;
     border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(20,104,229,0.06);
+    box-shadow: 0 4px 24px rgba(20,104,229,0.08);
     padding: 2rem 2.5rem;
     min-width: 260px;
     max-width: 320px;
@@ -338,8 +357,7 @@ nav ul li.notselected a {
 .wardrobe-card h2 {
     margin-bottom: 0.5rem;
     font-size: 1.3rem;
-    color: var(--col-accent);
-    font-family: var(--font-title);
+    color: #1468e5;
 }
 
 .wardrobe-card p {
@@ -353,7 +371,7 @@ nav ul li.notselected a {
 }
 
 .wardrobe-card:hover {
-    box-shadow: 0 8px 32px rgba(20,104,229,0.16);
+    box-shadow: 0 8px 32px rgba(20,104,229,0.18);
 }
 
 /* --- CAPO CARD (SIMPLE) --- */
@@ -411,7 +429,7 @@ nav ul li.notselected a {
     margin-top: 0.4rem;
 }
 
-/* ICON BUTTON */
+/* --- ICON BUTTON --- */
 .capo-icon-btn {
     width: 38px;
     height: 38px;
@@ -427,11 +445,11 @@ nav ul li.notselected a {
 
 .capo-icon-btn:hover {
     background: #e3e7ee;
-    border: 1px solid var(--col-accent);
+    border: 1px solid #1468e5;
     transform: translateY(-2px);
 }
 
-/* FLIP CARD */
+/* --- FLIP CARD (FRONTE/RETRO) --- */
 .capo-flip-card {
     width: 180px;
     height: 240px;
@@ -471,6 +489,7 @@ nav ul li.notselected a {
     transform: rotateY(180deg);
 }
 
+/* empty card per aggiunta */
 .empty-card {
     display: flex;
     justify-content: center;
@@ -483,7 +502,7 @@ nav ul li.notselected a {
     margin: 0;
 }
 
-/* FLIP responsive */
+/* FLIP CARD responsive */
 @media (max-width: 768px) {
     .capo-flip-card {
         width: 160px;
@@ -491,6 +510,7 @@ nav ul li.notselected a {
         margin: 0.3rem auto;
     }
 }
+
 @media (max-width: 480px) {
     .capo-flip-card {
         width: 100%;
@@ -498,6 +518,104 @@ nav ul li.notselected a {
         height: 230px;
         margin: 0.4rem auto;
     }
+}
+
+/* --- FORM GUIDATO + PSEUDO SELECT --- */
+.form-guidato .field {
+    max-width: 280px;
+    margin: 1rem auto;
+    position: relative;
+}
+
+.field .psuedo_select .options {
+    list-style: none;
+    padding-left: 0;
+}
+
+label.field {
+    position: relative;
+    display: block;
+    font-size: var(--f-sm);
+    margin: 1rem 0;
+    padding-top: 1.5rem;
+}
+
+label.field span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: var(--f-sm);
+    color: #666;
+    transition: all .2s ease;
+}
+
+label.field.focused span {
+    top: -1.2rem;
+    font-size: 0.85rem;
+    color: var(--col-accent);
+}
+
+.psuedo_select {
+    min-width: auto;
+    width: 100%;
+    position: relative;
+    border-bottom: 2px solid #ccc;
+    padding: .6rem 2.5rem .6rem .2rem;
+    cursor: pointer;
+}
+
+.psuedo_select .option {
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    text-align: left;
+}
+
+.psuedo_select::after {
+    content: "";
+    position: absolute;
+    right: .4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #666;
+    transition: transform .2s;
+}
+
+label.field.focused .psuedo_select {
+    border-bottom-color: var(--col-accent);
+}
+
+label.field.focused .psuedo_select::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.options {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: var(--col-white);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .2s ease;
+    z-index: 10;
+}
+
+.options.open {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.option {
+    padding: .6rem .8rem;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: var(--col-secondario);
 }
 
 /* --- LAYOUT VISUALIZZA WARDROBE (FILTRI + GRID) --- */
@@ -533,7 +651,7 @@ nav ul li.notselected a {
     justify-content: center;
 }
 
-/* grid 3 col */
+/* Grid a 3 colonne riutilizzata in varie pagine */
 .wardrobe-grid-3col {
     display: grid;
     grid-template-columns: repeat(3, minmax(260px, 1fr));
@@ -606,14 +724,82 @@ nav ul li.notselected a {
         width: 100%;
         max-width: 320px;
     }
+
+    .stycly-hero-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .stycly-hero-content strong {
+        font-size: 2rem;
+    }
+
+    .stycly-hero-content p {
+        font-size: 0.96rem;
+    }
 }
 
-/* ---------------- AUTH MODAL (Area admin) ---------------- */
+/* --- RESPONSIVE GENERALE NAV --- */
+@media (max-width: 700px) {
+    .stycly-header {
+        padding: 0 10px;
+        min-height: 56px;
+    }
 
+    .stycly-logo img {
+        height: 40px;
+    }
+
+    .stycly-nav-hamburger {
+        display: flex;
+    }
+
+    .stycly-nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        flex-direction: column;
+        background: #ffffff;
+        padding: 0.8rem 0.6rem 1rem 0.6rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        gap: 0.4rem;
+    }
+
+    .stycly-nav.open {
+        display: flex;
+    }
+
+    .stycly-nav > a,
+    .stycly-nav-dropdown-btn {
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+    }
+
+    .stycly-nav-dropdown-parent {
+        width: 100%;
+    }
+
+    .stycly-nav-dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+        margin-left: 0.5rem;
+    }
+
+    .stycly-nav-dropdown-menu a {
+        padding: 6px 12px;
+        font-size: 0.95rem;
+    }
+}
+
+/* --- AUTH MODAL (Area riservata admin) --- */
 .auth-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.55);
+  background: rgba(0,0,0,0.6);
   display: none;
   justify-content: center;
   align-items: center;
@@ -621,45 +807,19 @@ nav ul li.notselected a {
   padding: 1rem;
 }
 
-.auth-modal.open {
-  display: flex;
-}
-
-.auth-wrapper {
-  max-width: 900px;
-  width: 100%;
-}
-
-/* contenitore principale del template */
 .container {
   background-color: #fff;
-  border-radius: 18px;
+  border-radius: 16px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
               0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
-  width: 100%;
+  width: 768px;
+  max-width: 100%;
   min-height: 480px;
   font-family: 'Poppins', sans-serif;
 }
 
-/* close button */
-.auth-close-btn {
-  position: absolute;
-  top: 18px;
-  right: 22px;
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  border: none;
-  background: #7DB2E0;
-  color: #fff;
-  font-size: 1.4rem;
-  cursor: pointer;
-  z-index: 110;
-}
-
-/* pannelli form */
 .form-container {
   position: absolute;
   top: 0;
@@ -696,7 +856,6 @@ nav ul li.notselected a {
   50%, 100% { opacity: 1; z-index: 5; }
 }
 
-/* overlay */
 .overlay-container {
   position: absolute;
   top: 0;
@@ -741,68 +900,47 @@ nav ul li.notselected a {
   transition: transform 0.6s ease-in-out;
 }
 
+.overlay-panel h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.overlay-panel p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 320px;
+  margin: 0.4rem auto 0;
+}
+
 .overlay-left { transform: translateX(-20%); }
 .container.right-panel-active .overlay-left { transform: translateX(0); }
 
 .overlay-right { right: 0; transform: translateX(0); }
 .container.right-panel-active .overlay-right { transform: translateX(20%); }
 
-/* TITOLI + TESTI CENTRATI NEL MODAL */
-.auth-title {
-  font-family: var(--font-title);
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--col-primario);
-  text-align: center;
-  margin: 0 0 0.75rem;
-  padding: 0 1rem;
-  word-wrap: break-word;
-}
-
-.overlay-panel .auth-title {
-  color: #FFFFFF;
-}
-
-.auth-subtitle {
-  font-size: 0.95rem;
-  color: var(--col-primario);
-  text-align: center;
-  max-width: 320px;
-  margin: 0 auto 1.5rem;
-  padding: 0 0.5rem;
-  line-height: 1.5;
-}
-
-.overlay-panel .auth-subtitle {
-  color: #F2F4F7;
-}
-
-/* form interno */
 form {
   background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 40px;
+  padding: 0 50px;
   height: 100%;
   text-align: center;
 }
 
 input {
-  background-color: #EDF3FF;
+  background-color: #eee;
   border: none;
-  border-radius: 10px;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
-  font-size: 0.95rem;
 }
 
 button {
-  border-radius: 999px;
-  border: 1px solid var(--col-accent);
-  background-color: var(--col-accent);
+  border-radius: 20px;
+  border: 1px solid #7DB2E0;
+  background-color: #7DB2E0;
   color: #fff;
   font-size: 12px;
   font-weight: bold;
@@ -811,12 +949,12 @@ button {
   text-transform: uppercase;
   margin-top: 1rem;
   cursor: pointer;
-  transition: transform 80ms ease-in, background-color 0.2s, border-color 0.2s;
+  transition: transform 80ms ease-in, background-color .2s, border-color .2s;
 }
 
 button:hover {
-  background-color: var(--col-hover);
-  border-color: var(--col-hover);
+  background-color: #3A4C69;
+  border-color: #3A4C69;
 }
 
 button.ghost {
@@ -824,23 +962,39 @@ button.ghost {
   border-color: #fff;
 }
 
-/* Mobile auth modal */
-@media (max-width: 768px) {
+/* auth modal close button */
+.auth-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background-color: #7DB2E0;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* mobile auth modal */
+@media (max-width: 700px) {
   .container {
     width: 100%;
     min-height: 520px;
-    border-radius: 12px;
   }
 
   form {
     padding: 0 24px;
   }
 
-  .auth-title {
-    font-size: 1.3rem;
+  .overlay-panel h1 {
+    font-size: 1.4rem;
   }
 
-  .auth-subtitle {
+  .overlay-panel p {
     font-size: 0.9rem;
+    max-width: 260px;
   }
 }
+

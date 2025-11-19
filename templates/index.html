@@ -1,23 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}Stycly - Home{% endblock %}
+{% block title %}Stycly – Noleggio outfit per bambini{% endblock %}
 
 {% block content %}
 <section class="stycly-hero">
-    <div class="stycly-hero-content">
-        <h1>Sei alla ricerca di abiti per bambini ma ti servono solo per un singolo uso?</h1>
-        <strong>Scopri il noleggio abiti per bambini. Scopri StyCly!</strong>
+  <div class="stycly-hero-content">
+    <h1>Noleggio outfit per bambini</h1>
+    <strong>per shooting, eventi e occasioni speciali.</strong>
+    <p>
+      Scegli, combina e noleggia capi selezionati per bambine e bambini:
+      perfetti per cerimonie, eventi, servizi fotografici, campagne e contenuti social, senza riempire l'armadio di abiti usati una sola volta.
+    </p>
 
-        <p>
-            Scegli gli outfit perfetti per servizi fotografici, eventi e campagne,
-            senza riempire l'armadio di abiti usati una sola volta.
-        </p>
-
-        <!-- Bottone che porta al guardaroba pubblico -->
-        <a href="{{ url_for('products') }}" class="stycly-cta-btn">
-            Products
-        </a>
-    </div>
+    <!-- CTA principale: va al guardaroba pubblico -->
+    <a href="{{ url_for('public_wardrobe') }}" class="stycly-cta-btn">
+      Products
+    </a>
+  </div>
 </section>
 {% endblock %}
-

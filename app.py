@@ -299,10 +299,12 @@ def home():
 
 
 @app.route('/products')
-def products():
+@app.route('/public-wardrobe')
+def public_wardrobe():
     """
-    Products = vecchio Public Wardrobe:
+    Products / Public Wardrobe:
     mostra TUTTI i capi di TUTTI i wardrobe degli utenti.
+    L'endpoint si chiama 'public_wardrobe', l'URL principale è /products.
     """
     metadata = MetaData()
     all_capi = []
@@ -326,13 +328,6 @@ def products():
 
     return render_template("public_wardrobe.html", capi=all_capi)
 
-
-@app.route('/public-wardrobe')
-def public_wardrobe():
-    """
-    Alias legacy: reindirizza a /products.
-    """
-    return redirect(url_for('products'))
 
 
 @app.route('/about')

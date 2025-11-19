@@ -23,7 +23,7 @@
         <nav>
             <ul>
                 <li><a href="{{ url_for('index') }}">HOME</a></li>
-                <li><a href="{{ url_for('products') }}">PRODUCTS</a></li>
+                <li><a href="{{ url_for('public_wardrobe') }}">PRODUCTS</a></li>
                 <li><a href="{{ url_for('about') }}">ABOUT US</a></li>
                 <li><a href="{{ url_for('contact') }}">CONTACT</a></li>
                 <li><a href="#" id="open-auth-modal">AREA RISERVATA</a></li>
@@ -53,7 +53,7 @@
                 Scegli, noleggia e restituisci: il guardaroba per i tuoi servizi fotografici
                 diventa leggero, organizzato e sostenibile.
             </p>
-            <a href="{{ url_for('products') }}" class="stycly-cta-btn">Vai ai prodotti</a>
+            <a href="{{ url_for('public_wardrobe') }}" class="stycly-cta-btn">Vai ai prodotti</a>
         </div>
     </section>
     {% endblock %}
@@ -72,8 +72,8 @@
                 <form method="POST" action="{{ url_for('login') }}">
                     <h2 class="auth-title">Accedi all'area admin</h2>
                     <p class="auth-subtitle">
-                        Entra nell’area riservata per gestire il guardaroba Stycly
-                        e aggiornare gli outfit disponibili a noleggio.
+                        Entra nell'area riservata per gestire il guardaroba Stycly
+                        e aggiornare i capi disponibili a noleggio.
                     </p>
 
                     <input type="text" name="username" placeholder="Username admin" required>
@@ -88,7 +88,7 @@
                 <form method="POST" action="{{ url_for('register') }}">
                     <h2 class="auth-title">Crea il tuo account admin</h2>
                     <p class="auth-subtitle">
-                        Registrati per accedere all’area riservata e aggiungere
+                        Registrati per accedere all'area riservata e aggiungere
                         nuovi capi al guardaroba da noleggiare.
                     </p>
 
@@ -108,7 +108,7 @@
                         <h2 class="auth-title">Bentornatə!</h2>
                         <p class="auth-subtitle">
                             Hai già un account admin? Accedi per gestire il guardaroba
-                            e organizzare gli outfit a noleggio.
+                            e organizzare i capi per il noleggio.
                         </p>
                         <button class="ghost" id="signIn">Accedi</button>
                     </div>
