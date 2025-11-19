@@ -88,16 +88,20 @@ body {
     letter-spacing: 0.03em;
 }
 
-.stycly-nav > a.nav-active,
+/* Colore della pagina attiva */
+.stycly-nav > a.nav-active {
+    color: var(--col-accent);
+    font-weight: 600; /* opzionale, dà un minimo di enfasi */
+}
+
+/* Mantiene lo stesso colore anche quando ci passi sopra */
 .stycly-nav > a.nav-active:hover {
     color: var(--col-accent);
 }
 
 
-/* Voce di menu attiva (stesso colore dell'hover) */
-.stycly-nav > a.nav-active {
-    color: var(--col-accent);
-}
+
+
 
 
 .stycly-nav-dropdown-parent {
