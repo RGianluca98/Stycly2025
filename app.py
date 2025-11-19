@@ -653,6 +653,46 @@ def export_wardrobe(nome_tabella):
 
 
 # ----------------------------
+#       ADMIN: PULIZIA CAPI
+# ----------------------------
+
+@app.route('/admin/clear-all-items')
+def admin_clear_all_items():
+    """
+    Svuota TUTTE le tabelle wardrobe_* (tutti i capi),
+    ma NON cancella utenti né record nella tabella wardrobes.
+    Route da usare UNA VOLTA sola e poi rimuovere.
+    """
+    # piccola protezione con chiave
+    key = request.args.get('key')
+    expected = os.environ.get("ADMIN_CLEAR_KEY", "dev-reset")
+
+    if key != expected:
+        return "Not allowed", 403
+
+    metadata = MetaData()
+    wardrobes = db_session.query(Wardrobe).all()
+
+    total_deleted = 0
+    table_count = 0
+
+    for w in wardrobes:
+        try:
+            tbl = Table(w.nome, metadata, autoload_with=engine)
+        except Exception:
+            # se la tabella non esiste o dà errore, passa oltre
+            continue
+
+        with engine.begin() as conn:
+            result = conn.execute(tbl.delete())
+            # rowcount potrebbe essere None su alcuni DB, gestiamolo
+            if hasattr(result, "rowcount") and result.rowcount is not None:
+                total_deleted += result.rowcount
+        table_count += 1
+
+    return f"OK: cancellati {total_deleted} capi da {table_count} wardrobe."
+
+# ----------------------------
 #       AVVIO LOCALE
 # ----------------------------
 
