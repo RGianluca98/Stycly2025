@@ -300,11 +300,11 @@ def home():
 
 @app.route('/products')
 @app.route('/public-wardrobe')
-def public_wardrobe():
+def products():
     """
     Products / Public Wardrobe:
     mostra TUTTI i capi di TUTTI i wardrobe degli utenti.
-    L'endpoint si chiama 'public_wardrobe', l'URL principale è /products.
+    L'endpoint si chiama 'products'; /public-wardrobe è un alias.
     """
     metadata = MetaData()
     all_capi = []
@@ -327,7 +327,6 @@ def public_wardrobe():
                 all_capi.append(rd)
 
     return render_template("public_wardrobe.html", capi=all_capi)
-
 
 
 @app.route('/about')
