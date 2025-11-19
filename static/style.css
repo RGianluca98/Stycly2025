@@ -15,11 +15,11 @@
     --font-title: 'Fredoka', 'Poppins', Arial, sans-serif;
 
     --f-sm: 0.95rem;
-    --f-md: 1.1rem;
-    --f-lg: 1.4rem;
-    --f-xl: 2.2rem;
-    --f-2xl: 2.8rem;
-    --f-3xl: 3.2rem;
+    --f-md: 1.05rem;
+    --f-lg: 1.3rem;
+    --f-xl: 2.0rem;
+    --f-2xl: 2.6rem;
+    --f-3xl: 3.0rem;
 }
 
 /* --- GLOBAL --- */
@@ -37,7 +37,7 @@ html, body {
 body {
     position: relative;
     min-height: 100vh;
-    padding-bottom: 0; /* niente spazio extra per le onde */
+    padding-bottom: 0;
 }
 
 /* --- NAVBAR --- */
@@ -50,9 +50,9 @@ body {
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 20;
+    z-index: 10;
     min-height: 68px;
-    padding: 0 32px;
+    padding: 0 16px;
 }
 
 .stycly-logo img {
@@ -61,46 +61,28 @@ body {
     display: block;
 }
 
-/* NAV DESKTOP */
+/* desktop nav */
 .stycly-nav {
     display: flex;
     align-items: center;
-    gap: 2.2rem;
+    gap: 0.8rem;
     position: relative;
 }
 
 .stycly-nav > a,
 .stycly-nav-dropdown-btn {
-    font-family: var(--font-title);
     font-size: 0.95rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
     color: var(--col-primario);
     text-decoration: none;
     background: none;
     border: none;
-    font-weight: 600;
-    padding: 6px 0;
+    font-family: var(--font-main);
+    font-weight: 500;
+    padding: 6px 10px;
     cursor: pointer;
+    transition: color 0.18s;
     position: relative;
-}
-
-/* underline hover */
-.stycly-nav > a::after,
-.stycly-nav-dropdown-btn::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -6px;
-    width: 0;
-    height: 2px;
-    background: var(--col-accent);
-    transition: width 0.18s ease-out;
-}
-
-.stycly-nav > a:hover::after,
-.stycly-nav-dropdown-btn:hover::after {
-    width: 100%;
+    letter-spacing: 0.03em;
 }
 
 .stycly-nav > a:hover,
@@ -108,7 +90,6 @@ body {
     color: var(--col-accent);
 }
 
-/* dropdown (se in futuro servirà) */
 .stycly-nav-dropdown-parent {
     position: relative;
 }
@@ -154,53 +135,51 @@ body {
 
 /* Etichetta utente loggato */
 .stycly-user-label {
-    font-size: 0.9rem;
-    color: var(--col-primario);
-    margin-left: 0.8rem;
-    margin-right: 0.4rem;
+    font-size: 0.85rem;
+    color: #4a5670;
+    margin-left: 1rem;
     white-space: nowrap;
 }
-
 
 /* --- HAMBURGER (mobile) --- */
 .stycly-nav-hamburger {
     display: none;
     flex-direction: column;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     margin-left: 12px;
-    z-index: 30;
+    z-index: 101;
 }
 
 .stycly-nav-hamburger span {
     display: block;
-    height: 3px;
-    width: 26px;
+    height: 4px;
+    width: 28px;
     background: var(--col-primario);
     margin: 4px 0;
-    border-radius: 999px;
+    border-radius: 2px;
     transition: all 0.2s;
 }
 
-/* Stato "X" quando attivo (classe .active gestita da JS) */
+/* Stato "X" quando attivo */
 .stycly-nav-hamburger.active span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transform: translateY(8px) rotate(45deg);
 }
 .stycly-nav-hamburger.active span:nth-child(2) {
     opacity: 0;
 }
 .stycly-nav-hamburger.active span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+    transform: translateY(-8px) rotate(-45deg);
 }
 
 /* --- HERO --- */
 .stycly-hero {
-    min-height: calc(100vh - 80px); /* viewport meno header */
+    min-height: calc(100vh - 80px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -220,20 +199,20 @@ body {
 }
 
 .stycly-hero-content h1 {
+    font-family: var(--font-title);
     font-size: 2.2rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: var(--col-primario);
-    font-family: var(--font-title);
 }
 
 .stycly-hero-content strong {
+    font-family: var(--font-title);
     font-size: 2.2rem;
     color: var(--col-accent);
     font-weight: 700;
     margin: 0.2rem 0 1rem 0;
     display: block;
-    font-family: var(--font-title);
 }
 
 .stycly-hero-content p {
@@ -270,7 +249,7 @@ body {
     color: var(--col-white);
 }
 
-/* --- MODAL POPUP (generico, per dettagli capi) --- */
+/* --- MODAL POPUP (generico) --- */
 .stycly-modal {
     position: fixed;
     top: 0;
@@ -765,11 +744,11 @@ label.field.focused .psuedo_select::after {
     }
 }
 
-/* --- NAV MOBILE FULLSCREEN --- */
+/* --- RESPONSIVE GENERALE NAV --- */
 @media (max-width: 900px) {
     .stycly-header {
-        padding: 0 18px;
-        min-height: 60px;
+        padding: 0 10px;
+        min-height: 56px;
     }
 
     .stycly-logo img {
@@ -781,49 +760,48 @@ label.field.focused .psuedo_select::after {
     }
 
     .stycly-nav {
-        position: fixed;
-        inset: 0;
-        background: #7DB2E0;
-        display: flex;
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
         flex-direction: column;
-        justify-content: center;
-        align-items: flex-start;
-        padding-left: 48px;
-        gap: 1.6rem;
-        transform: translateX(100%);
-        transition: transform 0.25s ease-out;
-        z-index: 25;
+        background: #ffffff;
+        padding: 0.8rem 0.6rem 1rem 0.6rem;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        gap: 0.4rem;
     }
 
     .stycly-nav.open {
-        transform: translateX(0);
-    }
-
-    .stycly-nav::after {
-        /* barra bianca verticale a destra */
-        content: "";
-        position: absolute;
-        top: 20%;
-        right: 48px;
-        width: 3px;
-        height: 60%;
-        background: #ffffff;
+        display: flex;
     }
 
     .stycly-nav > a,
     .stycly-nav-dropdown-btn {
-        font-size: 1.1rem;
-        color: #ffffff;
-        letter-spacing: 0.14em;
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
     }
 
-    .stycly-nav > a::after,
-    .stycly-nav-dropdown-btn::after {
-        display: none;
+    .stycly-user-label {
+        margin-left: 0;
     }
 
-    body.nav-open {
-        overflow: hidden;
+    .stycly-nav-dropdown-parent {
+        width: 100%;
+    }
+
+    .stycly-nav-dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        padding: 0;
+        margin-left: 0.5rem;
+    }
+
+    .stycly-nav-dropdown-menu a {
+        padding: 6px 12px;
+        font-size: 0.95rem;
     }
 }
 
@@ -836,237 +814,217 @@ label.field.focused .psuedo_select::after {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
-.auth-modal.show {
+.auth-modal.open {
   display: flex;
 }
 
-.auth-container {
+.auth-card {
   background-color: #fff;
-  border-radius: 20px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+  border-radius: 16px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+              0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
   overflow: hidden;
-  width: 900px;
+  width: 768px;
   max-width: 100%;
   min-height: 480px;
   font-family: var(--font-main);
-  display: flex;
 }
 
-/* blocchi form */
+/* pannelli form */
 .form-container {
-  position: relative;
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.sign-in-container {
+  left: 0;
   width: 50%;
-  padding: 3rem 3.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  z-index: 2;
 }
 
-/* form interno modal */
-.auth-container form {
-  width: 100%;
-  max-width: 320px;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  text-align: center;
+.auth-card.right-panel-active .sign-in-container {
+  transform: translateX(100%);
 }
 
-.auth-container form h2 {
-  font-family: var(--font-title);
-  font-size: 1.6rem;
-  color: var(--col-primario);
-  margin-bottom: 1rem;
+.sign-up-container {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
 }
 
-.auth-subtitle {
-  font-size: 0.95rem;
-  color: #5c6479;
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
+.auth-card.right-panel-active .sign-up-container {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: show 0.6s;
 }
 
-.auth-container form input {
-  background-color: #eef4ff;
-  border: none;
-  padding: 12px 14px;
-  margin: 6px 0;
-  border-radius: 6px;
-  font-size: 0.95rem;
+@keyframes show {
+  0%, 49.99% { opacity: 0; z-index: 1; }
+  50%, 100% { opacity: 1; z-index: 5; }
 }
 
-.auth-container form button {
-  border-radius: 999px;
-  border: none;
-  background-color: #7DB2E0;
-  color: #fff;
-  font-size: 0.85rem;
-  font-weight: 600;
-  padding: 12px 30px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-top: 1.1rem;
-  cursor: pointer;
-  transition: transform 80ms ease-in, box-shadow 0.18s, background 0.18s;
-  align-self: center;
-}
-
-.auth-container form button:hover {
-  background-color: #5f9ad3;
-  box-shadow: 0 6px 16px rgba(125,178,224,0.55);
-}
-
-/* OVERLAY */
+/* overlay gradient */
 .overlay-container {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 50%;
   width: 50%;
   height: 100%;
   overflow: hidden;
-  z-index: 10;
+  transition: transform 0.6s ease-in-out;
+  z-index: 100;
+}
+
+.auth-card.right-panel-active .overlay-container {
+  transform: translateX(-100%);
 }
 
 .overlay {
-  background: linear-gradient(135deg, #7DB2E0, #3A4C69);
+  background: linear-gradient(to right, #7DB2E0, #3A4C69);
   color: #fff;
   position: relative;
-  left: 0;
-  width: 100%;
+  left: -100%;
+  width: 200%;
   height: 100%;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+}
+
+.auth-card.right-panel-active .overlay {
+  transform: translateX(50%);
 }
 
 .overlay-panel {
   position: absolute;
-  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 40px;
+  text-align: center;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  transition: transform 0.6s ease-in-out;
+}
+
+.overlay-panel h2 {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.overlay-panel p,
+.auth-subtitle {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  max-width: 320px;
+  margin: 0.4rem auto 0;
+}
+
+.overlay-left { transform: translateX(-20%); }
+.auth-card.right-panel-active .overlay-left { transform: translateX(0); }
+
+.overlay-right { right: 0; transform: translateX(0); }
+.auth-card.right-panel-active .overlay-right { transform: translateX(20%); }
+
+/* form nel modal */
+.auth-card form {
+  background-color: #fff;
   display: flex;
   flex-direction: column;
-  padding: 3rem 3rem;
   justify-content: center;
   align-items: center;
+  padding: 0 50px;
+  height: 100%;
   text-align: center;
 }
 
-.overlay-left,
-.overlay-right {
-  width: 100%;
-  height: 100%;
-}
-
-.overlay-left h2,
-.overlay-right h2 {
+.auth-card form h2 {
   font-family: var(--font-title);
+  font-size: 1.6rem;
+  margin-bottom: 0.4rem;
 }
 
-/* di base mostro pannello "Nuovə su Stycly?" sul lato destro */
-.overlay-left {
-  opacity: 0;
-  pointer-events: none;
-}
-.overlay-right {
-  opacity: 1;
+.auth-card input {
+  background-color: #EEF3FF;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 15px;
+  margin: 8px 0;
+  width: 100%;
+  font-size: 0.95rem;
 }
 
-/* bottone ghost */
-.auth-container button.ghost {
-  background-color: transparent;
-  border-radius: 999px;
-  border: 1px solid #fff;
+.auth-card button {
+  border-radius: 20px;
+  border: 1px solid #7DB2E0;
+  background-color: #7DB2E0;
   color: #fff;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  padding: 10px 30px;
-  letter-spacing: 0.1em;
+  padding: 12px 45px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  margin-top: 1.1rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: transform 80ms ease-in, background-color .2s, border-color .2s;
 }
 
-/* Stati per passare da login a register */
-.auth-container.right-panel-active .sign-in-container {
-  transform: translateX(-100%);
-  opacity: 0;
-  pointer-events: none;
+.auth-card button:hover {
+  background-color: #3A4C69;
+  border-color: #3A4C69;
 }
 
-.auth-container.right-panel-active .sign-up-container {
-  transform: translateX(0);
-  opacity: 1;
-  pointer-events: auto;
+.auth-card button.ghost {
+  background-color: transparent;
+  border-color: #fff;
 }
 
-.sign-in-container,
-.sign-up-container {
-  transition: all 0.4s ease;
-}
-
-.sign-up-container {
-  transform: translateX(100%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.auth-container.right-panel-active .overlay-left {
-  opacity: 1;
-  pointer-events: auto;
-}
-.auth-container.right-panel-active .overlay-right {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Pulsante chiusura */
+/* auth modal close button */
 .auth-close-btn {
   position: absolute;
   top: 16px;
   right: 20px;
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
+  background-color: #7DB2E0;
   border: none;
-  background: #7DB2E0;
   color: #fff;
-  font-size: 22px;
-  line-height: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: 20px;
   cursor: pointer;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+  z-index: 120;
 }
 
-/* Responsive modal */
-@media (max-width: 800px) {
-  .auth-container {
-    flex-direction: column;
+/* mobile auth modal */
+@media (max-width: 700px) {
+  .auth-card {
     width: 100%;
-    max-width: 420px;
-    min-height: 0;
+    min-height: 520px;
   }
 
-  .form-container {
-    width: 100%;
-    padding: 2.2rem 2rem;
+  .auth-card form {
+    padding: 0 24px;
   }
 
-  .overlay-container {
-    position: relative;
-    width: 100%;
-    height: auto;
-    order: -1;
+  .overlay-panel h2 {
+    font-size: 1.4rem;
   }
 
-  .overlay-panel {
-    padding: 1.8rem 1.6rem;
-  }
-
-  .auth-close-btn {
-    top: 10px;
-    right: 10px;
+  .overlay-panel p {
+    font-size: 0.9rem;
+    max-width: 260px;
   }
 }
+
 
 

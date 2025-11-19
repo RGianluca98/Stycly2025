@@ -19,7 +19,6 @@
 <body>
 
 <header class="stycly-header">
-    <!-- LOGO -->
     <div class="stycly-logo">
         <a href="{{ url_for('home') }}">
             <img src="{{ url_for('static', filename='stycly-logo.png') }}" alt="Stycly logo">
@@ -33,22 +32,21 @@
         <span></span>
     </button>
 
-    <!-- NAVBAR DESKTOP / MOBILE -->
+    <!-- MENU DESKTOP / MOBILE -->
     <nav class="stycly-nav" id="mainNav">
         <a href="{{ url_for('home') }}">HOME</a>
-        <a href="{{ url_for('products') }}">PRODUCTS</a>
+        <a href="{{ url_for('public_wardrobe') }}">PRODUCTS</a>
         <a href="{{ url_for('about') }}">ABOUT US</a>
         <a href="{{ url_for('contact') }}">CONTACT</a>
 
         {% if session.get('user_id') %}
-            <!-- Utente loggato -->
             <span class="stycly-user-label">
                 Ciao, {{ session.get('username') }}
             </span>
             <a href="{{ url_for('private_wardrobe') }}">PRIVATE WARDROBE</a>
             <a href="{{ url_for('logout') }}">LOGOUT</a>
         {% else %}
-            <!-- Nessun utente loggato: mostra solo trigger modal -->
+            <!-- Area riservata solo come trigger del modal -->
             <a href="#" id="area-riservata-link">AREA RISERVATA</a>
         {% endif %}
     </nav>
@@ -60,7 +58,7 @@
 
 <!-- MODAL LOGIN/REGISTER (ADMIN) -->
 <div class="auth-modal" id="authModal">
-  <div class="container" id="authContainer">
+  <div class="auth-card" id="authContainer">
     <!-- BLOCCO LOGIN -->
     <div class="form-container sign-in-container">
       <form action="{{ url_for('login') }}" method="POST">
@@ -90,7 +88,7 @@
       </form>
     </div>
 
-    <!-- OVERLAY -->
+    <!-- OVERLAY GRADIENT -->
     <div class="overlay-container">
       <div class="overlay">
         <div class="overlay-panel overlay-left">

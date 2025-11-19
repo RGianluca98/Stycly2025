@@ -1,80 +1,68 @@
-// main.js
-
 document.addEventListener('DOMContentLoaded', () => {
-  // NAVBAR MOBILE
+  /* NAV HAMBURGER */
   const navToggle = document.getElementById('navToggle');
-  const mainNav   = document.getElementById('mainNav');
+  const mainNav = document.getElementById('mainNav');
 
   if (navToggle && mainNav) {
     navToggle.addEventListener('click', () => {
       navToggle.classList.toggle('active');
       mainNav.classList.toggle('open');
-      document.body.classList.toggle('nav-open');
-    });
-
-    // Chiudi menu quando clicchi su un link
-    mainNav.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mainNav.classList.remove('open');
-        navToggle.classList.remove('active');
-        document.body.classList.remove('nav-open');
-      });
     });
   }
 
-  // MODAL AUTH (Area riservata)
-  const areaRiservataLink = document.getElementById('area-riservata-link');
-  const authModal         = document.getElementById('authModal');
-  const authContainer     = document.getElementById('authContainer');
-  const authClose         = document.getElementById('authClose');
-  const goToLogin         = document.getElementById('goToLogin');
-  const goToRegister      = document.getElementById('goToRegister');
+  /* AUTH MODAL */
+  const authModal     = document.getElementById('authModal');
+  const authContainer = document.getElementById('authContainer');
+  const areaLink      = document.getElementById('area-riservata-link');
+  const authClose     = document.getElementById('authClose');
+  const goToLogin     = document.getElementById('goToLogin');
+  const goToRegister  = document.getElementById('goToRegister');
 
-  function openAuthModal() {
+  function openAuth() {
     if (!authModal) return;
-    authModal.classList.add('show');
-    document.body.classList.add('nav-open');
+    authModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (authContainer) authContainer.classList.remove('right-panel-active');
   }
 
-  function closeAuthModal() {
+  function closeAuth() {
     if (!authModal) return;
-    authModal.classList.remove('show');
-    document.body.classList.remove('nav-open');
+    authModal.classList.remove('open');
+    document.body.style.overflow = '';
   }
 
-  if (areaRiservataLink) {
-    areaRiservataLink.addEventListener('click', (e) => {
+  if (areaLink) {
+    areaLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openAuthModal();
+      openAuth();
     });
   }
 
   if (authClose) {
-    authClose.addEventListener('click', () => {
-      closeAuthModal();
-    });
+    authClose.addEventListener('click', closeAuth);
   }
 
-  // Chiudi cliccando fuori dal contenuto
-  if (authModal && authContainer) {
+  if (authModal) {
     authModal.addEventListener('click', (e) => {
-      if (!authContainer.contains(e.target)) {
-        closeAuthModal();
+      if (e.target === authModal) {
+        closeAuth();
       }
     });
   }
 
-  // Switch login/register
-  if (goToLogin && goToRegister && authContainer) {
-    goToRegister.addEventListener('click', () => {
-      authContainer.classList.add('right-panel-active');
-    });
-
+  if (goToLogin && authContainer) {
     goToLogin.addEventListener('click', () => {
       authContainer.classList.remove('right-panel-active');
     });
   }
+
+  if (goToRegister && authContainer) {
+    goToRegister.addEventListener('click', () => {
+      authContainer.classList.add('right-panel-active');
+    });
+  }
 });
+
 
 
 
