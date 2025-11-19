@@ -34,22 +34,40 @@
 
     <!-- MENU DESKTOP / MOBILE -->
     <nav class="stycly-nav" id="mainNav">
-        <a href="{{ url_for('home') }}">HOME</a>
-        <a href="{{ url_for('products') }}">PRODUCTS</a>
-        <a href="{{ url_for('about') }}">ABOUT US</a>
-        <a href="{{ url_for('contact') }}">CONTACT</a>
+    <a href="{{ url_for('home') }}"
+       class="{% if request.endpoint == 'home' %}nav-active{% endif %}">
+        HOME
+    </a>
 
-        {% if session.get('user_id') %}
-            <span class="stycly-user-label">
-                Ciao, {{ session.get('username') }}
-            </span>
-            <a href="{{ url_for('private_wardrobe') }}">PRIVATE WARDROBE</a>
-            <a href="{{ url_for('logout') }}">LOGOUT</a>
-        {% else %}
-            <!-- Area riservata solo come trigger del modal -->
-            <a href="#" id="area-riservata-link">AREA RISERVATA</a>
-        {% endif %}
-    </nav>
+    <a href="{{ url_for('products') }}"
+       class="{% if request.endpoint in ['products'] %}nav-active{% endif %}">
+        PRODUCTS
+    </a>
+
+    <a href="{{ url_for('about') }}"
+       class="{% if request.endpoint == 'about' %}nav-active{% endif %}">
+        ABOUT US
+    </a>
+
+    <a href="{{ url_for('contact') }}"
+       class="{% if request.endpoint == 'contact' %}nav-active{% endif %}">
+        CONTACT
+    </a>
+
+    {% if session.get('user_id') %}
+        <span class="stycly-user-label">
+            Ciao, {{ session.get('username') }}
+        </span>
+        <a href="{{ url_for('private_wardrobe') }}"
+           class="{% if request.endpoint == 'private_wardrobe' %}nav-active{% endif %}">
+            PRIVATE WARDROBE
+        </a>
+        <a href="{{ url_for('logout') }}">LOGOUT</a>
+    {% else %}
+        <a href="#" id="area-riservata-link">AREA RISERVATA</a>
+    {% endif %}
+</nav>
+
 </header>
 
 <main>

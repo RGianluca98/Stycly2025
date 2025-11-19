@@ -65,9 +65,12 @@ body {
 .stycly-nav {
     display: flex;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.5rem;              /* leggermente meno spazio tra le voci */
     position: relative;
+    flex-wrap: wrap;          /* permette di andare a capo se non c’è spazio */
+    justify-content: flex-end;/* tiene il menu allineato a destra senza uscire dallo schermo */
 }
+
 
 .stycly-nav > a,
 .stycly-nav-dropdown-btn {
@@ -85,10 +88,17 @@ body {
     letter-spacing: 0.03em;
 }
 
-.stycly-nav > a:hover,
-.stycly-nav-dropdown-btn:hover {
+.stycly-nav > a.nav-active,
+.stycly-nav > a.nav-active:hover {
     color: var(--col-accent);
 }
+
+
+/* Voce di menu attiva (stesso colore dell'hover) */
+.stycly-nav > a.nav-active {
+    color: var(--col-accent);
+}
+
 
 .stycly-nav-dropdown-parent {
     position: relative;

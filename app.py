@@ -687,20 +687,14 @@ def admin_clear_all_items():
        table_count += 1
 
     return f"OK: cancellati {total_deleted} capi da {table_count} wardrobe."
-"""
+
 # ----------------------------
 #       ADMIN: RESET COMPLETO DB
 # ----------------------------
 
 @app.route('/admin/reset-all')
 def admin_reset_all():
-    """
-    Reset completo:
-    - DROPA tutte le tabelle wardrobe_*
-    - SVUOTA le tabelle 'wardrobes' e 'users'
-    - NON tocca la struttura (schemi) del DB
-    Route da usare UNA SOLA VOLTA e POI ELIMINARE.
-    """
+    
     key = request.args.get('key')
     expected = os.environ.get("ADMIN_RESET_KEY", "dev-reset-all")
 
@@ -732,7 +726,7 @@ def admin_reset_all():
     session.clear()
 
     return f"OK: droppate {dropped_tables} tabelle wardrobe_*, svuotate 'users' e 'wardrobes'."
-
+"""
 
 # ----------------------------
 #       AVVIO LOCALE
