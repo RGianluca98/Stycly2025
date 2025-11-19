@@ -19,11 +19,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const goToRegister  = document.getElementById('goToRegister');
 
   function openAuth() {
-    if (!authModal) return;
-    authModal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    if (authContainer) authContainer.classList.remove('right-panel-active');
-  }
+  if (!authModal) return;
+  authModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (authContainer) authContainer.classList.remove('right-panel-active');
+
+  // Pulisce sempre tutti i campi del modal ad ogni apertura
+  const inputs = authModal.querySelectorAll('input');
+  inputs.forEach(input => {
+    if (input.type === 'password' || input.type === 'text' || input.type === 'email') {
+      input.value = '';
+    }
+  });
+}
+
 
   function closeAuth() {
     if (!authModal) return;

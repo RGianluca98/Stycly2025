@@ -79,29 +79,54 @@
   <div class="auth-card" id="authContainer">
     <!-- BLOCCO LOGIN -->
     <div class="form-container sign-in-container">
-      <form action="{{ url_for('login') }}" method="POST">
+      <form action="{{ url_for('login') }}" method="POST" autocomplete="off" novalidate>
         <h2>Accedi</h2>
         <p class="auth-subtitle">
           Entra nell'area riservata admin di Stycly<br>
           per gestire il guardaroba dei capi a noleggio.
         </p>
-        <input type="text" name="email_or_username" placeholder="Email o username" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <input type="text"
+       name="email_or_username"
+       placeholder="Email o username"
+       required
+       autocomplete="off">
+
+<input type="password"
+       name="password"
+       placeholder="Password"
+       required
+       autocomplete="new-password">
         <button type="submit">ACCEDI</button>
       </form>
     </div>
 
     <!-- BLOCCO REGISTER -->
     <div class="form-container sign-up-container">
-      <form action="{{ url_for('register') }}" method="POST">
+      <form action="{{ url_for('register') }}" method="POST" autocomplete="off" novalidate>
+
         <h2>Crea il tuo account</h2>
         <p class="auth-subtitle">
           Registrati come admin per creare e aggiornare<br>
           il guardaroba pubblico dei capi a noleggio.
         </p>
-        <input type="text" name="username" placeholder="Username" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
+        <<input type="text"
+       name="username"
+       placeholder="Username"
+       required
+       autocomplete="off">
+
+<input type="email"
+       name="email"
+       placeholder="Email"
+       required
+       autocomplete="off">
+
+<input type="password"
+       name="password"
+       placeholder="Password"
+       required
+       autocomplete="new-password">
+
         <button type="submit">REGISTRATI</button>
       </form>
     </div>

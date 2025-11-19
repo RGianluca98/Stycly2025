@@ -837,16 +837,16 @@ label.field.focused .psuedo_select::after {
 
 .auth-card {
   background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-              0 10px 10px rgba(0, 0, 0, 0.22);
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
   position: relative;
   overflow: hidden;
-  width: 768px;
+  width: 820px;       /* un po' più ampio, come il template */
   max-width: 100%;
-  min-height: 480px;
+  min-height: 500px;  /* altezza leggermente maggiore */
   font-family: var(--font-main);
 }
+
 
 /* pannelli form */
 .form-container {
@@ -955,18 +955,23 @@ label.field.focused .psuedo_select::after {
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 50px;
+  justify-content: center;   /* centrato verticalmente */
+  align-items: stretch;      /* campi a tutta larghezza col padding */
+  padding: 0 60px;
   height: 100%;
-  text-align: center;
+  text-align: left;          /* stile più simile al template 2 */
 }
 
 .auth-card form h2 {
-  font-family: var(--font-title);
-  font-size: 1.6rem;
-  margin-bottom: 0.4rem;
+  align-self: center;
+  text-align: center;
 }
+
+.auth-card .auth-subtitle {
+  text-align: center;
+  margin-bottom: 1.2rem;
+}
+
 
 .auth-card input {
   background-color: #EEF3FF;
