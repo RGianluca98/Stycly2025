@@ -5,125 +5,131 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Stycly{% endblock %}</title>
 
-    <link rel="icon" type="image/png" href="/static/stycly-favicon.png">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='stycly-favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- CSS principale -->
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Font: titoli rotondi + Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     {% block extra_head %}{% endblock %}
 </head>
-
 <body>
-    <!-- HEADER / NAV -->
-    <header class="stycly-header overlay-header">
-        <!-- Logo -->
-        <a href="/" class="stycly-logo-link">
-            <img class="timlogo"
-                 src="/static/stycly-logo.png"
-                 alt="Stycly">
-        </a>
 
-        <!-- Menu overlay “blob” -->
-        <div class="nav-modal">
-            <div class="blob"></div>
-            <nav class="overlay-nav">
-                <ul>
-                    <!-- voci sempre visibili -->
-                    <li><a href="/">HOME</a></li>
-
-                    <!-- PRODUCTS = public wardrobe -->
-                    <li><a href="/products">PRODUCTS</a></li>
-
-                    <li><a href="/about">ABOUT US</a></li>
-                    <li><a href="/contact">CONTACT</a></li>
-
-                    {# --- Stato non loggato: AREA RISERVATA apre il modal --- #}
-                    {% if not session.get('username') %}
-                        <li>
-                            <a href="#" id="area-riservata-link" data-auth-open="true" class="nav-area-riservata">
-                                AREA RISERVATA
-                            </a>
-                        </li>
-                    {% else %}
-                    {# --- Stato loggato --- #}
-                        <li><a href="#">{{ session.get('username') }}</a></li>
-                        <li><a href="/private-wardrobe">MY WARDROBE</a></li>
-                        <li><a href="/logout">Logout</a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </div>
-
-        <!-- Solo burger a destra -->
-        <div class="head">
-            <div class="tile burger">
-                <div class="meat">
-                    <div class="line one"></div>
-                    <div class="line two"></div>
-                    <div class="line three"></div>
-                </div>
+<!-- HEADER / NAV -->
+<header>
+    <img class="timlogo" src="{{ url_for('static', filename='stycly-logo.png') }}" alt="Stycly logo">
+    <div class="nav-modal">
+        <div class="blob"></div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">HOME</a></li>
+                <li><a href="{{ url_for('products') }}">PRODUCTS</a></li>
+                <li><a href="{{ url_for('about') }}">ABOUT US</a></li>
+                <li><a href="{{ url_for('contact') }}">CONTACT</a></li>
+                <li><a href="#" id="open-auth-modal">AREA RISERVATA</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="head">
+        <!-- solo burger, niente social -->
+        <div class="tile burger">
+            <div class="meat">
+                <div class="line one"></div>
+                <div class="line two"></div>
+                <div class="line three"></div>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <!-- MODAL LOGIN / REGISTER (AREA RISERVATA) -->
-    <div class="auth-modal" id="auth-modal">
-        <div class="auth-container" id="auth-container">
-            <!-- Bottone chiudi -->
-            <button type="button" class="auth-close-btn" id="auth-close-btn">&times;</button>
+<!-- CONTENUTO PAGINA -->
+<main>
+    {% block content %}
+    <section class="stycly-hero">
+        <div class="stycly-hero-content">
+            <h1>Stycly – Rent. Style. Repeat.</h1>
+            <strong>Noleggio outfit per shooting bimbi.</strong>
+            <p>
+                Scegli, noleggia e restituisci: il guardaroba per i tuoi servizi fotografici
+                diventa leggero, organizzato e sostenibile.
+            </p>
+            <a href="{{ url_for('products') }}" class="stycly-cta-btn">Vai ai prodotti</a>
+        </div>
+    </section>
+    {% endblock %}
+</main>
 
-            <!-- SIGN UP -->
+<!-- MODAL LOGIN / REGISTER – AREA ADMIN -->
+<div id="auth-modal" class="auth-modal">
+    <div class="auth-wrapper">
+        <div id="authContainer" class="container">
+
+            <!-- CLOSE BUTTON -->
+            <button type="button" id="auth-close" class="auth-close-btn">×</button>
+
+            <!-- LOGIN -->
+            <div class="form-container sign-in-container">
+                <form method="POST" action="{{ url_for('login') }}">
+                    <h2 class="auth-title">Accedi all'area admin</h2>
+                    <p class="auth-subtitle">
+                        Entra nell’area riservata per gestire il guardaroba Stycly
+                        e aggiornare gli outfit disponibili a noleggio.
+                    </p>
+
+                    <input type="text" name="username" placeholder="Username admin" required>
+                    <input type="password" name="password" placeholder="Password" required>
+
+                    <button type="submit">ACCEDI</button>
+                </form>
+            </div>
+
+            <!-- REGISTER -->
             <div class="form-container sign-up-container">
-                <form action="/register" method="POST">
-                    <h2>Crea il tuo account</h2>
-                    <p class="auth-subtitle">Registrati per creare il tuo guardaroba personale</p>
-                    <input type="text" name="username" placeholder="Username" required>
+                <form method="POST" action="{{ url_for('register') }}">
+                    <h2 class="auth-title">Crea il tuo account admin</h2>
+                    <p class="auth-subtitle">
+                        Registrati per accedere all’area riservata e aggiungere
+                        nuovi capi al guardaroba da noleggiare.
+                    </p>
+
+                    <input type="text" name="username" placeholder="Username admin" required>
                     <input type="email" name="email" placeholder="Email" required>
                     <input type="password" name="password" placeholder="Password" required>
-                    <button type="submit">Registrati</button>
+
+                    <button type="submit">REGISTRATI</button>
                 </form>
             </div>
 
-            <!-- SIGN IN -->
-            <div class="form-container sign-in-container">
-                <form action="/login" method="POST">
-                    <h2>Accedi</h2>
-                    <p class="auth-subtitle">Entra nella tua area riservata Stycly</p>
-                    <input type="text" name="username" placeholder="Username" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <button type="submit">Accedi</button>
-                </form>
-            </div>
-
-            <!-- OVERLAY LATERALE -->
+            <!-- OVERLAY -->
             <div class="overlay-container">
                 <div class="overlay">
+                    <!-- Lato sinistro (visibile quando si è sulla REGISTER) -->
                     <div class="overlay-panel overlay-left">
-                        <h2>Ben tornata/o!</h2>
-                        <p class="overlay-text">Hai già un account? Accedi per gestire il tuo wardrobe.</p>
+                        <h2 class="auth-title">Bentornatə!</h2>
+                        <p class="auth-subtitle">
+                            Hai già un account admin? Accedi per gestire il guardaroba
+                            e organizzare gli outfit a noleggio.
+                        </p>
                         <button class="ghost" id="signIn">Accedi</button>
                     </div>
+
+                    <!-- Lato destro (visibile quando si è sulla LOGIN) -->
                     <div class="overlay-panel overlay-right">
-                        <h2>Nuova su Stycly?</h2>
-                        <p class="overlay-text">Crea un profilo e inizia a noleggiare outfit per i tuoi shooting.</p>
+                        <h2 class="auth-title">Primo accesso su Stycly?</h2>
+                        <p class="auth-subtitle">
+                            Crea un profilo admin per aggiungere, modificare e gestire
+                            tutti i capi disponibili per il noleggio.
+                        </p>
                         <button class="ghost" id="signUp">Registrati</button>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+</div>
 
-    <!-- CONTENUTO PAGINA -->
-    <main>
-        {% block content %}{% endblock %}
-    </main>
-
-    <!-- JS principale -->
-    <script src="/static/main.js"></script>
-    {% block extra_scripts %}{% endblock %}
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
 
