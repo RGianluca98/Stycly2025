@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   navItems.forEach((li) => {
     li.addEventListener("click", () => {
-      // evidenzia quella cliccata (se vuoi lo stile selected/notselected)
+      // evidenzia quella cliccata (optional)
       navItems.forEach((item) => {
         item.classList.remove("selected");
         item.classList.add("notselected");
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       li.classList.add("selected");
       li.classList.remove("notselected");
 
-      // chiudi il menu dopo il click (utile su mobile)
+      // chiudi il menu dopo il click
       if (header && header.classList.contains("clicked")) {
         header.classList.remove("clicked");
       }
