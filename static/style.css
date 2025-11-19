@@ -229,7 +229,8 @@ nav ul li.notselected a {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 3rem 1.5rem;
+    padding: 1.5rem 1.5rem;
+    box-sizing: border-box;
     background: linear-gradient(135deg, #C9E2F5 0%, #F2F4F7 40%, #FFFFFF 100%);
 }
 
