@@ -3,16 +3,17 @@
 
 :root {
     /* Palette Stycly */
-    --col-primario: #3A4C69;     /* testi principali */
-    --col-secondario: #F2F4F7;   /* sfondi chiari / card */
-    --col-accent: #7DB2E0;       /* bottoni, elementi primari */
-    --col-accent-soft: #C9E2F5;  /* hover leggeri, badge */
-    --col-beige: #E8D4C0;        /* dettagli decorativi */
-    --col-hover: #1468e5;
-    --col-white: #fff;
-    --col-cta: #F7D774;          /* CTA speciali */
+    --col-primario: #3A4C69;   /* Soft Navy – testi importanti */
+    --col-secondario: #F2F4F7; /* Light Grey – sfondi soft */
+    --col-accent: #7DB2E0;     /* Baby Blue – bottoni, link attivi */
+    --col-hover: #1468e5;      /* Hover accent più intenso */
+    --col-white: #FFFFFF;
+    --col-warm-beige: #E8D4C0;
+    --col-accent-yellow: #F7D774;
 
     --font-main: 'Poppins', Arial, sans-serif;
+    --font-title: 'Fredoka', 'Poppins', Arial, sans-serif;
+
     --f-sm: 0.95rem;
     --f-md: 1.1rem;
     --f-lg: 1.4rem;
@@ -49,9 +50,9 @@ body {
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 10;
+    z-index: 20;
     min-height: 68px;
-    padding: 0 16px;
+    padding: 0 32px;
 }
 
 .stycly-logo img {
@@ -60,27 +61,46 @@ body {
     display: block;
 }
 
-/* desktop nav */
+/* NAV DESKTOP */
 .stycly-nav {
     display: flex;
     align-items: center;
-    gap: 1.2rem;
+    gap: 2.2rem;
     position: relative;
 }
 
 .stycly-nav > a,
 .stycly-nav-dropdown-btn {
-    font-size: var(--f-md);
+    font-family: var(--font-title);
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--col-primario);
     text-decoration: none;
     background: none;
     border: none;
-    font-family: var(--font-main);
-    font-weight: 500;
-    padding: 8px 16px;
+    font-weight: 600;
+    padding: 6px 0;
     cursor: pointer;
-    transition: color 0.18s;
     position: relative;
+}
+
+/* underline hover */
+.stycly-nav > a::after,
+.stycly-nav-dropdown-btn::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 0;
+    height: 2px;
+    background: var(--col-accent);
+    transition: width 0.18s ease-out;
+}
+
+.stycly-nav > a:hover::after,
+.stycly-nav-dropdown-btn:hover::after {
+    width: 100%;
 }
 
 .stycly-nav > a:hover,
@@ -88,6 +108,7 @@ body {
     color: var(--col-accent);
 }
 
+/* dropdown (se in futuro servirà) */
 .stycly-nav-dropdown-parent {
     position: relative;
 }
@@ -142,35 +163,35 @@ body {
     display: none;
     flex-direction: column;
     justify-content: center;
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
     background: none;
     border: none;
     cursor: pointer;
     padding: 0;
     margin-left: 12px;
-    z-index: 101;
+    z-index: 30;
 }
 
 .stycly-nav-hamburger span {
     display: block;
-    height: 4px;
-    width: 28px;
+    height: 3px;
+    width: 26px;
     background: var(--col-primario);
     margin: 4px 0;
-    border-radius: 2px;
+    border-radius: 999px;
     transition: all 0.2s;
 }
 
 /* Stato "X" quando attivo (classe .active gestita da JS) */
 .stycly-nav-hamburger.active span:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
+    transform: translateY(7px) rotate(45deg);
 }
 .stycly-nav-hamburger.active span:nth-child(2) {
     opacity: 0;
 }
 .stycly-nav-hamburger.active span:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 /* --- HERO --- */
@@ -199,6 +220,7 @@ body {
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: var(--col-primario);
+    font-family: var(--font-title);
 }
 
 .stycly-hero-content strong {
@@ -207,6 +229,7 @@ body {
     font-weight: 700;
     margin: 0.2rem 0 1rem 0;
     display: block;
+    font-family: var(--font-title);
 }
 
 .stycly-hero-content p {
@@ -243,7 +266,7 @@ body {
     color: var(--col-white);
 }
 
-/* --- MODAL POPUP (generico) --- */
+/* --- MODAL POPUP (generico, per dettagli capi) --- */
 .stycly-modal {
     position: fixed;
     top: 0;
@@ -738,11 +761,11 @@ label.field.focused .psuedo_select::after {
     }
 }
 
-/* --- RESPONSIVE GENERALE NAV --- */
-@media (max-width: 700px) {
+/* --- NAV MOBILE FULLSCREEN --- */
+@media (max-width: 900px) {
     .stycly-header {
-        padding: 0 10px;
-        min-height: 56px;
+        padding: 0 18px;
+        min-height: 60px;
     }
 
     .stycly-logo img {
@@ -754,44 +777,49 @@ label.field.focused .psuedo_select::after {
     }
 
     .stycly-nav {
-        display: none;
-        position: absolute;
-        top: 100%;
-        right: 0;
-        left: 0;
+        position: fixed;
+        inset: 0;
+        background: #7DB2E0;
+        display: flex;
         flex-direction: column;
-        background: #ffffff;
-        padding: 0.8rem 0.6rem 1rem 0.6rem;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        gap: 0.4rem;
+        justify-content: center;
+        align-items: flex-start;
+        padding-left: 48px;
+        gap: 1.6rem;
+        transform: translateX(100%);
+        transition: transform 0.25s ease-out;
+        z-index: 25;
     }
 
     .stycly-nav.open {
-        display: flex;
+        transform: translateX(0);
+    }
+
+    .stycly-nav::after {
+        /* barra bianca verticale a destra */
+        content: "";
+        position: absolute;
+        top: 20%;
+        right: 48px;
+        width: 3px;
+        height: 60%;
+        background: #ffffff;
     }
 
     .stycly-nav > a,
     .stycly-nav-dropdown-btn {
-        width: 100%;
-        text-align: left;
-        padding: 8px 12px;
+        font-size: 1.1rem;
+        color: #ffffff;
+        letter-spacing: 0.14em;
     }
 
-    .stycly-nav-dropdown-parent {
-        width: 100%;
+    .stycly-nav > a::after,
+    .stycly-nav-dropdown-btn::after {
+        display: none;
     }
 
-    .stycly-nav-dropdown-menu {
-        position: static;
-        box-shadow: none;
-        background: transparent;
-        padding: 0;
-        margin-left: 0.5rem;
-    }
-
-    .stycly-nav-dropdown-menu a {
-        padding: 6px 12px;
-        font-size: 0.95rem;
+    body.nav-open {
+        overflow: hidden;
     }
 }
 
@@ -804,197 +832,237 @@ label.field.focused .psuedo_select::after {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
-.container {
+.auth-modal.show {
+  display: flex;
+}
+
+.auth-container {
   background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
-              0 10px 10px rgba(0, 0, 0, 0.22);
+  border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
   position: relative;
   overflow: hidden;
-  width: 768px;
+  width: 900px;
   max-width: 100%;
   min-height: 480px;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-main);
+  display: flex;
 }
 
+/* blocchi form */
 .form-container {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  transition: all 0.6s ease-in-out;
-}
-
-.sign-in-container {
-  left: 0;
+  position: relative;
   width: 50%;
-  z-index: 2;
+  padding: 3rem 3.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.container.right-panel-active .sign-in-container {
-  transform: translateX(100%);
+/* form interno modal */
+.auth-container form {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: center;
 }
 
-.sign-up-container {
-  left: 0;
-  width: 50%;
-  opacity: 0;
-  z-index: 1;
+.auth-container form h2 {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  color: var(--col-primario);
+  margin-bottom: 1rem;
 }
 
-.container.right-panel-active .sign-up-container {
-  transform: translateX(100%);
-  opacity: 1;
-  z-index: 5;
-  animation: show 0.6s;
+.auth-subtitle {
+  font-size: 0.95rem;
+  color: #5c6479;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
 }
 
-@keyframes show {
-  0%, 49.99% { opacity: 0; z-index: 1; }
-  50%, 100% { opacity: 1; z-index: 5; }
+.auth-container form input {
+  background-color: #eef4ff;
+  border: none;
+  padding: 12px 14px;
+  margin: 6px 0;
+  border-radius: 6px;
+  font-size: 0.95rem;
 }
 
+.auth-container form button {
+  border-radius: 999px;
+  border: none;
+  background-color: #7DB2E0;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 12px 30px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 1.1rem;
+  cursor: pointer;
+  transition: transform 80ms ease-in, box-shadow 0.18s, background 0.18s;
+  align-self: center;
+}
+
+.auth-container form button:hover {
+  background-color: #5f9ad3;
+  box-shadow: 0 6px 16px rgba(125,178,224,0.55);
+}
+
+/* OVERLAY */
 .overlay-container {
   position: absolute;
   top: 0;
-  left: 50%;
+  right: 0;
   width: 50%;
   height: 100%;
   overflow: hidden;
-  transition: transform 0.6s ease-in-out;
-  z-index: 100;
-}
-
-.container.right-panel-active .overlay-container {
-  transform: translateX(-100%);
+  z-index: 10;
 }
 
 .overlay {
-  background: linear-gradient(to right, #7DB2E0, #3A4C69);
+  background: linear-gradient(135deg, #7DB2E0, #3A4C69);
   color: #fff;
   position: relative;
-  left: -100%;
-  width: 200%;
+  left: 0;
+  width: 100%;
   height: 100%;
-  transform: translateX(0);
-  transition: transform 0.6s ease-in-out;
-}
-
-.container.right-panel-active .overlay {
-  transform: translateX(50%);
 }
 
 .overlay-panel {
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 0 40px;
-  text-align: center;
-  top: 0;
-  height: 100%;
-  width: 50%;
-  transition: transform 0.6s ease-in-out;
-}
-
-.overlay-panel h1 {
-  font-size: 1.6rem;
-  margin-bottom: 0.4rem;
-}
-
-.overlay-panel p {
-  font-size: 0.95rem;
-  line-height: 1.5;
-  max-width: 320px;
-  margin: 0.4rem auto 0;
-}
-
-.overlay-left { transform: translateX(-20%); }
-.container.right-panel-active .overlay-left { transform: translateX(0); }
-
-.overlay-right { right: 0; transform: translateX(0); }
-.container.right-panel-active .overlay-right { transform: translateX(20%); }
-
-form {
-  background-color: #fff;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  padding: 3rem 3rem;
   justify-content: center;
   align-items: center;
-  padding: 0 50px;
-  height: 100%;
   text-align: center;
 }
 
-input {
-  background-color: #eee;
-  border: none;
-  padding: 12px 15px;
-  margin: 8px 0;
+.overlay-left,
+.overlay-right {
   width: 100%;
+  height: 100%;
 }
 
-button {
-  border-radius: 20px;
-  border: 1px solid #7DB2E0;
-  background-color: #7DB2E0;
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 12px 45px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  margin-top: 1rem;
-  cursor: pointer;
-  transition: transform 80ms ease-in, background-color .2s, border-color .2s;
+.overlay-left h2,
+.overlay-right h2 {
+  font-family: var(--font-title);
 }
 
-button:hover {
-  background-color: #3A4C69;
-  border-color: #3A4C69;
+/* di base mostro pannello "Nuovə su Stycly?" sul lato destro */
+.overlay-left {
+  opacity: 0;
+  pointer-events: none;
+}
+.overlay-right {
+  opacity: 1;
 }
 
-button.ghost {
+/* bottone ghost */
+.auth-container button.ghost {
   background-color: transparent;
-  border-color: #fff;
+  border-radius: 999px;
+  border: 1px solid #fff;
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 30px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 1.1rem;
 }
 
-/* auth modal close button */
+/* Stati per passare da login a register */
+.auth-container.right-panel-active .sign-in-container {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.auth-container.right-panel-active .sign-up-container {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sign-in-container,
+.sign-up-container {
+  transition: all 0.4s ease;
+}
+
+.sign-up-container {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.auth-container.right-panel-active .overlay-left {
+  opacity: 1;
+  pointer-events: auto;
+}
+.auth-container.right-panel-active .overlay-right {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Pulsante chiusura */
 .auth-close-btn {
   position: absolute;
   top: 16px;
   right: 20px;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 999px;
-  background-color: #7DB2E0;
   border: none;
+  background: #7DB2E0;
   color: #fff;
-  font-size: 20px;
+  font-size: 22px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.25);
 }
 
-/* mobile auth modal */
-@media (max-width: 700px) {
-  .container {
+/* Responsive modal */
+@media (max-width: 800px) {
+  .auth-container {
+    flex-direction: column;
     width: 100%;
-    min-height: 520px;
+    max-width: 420px;
+    min-height: 0;
   }
 
-  form {
-    padding: 0 24px;
+  .form-container {
+    width: 100%;
+    padding: 2.2rem 2rem;
   }
 
-  .overlay-panel h1 {
-    font-size: 1.4rem;
+  .overlay-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    order: -1;
   }
 
-  .overlay-panel p {
-    font-size: 0.9rem;
-    max-width: 260px;
+  .overlay-panel {
+    padding: 1.8rem 1.6rem;
+  }
+
+  .auth-close-btn {
+    top: 10px;
+    right: 10px;
   }
 }
+
 

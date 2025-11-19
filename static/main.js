@@ -1,99 +1,79 @@
+// main.js
+
 document.addEventListener('DOMContentLoaded', () => {
-  // -------------------------
-  // NAVBAR / HAMBURGER
-  // -------------------------
+  // NAVBAR MOBILE
   const navToggle = document.getElementById('navToggle');
   const mainNav   = document.getElementById('mainNav');
 
   if (navToggle && mainNav) {
-    // apre/chiude menu mobile
     navToggle.addEventListener('click', () => {
       navToggle.classList.toggle('active');
       mainNav.classList.toggle('open');
+      document.body.classList.toggle('nav-open');
     });
 
-    // quando clicchi un link del menu, chiudi il menu (su mobile)
+    // Chiudi menu quando clicchi su un link
     mainNav.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        navToggle.classList.remove('active');
         mainNav.classList.remove('open');
+        navToggle.classList.remove('active');
+        document.body.classList.remove('nav-open');
       });
     });
   }
 
-  // -------------------------
-  // MODAL AREA RISERVATA
-  // -------------------------
-  const authModal     = document.getElementById('authModal');
-  const authContainer = document.getElementById('authContainer');
-  const authClose     = document.getElementById('authClose');
-  const areaLink      = document.getElementById('area-riservata-link');
-  const goToLogin     = document.getElementById('goToLogin');
-  const goToRegister  = document.getElementById('goToRegister');
+  // MODAL AUTH (Area riservata)
+  const areaRiservataLink = document.getElementById('area-riservata-link');
+  const authModal         = document.getElementById('authModal');
+  const authContainer     = document.getElementById('authContainer');
+  const authClose         = document.getElementById('authClose');
+  const goToLogin         = document.getElementById('goToLogin');
+  const goToRegister      = document.getElementById('goToRegister');
 
-  function openAuthModal(showRegister = false) {
-    if (!authModal || !authContainer) return;
-    authModal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-
-    if (showRegister) {
-      authContainer.classList.add('right-panel-active');
-    } else {
-      authContainer.classList.remove('right-panel-active');
-    }
+  function openAuthModal() {
+    if (!authModal) return;
+    authModal.classList.add('show');
+    document.body.classList.add('nav-open');
   }
 
   function closeAuthModal() {
-    if (!authModal || !authContainer) return;
-    authModal.style.display = 'none';
-    document.body.style.overflow = '';
+    if (!authModal) return;
+    authModal.classList.remove('show');
+    document.body.classList.remove('nav-open');
   }
 
-  // click su "AREA RISERVATA" nella navbar
-  if (areaLink) {
-    areaLink.addEventListener('click', (e) => {
+  if (areaRiservataLink) {
+    areaRiservataLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openAuthModal(false); // di default mostra il blocco LOGIN
+      openAuthModal();
     });
   }
 
-  // bottone X per chiudere
   if (authClose) {
-    authClose.addEventListener('click', (e) => {
-      e.preventDefault();
+    authClose.addEventListener('click', () => {
       closeAuthModal();
     });
   }
 
-  // chiusura cliccando fuori dal box
-  if (authModal) {
+  // Chiudi cliccando fuori dal contenuto
+  if (authModal && authContainer) {
     authModal.addEventListener('click', (e) => {
-      if (e.target === authModal) {
+      if (!authContainer.contains(e.target)) {
         closeAuthModal();
       }
     });
   }
 
-  // ESC per chiudere
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      closeAuthModal();
-    }
-  });
+  // Switch login/register
+  if (goToLogin && goToRegister && authContainer) {
+    goToRegister.addEventListener('click', () => {
+      authContainer.classList.add('right-panel-active');
+    });
 
-  // switch LOGIN / REGISTER
-  if (goToLogin) {
-    goToLogin.addEventListener('click', (e) => {
-      e.preventDefault();
+    goToLogin.addEventListener('click', () => {
       authContainer.classList.remove('right-panel-active');
     });
   }
-
-  if (goToRegister) {
-    goToRegister.addEventListener('click', (e) => {
-      e.preventDefault();
-      authContainer.classList.add('right-panel-active');
-    });
-  }
 });
+
 
