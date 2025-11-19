@@ -1,19 +1,19 @@
 {% extends "base.html" %}
-
-{% block title %}Stycly – Noleggio outfit per bambini{% endblock %}
+{% block title %}Stycly – Noleggio abiti per bambini{% endblock %}
 
 {% block content %}
 <section class="stycly-hero">
   <div class="stycly-hero-content">
-    <h1>Noleggio outfit per bambini</h1>
-    <strong>per shooting, eventi e occasioni speciali.</strong>
+    <h1>Crea il tuo guardaroba digitale</h1>
+    <strong>e scopri il noleggio abiti per bambini</strong>
+
     <p>
-      Scegli, combina e noleggia capi selezionati per bambine e bambini:
-      perfetti per cerimonie, eventi, servizi fotografici, campagne e contenuti social, senza riempire l'armadio di abiti usati una sola volta.
+      Stycly è il tuo guardaroba online di outfit per bambini pensato per shooting,
+      eventi speciali e campagne creative.  
+      Scegli i capi, prenota il noleggio e pensa solo alle foto.
     </p>
 
-    <!-- CTA principale: va al guardaroba pubblico -->
-    <a href="{{ url_for('public_wardrobe') }}" class="stycly-cta-btn">
+    <a href="{{ url_for('products') }}" class="stycly-cta-btn">
       Products
     </a>
   </div>
