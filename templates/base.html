@@ -74,90 +74,96 @@
 </main>
 
 <!-- MODAL LOGIN/REGISTER (ADMIN) -->
-<div id="authModal" class="auth-modal">
-  <div class="auth-modal-inner">
-    <button id="authClose" class="auth-close-btn">&times;</button>
+<div class="auth-modal" id="authModal">
+  <div class="auth-card" id="authContainer">
 
-    <div id="authContainer" class="auth-container">
+    <!-- pulsante chiudi -->
+    <button type="button" id="authClose" class="auth-close-btn">&times;</button>
 
-      <!-- LOGIN -->
-      <div class="form-container sign-in-container">
-        <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
-          <h2>Accedi</h2>
+    <!-- LOGIN -->
+    <div class="form-container sign-in-container">
+      <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
+        <h2>Accedi</h2>
 
-          <input type="text"
-                 name="email_or_username"
-                 placeholder="Email o username"
-                 required>
+        <input type="text"
+               name="email_or_username"
+               placeholder="Email o username"
+               required>
 
-          <input type="password"
-                 name="password"
-                 placeholder="Password"
-                 required>
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required>
 
-          <a href="{{ url_for('forgot_password') }}" class="forgot-link">
-            Hai dimenticato la password?
-          </a>
+        <a href="{{ url_for('forgot_password') }}" class="forgot-link">
+          Hai dimenticato la password?
+        </a>
 
-          <button type="submit">ACCEDI</button>
-        </form>
-      </div>
-
-      <!-- REGISTER -->
-      <div class="form-container sign-up-container">
-        <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
-          <h2>Crea il tuo account</h2>
-
-          <input type="text"
-                 name="username"
-                 placeholder="Username"
-                 required>
-
-          <input type="email"
-                 name="email"
-                 placeholder="Email"
-                 required>
-
-          <input type="password"
-                 name="password"
-                 placeholder="Password"
-                 required>
-
-          <input type="password"
-                 name="confirm_password"
-                 placeholder="Conferma password"
-                 required>
-
-          <p class="password-hint">
-            Minimo 8 caratteri, almeno 1 lettera e 1 numero.
-          </p>
-
-          <button type="submit">REGISTRATI</button>
-        </form>
-      </div>
-
-      <!-- OVERLAY -->
-      <div class="overlay-container">
-        <div class="overlay">
-
-          <div class="overlay-panel overlay-left">
-            <h3>Ben tornat*!</h3>
-            <p>Hai già un account admin?<br>Accedi per gestire il guardaroba.</p>
-            <button class="ghost" id="goToLogin">ACCEDI</button>
-          </div>
-
-          <div class="overlay-panel overlay-right">
-            <h3>Nuov* su Stycly?</h3>
-            <p>Crea un profilo admin per aggiungere<br>e organizzare i capi a noleggio.</p>
-            <button class="ghost" id="goToRegister">REGISTRATI</button>
-          </div>
-
-        </div>
-      </div>
-
+        <button type="submit">ACCEDI</button>
+      </form>
     </div>
+
+    <!-- REGISTER -->
+    <div class="form-container sign-up-container">
+      <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
+        <h2>Crea il tuo account</h2>
+
+        <input type="text"
+               name="username"
+               placeholder="Username"
+               required>
+
+        <input type="email"
+               name="email"
+               placeholder="Email"
+               required>
+
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required>
+
+        <input type="password"
+               name="confirm_password"
+               placeholder="Conferma password"
+               required>
+
+        <p class="password-hint">
+          Minimo 8 caratteri, almeno 1 lettera e 1 numero.
+        </p>
+
+        <button type="submit">REGISTRATI</button>
+      </form>
+    </div>
+
+    <!-- OVERLAY GRADIENT (lato destro) -->
+    <div class="overlay-container">
+      <div class="overlay">
+
+        <div class="overlay-panel overlay-left">
+          <h2>Ben tornat*!</h2>
+          <p class="auth-subtitle">
+            Hai già un account admin?<br>
+            Accedi per aggiornare il guardaroba dei capi a noleggio.
+          </p>
+          <button class="ghost" id="goToLogin">ACCEDI</button>
+        </div>
+
+        <div class="overlay-panel overlay-right">
+          <h2>Nuov* su Stycly?</h2>
+          <p class="auth-subtitle">
+            Crea un profilo admin per aggiungere,<br>
+            organizzare e pubblicare i capi a noleggio.
+          </p>
+          <button class="ghost" id="goToRegister">REGISTRATI</button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </div>
+
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% block extra_js %}{% endblock %}
