@@ -34,40 +34,39 @@
 
     <!-- MENU DESKTOP / MOBILE -->
     <nav class="stycly-nav" id="mainNav">
-    <a href="{{ url_for('home') }}"
-       class="{% if request.endpoint == 'home' %}nav-active{% endif %}">
-        HOME
-    </a>
-
-    <a href="{{ url_for('products') }}"
-       class="{% if request.endpoint in ['products'] %}nav-active{% endif %}">
-        PRODUCTS
-    </a>
-
-    <a href="{{ url_for('about') }}"
-       class="{% if request.endpoint == 'about' %}nav-active{% endif %}">
-        ABOUT US
-    </a>
-
-    <a href="{{ url_for('contact') }}"
-       class="{% if request.endpoint == 'contact' %}nav-active{% endif %}">
-        CONTACT
-    </a>
-
-    {% if session.get('user_id') %}
-        <span class="stycly-user-label">
-            Ciao, {{ session.get('username') }}
-        </span>
-        <a href="{{ url_for('private_wardrobe') }}"
-           class="{% if request.endpoint == 'private_wardrobe' %}nav-active{% endif %}">
-            PRIVATE WARDROBE
+        <a href="{{ url_for('home') }}"
+           class="{% if request.endpoint == 'home' %}nav-active{% endif %}">
+            HOME
         </a>
-        <a href="{{ url_for('logout') }}">LOGOUT</a>
-    {% else %}
-        <a href="#" id="area-riservata-link">AREA RISERVATA</a>
-    {% endif %}
-</nav>
 
+        <a href="{{ url_for('products') }}"
+           class="{% if request.endpoint in ['products'] %}nav-active{% endif %}">
+            PRODUCTS
+        </a>
+
+        <a href="{{ url_for('about') }}"
+           class="{% if request.endpoint == 'about' %}nav-active{% endif %}">
+            ABOUT US
+        </a>
+
+        <a href="{{ url_for('contact') }}"
+           class="{% if request.endpoint == 'contact' %}nav-active{% endif %}">
+            CONTACT
+        </a>
+
+        {% if session.get('user_id') %}
+            <span class="stycly-user-label">
+                Ciao, {{ session.get('username') }}
+            </span>
+            <a href="{{ url_for('private_wardrobe') }}"
+               class="{% if request.endpoint == 'private_wardrobe' %}nav-active{% endif %}">
+                PRIVATE WARDROBE
+            </a>
+            <a href="{{ url_for('logout') }}">LOGOUT</a>
+        {% else %}
+            <a href="#" id="area-riservata-link">AREA RISERVATA</a>
+        {% endif %}
+    </nav>
 </header>
 
 <main>
@@ -75,84 +74,69 @@
 </main>
 
 <!-- MODAL LOGIN/REGISTER (ADMIN) -->
-<div class="auth-modal" id="authModal">
+<div id="authModal" class="auth-modal">
   <div class="auth-card" id="authContainer">
-    <!-- BLOCCO LOGIN -->
+
+    <!-- LOGIN -->
     <div class="form-container sign-in-container">
-  <form action="{{ url_for('login') }}" method="POST" autocomplete="off" novalidate>
-    <h2>Accedi</h2>
-    <p class="auth-subtitle">
-      Entra nell'area riservata admin di Stycly<br>
-      per gestire il guardaroba dei capi a noleggio.
-    </p>
+      <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
+        <h2>Accedi</h2>
 
-    <input type="text"
-           name="email_or_username"
-           placeholder="Email o username"
-           required
-           autocomplete="off">
+        <input type="text"
+               name="email_or_username"
+               placeholder="Email o username"
+               required>
 
-    <input type="password"
-           name="password"
-           placeholder="Password"
-           required
-           autocomplete="current-password">
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required>
 
-    <!-- NUOVO LINK -->
-    <a href="{{ url_for('forgot_password') }}" class="forgot-link">
-      Hai dimenticato la password?
-    </a>
+        <a href="{{ url_for('forgot_password') }}" class="forgot-link">
+          Hai dimenticato la password?
+        </a>
 
-    <button type="submit">ACCEDI</button>
-  </form>
-</div>
+        <button type="submit">ACCEDI</button>
+      </form>
+    </div>
 
-
-    <!-- BLOCCO REGISTER -->
+    <!-- REGISTER -->
     <div class="form-container sign-up-container">
-  <form action="{{ url_for('register') }}" method="POST" autocomplete="off" novalidate>
-    <h2>Crea il tuo account</h2>
-    <p class="auth-subtitle">
-      Registrati come admin per creare e aggiornare<br>
-      il guardaroba pubblico dei capi a noleggio.
-    </p>
+      <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
+        <h2>Crea il tuo account</h2>
 
-    <input type="text"
-           name="username"
-           placeholder="Username"
-           required
-           autocomplete="off">
+        <input type="text"
+               name="username"
+               placeholder="Username"
+               required>
 
-    <input type="email"
-           name="email"
-           placeholder="Email"
-           required
-           autocomplete="off">
+        <input type="email"
+               name="email"
+               placeholder="Email"
+               required>
 
-    <input type="password"
-           name="password"
-           placeholder="Password"
-           required
-           autocomplete="new-password">
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required>
 
-    <input type="password"
-           name="confirm_password"
-           placeholder="Conferma password"
-           required
-           autocomplete="new-password">
+        <input type="password"
+               name="confirm_password"
+               placeholder="Conferma password"
+               required>
 
-    <p class="password-hint">
-      La password deve avere almeno 8 caratteri e contenere almeno una lettera e un numero.
-    </p>
+        <p class="password-hint">
+          Minimo 8 caratteri, almeno 1 lettera + 1 numero.
+        </p>
 
-    <button type="submit">REGISTRATI</button>
-  </form>
-</div>
+        <button type="submit">REGISTRATI</button>
+      </form>
+    </div>
 
-
-    <!-- OVERLAY GRADIENT -->
+    <!-- OVERLAY -->
     <div class="overlay-container">
       <div class="overlay">
+
         <div class="overlay-panel overlay-left">
           <h2>Ben tornat*!</h2>
           <p class="auth-subtitle">
@@ -161,6 +145,7 @@
           </p>
           <button class="ghost" id="goToLogin">ACCEDI</button>
         </div>
+
         <div class="overlay-panel overlay-right">
           <h2>Nuov* su Stycly?</h2>
           <p class="auth-subtitle">
@@ -169,18 +154,20 @@
           </p>
           <button class="ghost" id="goToRegister">REGISTRATI</button>
         </div>
+
       </div>
     </div>
 
     <!-- Pulsante chiusura modal -->
     <button type="button" id="authClose" class="auth-close-btn">×</button>
+
   </div>
 </div>
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
-
 
 
 
