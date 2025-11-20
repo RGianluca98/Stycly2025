@@ -75,119 +75,107 @@
 
 <!-- MODAL LOGIN/REGISTER (ADMIN) -->
 <div id="authModal" class="auth-modal">
-  <div class="auth-card" id="authContainer">
-
-            <!-- LOGIN -->
-    <div class="form-container sign-in-container">
-      <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
-        <h2>Accedi</h2>
-
-        <div class="auth-field">
-          <input type="text"
-                 name="email_or_username"
-                 required>
-          <label class="auth-label">
-            Email o username<span class="req">*</span>
-          </label>
-        </div>
-
-        <div class="auth-field">
-          <input type="password"
-                 name="password"
-                 required>
-          <label class="auth-label">
-            Password<span class="req">*</span>
-          </label>
-        </div>
-
-        <p class="forgot">
-          <a href="{{ url_for('forgot_password') }}">Hai dimenticato la password?</a>
-        </p>
-
-        <button type="submit">ACCEDI</button>
-      </form>
-    </div>
-
-    <!-- REGISTER -->
-    <div class="form-container sign-up-container">
-      <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
-        <h2>Crea il tuo account</h2>
-
-        <div class="auth-field">
-          <input type="text"
-                 name="username"
-                 required>
-          <label class="auth-label">
-            Username<span class="req">*</span>
-          </label>
-        </div>
-
-        <div class="auth-field">
-          <input type="email"
-                 name="email"
-                 required>
-          <label class="auth-label">
-            Email<span class="req">*</span>
-          </label>
-        </div>
-
-        <div class="auth-field">
-          <input type="password"
-                 name="password"
-                 required>
-          <label class="auth-label">
-            Password<span class="req">*</span>
-          </label>
-        </div>
-
-        <div class="auth-field">
-          <input type="password"
-                 name="confirm_password"
-                 required>
-          <label class="auth-label">
-            Conferma password<span class="req">*</span>
-          </label>
-        </div>
-
-        <p class="password-hint">
-          Minimo 8 caratteri, almeno 1 lettera e 1 numero.
-        </p>
-
-        <button type="submit">REGISTRATI</button>
-      </form>
-    </div>
-
-
-    <!-- OVERLAY -->
-    <div class="overlay-container">
-      <div class="overlay">
-
-        <div class="overlay-panel overlay-left">
-          <h2>Ben tornat*!</h2>
-          <p class="auth-subtitle">
-            Hai già un account admin?<br>
-            Accedi per aggiornare il guardaroba dei capi a noleggio.
-          </p>
-          <button class="ghost" id="goToLogin">ACCEDI</button>
-        </div>
-
-        <div class="overlay-panel overlay-right">
-          <h2>Nuov* su Stycly?</h2>
-          <p class="auth-subtitle">
-            Crea un profilo admin per aggiungere,<br>
-            organizzare e pubblicare i capi a noleggio.
-          </p>
-          <button class="ghost" id="goToRegister">REGISTRATI</button>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Pulsante chiusura modal -->
+  <div class="auth-card">
+    <!-- Pulsante chiusura -->
     <button type="button" id="authClose" class="auth-close-btn">×</button>
 
+    <div class="auth-form-box">
+      <!-- TAB HEADER -->
+      <ul class="auth-tab-group">
+        <li class="auth-tab active"><a href="#auth-login">Accedi</a></li>
+        <li class="auth-tab"><a href="#auth-signup">Registrati</a></li>
+      </ul>
+
+      <div class="auth-tab-content">
+        <!-- PANE LOGIN -->
+        <div id="auth-login" class="auth-pane active">
+          <h2>Accedi</h2>
+
+          <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
+            <div class="auth-field">
+              <input type="text"
+                     name="email_or_username"
+                     required>
+              <label class="auth-label">
+                Email o username<span class="req">*</span>
+              </label>
+            </div>
+
+            <div class="auth-field">
+              <input type="password"
+                     name="password"
+                     required>
+              <label class="auth-label">
+                Password<span class="req">*</span>
+              </label>
+            </div>
+
+            <p class="forgot">
+              <a href="{{ url_for('forgot_password') }}">Hai dimenticato la password?</a>
+            </p>
+
+            <button type="submit" class="auth-button">Accedi</button>
+          </form>
+        </div>
+
+        <!-- PANE REGISTRAZIONE -->
+        <div id="auth-signup" class="auth-pane">
+          <h2>Crea il tuo account</h2>
+
+          <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
+            <div class="auth-field">
+              <input type="text"
+                     name="username"
+                     required>
+              <label class="auth-label">
+                Username<span class="req">*</span>
+              </label>
+            </div>
+
+            <div class="auth-field">
+              <input type="email"
+                     name="email"
+                     required>
+              <label class="auth-label">
+                Email<span class="req">*</span>
+              </label>
+            </div>
+
+            <div class="auth-field">
+              <input type="password"
+                     name="password"
+                     required>
+              <label class="auth-label">
+                Password<span class="req">*</span>
+              </label>
+            </div>
+
+            <div class="auth-field">
+              <input type="password"
+                     name="confirm_password"
+                     required>
+              <label class="auth-label">
+                Conferma password<span class="req">*</span>
+              </label>
+            </div>
+
+            <p class="password-hint">
+              Minimo 8 caratteri, almeno 1 lettera e 1 numero.
+            </p>
+
+            <button type="submit" class="auth-button">Registrati</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>
+
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% block extra_js %}{% endblock %}

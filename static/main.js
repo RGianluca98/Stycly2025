@@ -11,28 +11,21 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* AUTH MODAL */
-  const authModal     = document.getElementById('authModal');
-  const authContainer = document.getElementById('authContainer');
-  const areaLink      = document.getElementById('area-riservata-link');
-  const authClose     = document.getElementById('authClose');
-  const goToLogin     = document.getElementById('goToLogin');
-  const goToRegister  = document.getElementById('goToRegister');
+  const authModal = document.getElementById('authModal');
+  const areaLink = document.getElementById('area-riservata-link');
+  const authClose = document.getElementById('authClose');
 
   function openAuth() {
-  if (!authModal) return;
-  authModal.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  if (authContainer) authContainer.classList.remove('right-panel-active');
+    if (!authModal) return;
+    authModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
 
-  // Pulisce sempre tutti i campi del modal ad ogni apertura
-  const inputs = authModal.querySelectorAll('input');
-  inputs.forEach(input => {
-    if (input.type === 'password' || input.type === 'text' || input.type === 'email') {
-      input.value = '';
+    // di default mostra il tab "Accedi"
+    const loginTabLink = document.querySelector('.auth-tab-group .auth-tab:first-child a');
+    if (loginTabLink) {
+      loginTabLink.click();
     }
-  });
-}
-
+  }
 
   function closeAuth() {
     if (!authModal) return;
@@ -59,20 +52,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  if (goToLogin && authContainer) {
-    goToLogin.addEventListener('click', () => {
-      authContainer.classList.remove('right-panel-active');
+  /* TAB LOGIN / REGISTRAZIONE */
+  const tabLinks = document.querySelectorAll('.auth-tab-group .auth-tab a');
+  const panes = document.querySelectorAll('.auth-tab-content .auth-pane');
+
+  if (tabLinks.length && panes.length) {
+    tabLinks.forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const targetId = link.getAttribute('href').replace('#', '');
+
+        // attiva tab
+        document.querySelectorAll('.auth-tab-group .auth-tab')
+          .forEach((li) => li.classList.remove('active'));
+        link.parentElement.classList.add('active');
+
+        // mostra il pane giusto
+        panes.forEach((pane) => {
+          pane.classList.toggle('active', pane.id === targetId);
+        });
+      });
     });
   }
 
-  if (goToRegister && authContainer) {
-    goToRegister.addEventListener('click', () => {
-      authContainer.classList.add('right-panel-active');
-    });
-  }
-});
-
-  /* LABEL FLOTANTI NEL MODAL AUTH */
+  /* LABEL FLOTANTI NEI CAMPI AUTH */
   const authInputs = document.querySelectorAll('.auth-field input');
 
   authInputs.forEach((input) => {
@@ -98,9 +101,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     input.addEventListener('input', update);
 
-    // inizializza stato corretto se il browser ha messo valori
+    // inizializza (utile se il browser precompila)
     update();
   });
+});
+
 
 
 
