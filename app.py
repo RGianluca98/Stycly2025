@@ -11,13 +11,13 @@ from flask import (
     send_from_directory, session, flash, Response
 )
 from werkzeug.utils import secure_filename
+    # maybe keep as is
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from sqlalchemy import (
     create_engine, Table, Column, Integer, String,
     MetaData, ForeignKey, text, inspect
 )
-
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
@@ -130,6 +130,7 @@ def allowed_file(filename: str) -> bool:
         and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
     )
 
+
 def validate_password_strength(password: str) -> str | None:
     """
     Controlla robustezza password.
@@ -167,7 +168,6 @@ def crea_tabella_wardrobe(nome_tabella: str) -> str:
     return nome_tabella
 
 
-
 def get_personal_wardrobe(user: User) -> Wardrobe:
     """
     Restituisce (o crea) il wardrobe personale dell'utente,
@@ -191,6 +191,7 @@ def get_personal_wardrobe(user: User) -> Wardrobe:
 
     return w
 
+
 def is_strong_password(pw: str) -> bool:
     """
     Almeno 8 caratteri, almeno una lettera e almeno una cifra.
@@ -203,13 +204,13 @@ def is_strong_password(pw: str) -> bool:
         return False
     return True
 
+
 # ----------------------------
 #       SESSIONE / LOGIN
 # ----------------------------
 
 def login_required(view_func):
     """Decorator per proteggere le route: richiede utente loggato e sessione non scaduta."""
-
     @wraps(view_func)
     def wrapped_view(*args, **kwargs):
         user_id = session.get("user_id")
@@ -241,8 +242,6 @@ def login_required(view_func):
 # ----------------------------
 #       AUTH ROUTES
 # ----------------------------
-
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -284,9 +283,6 @@ def register():
 
     flash("Registrazione completata, ora effettua il login dall'Area Riservata.", "success")
     return redirect(url_for('home'))
-
-
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -347,7 +343,6 @@ def inject_user_header_info():
     - current_user_username
     - current_user_email
     - current_user_last_added (timestamp ultimo capo, se disponibile)
-
     Qualsiasi errore interno viene “assorbito” per evitare 500.
     """
     try:
@@ -355,27 +350,21 @@ def inject_user_header_info():
         if not user_id:
             return {}
 
-        # recupero utente
         user = db_session.query(User).get(user_id)
         if not user:
-            # sessione “sporca”: pulisco e non rompo il rendering
             session.clear()
             return {}
 
         last_added = None
 
-        # prendo il wardrobe personale (se esiste)
         w = db_session.query(Wardrobe).filter_by(user_id=user_id).first()
         if w:
             metadata = MetaData()
             inspector = inspect(engine)
             existing_tables = set(inspector.get_table_names())
 
-            # controllo che la tabella fisica esista
             if w.nome in existing_tables:
                 tbl = Table(w.nome, metadata, autoload_with=engine)
-
-                # solo se la colonna created_at esiste davvero
                 if 'created_at' in tbl.c:
                     with engine.connect() as conn:
                         row = conn.execute(
@@ -391,27 +380,18 @@ def inject_user_header_info():
             current_user_email=user.email,
             current_user_last_added=last_added
         )
-
     except Exception:
-        # in caso di qualunque errore non blocco l'app,
-        # semplicemente non inietto nulla
         return {}
-
 
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
-    """
-    Pagina 'Hai dimenticato la password?'.
-    Per ora mostra solo un form email e un messaggio di conferma.
-    """
     if request.method == 'POST':
         email = request.form.get('email', '').strip().lower()
         if not email:
             flash("Inserisci una email valida.", "error")
             return redirect(url_for('forgot_password'))
 
-        # Qui in futuro potrai aggiungere l'invio email/reset token
         flash("Se l'email è registrata, riceverai le istruzioni per reimpostare la password.", "info")
         return redirect(url_for('home'))
 
@@ -438,6 +418,7 @@ def clear_wardrobe():
 
     return redirect(url_for('private_wardrobe'))
 
+
 @app.route('/delete-account', methods=['GET', 'POST'])
 @login_required
 def delete_account():
@@ -457,7 +438,6 @@ def delete_account():
         return redirect(url_for('private_wardrobe'))
 
     if not user:
-        # se per qualche motivo l'utente non esiste più, pulisco la sessione
         session.clear()
         flash("Utente non trovato.", "error")
         return redirect(url_for('home'))
@@ -465,27 +445,20 @@ def delete_account():
     metadata = MetaData()
 
     try:
-        # tutti i wardrobe associati all'utente
         wardrobes = db_session.query(Wardrobe).filter_by(user_id=user_id).all()
-
-        # elenco tabelle esistenti nel DB (per evitare errori se il nome non esiste)
         inspector = inspect(engine)
         existing_tables = set(inspector.get_table_names())
 
         for w in wardrobes:
-            # se esiste una tabella fisica col nome del wardrobe, provo a dropparla
             if w.nome in existing_tables:
                 try:
                     tbl = Table(w.nome, metadata, autoload_with=engine)
                     tbl.drop(engine, checkfirst=True)
                 except Exception:
-                    # se il drop fallisce, non blocco l'intero processo
                     pass
 
-            # elimino il record dalla tabella master "wardrobes"
             db_session.delete(w)
 
-        # infine elimino l'utente
         db_session.delete(user)
         db_session.commit()
 
@@ -494,7 +467,6 @@ def delete_account():
         flash("Si è verificato un errore durante l'eliminazione dell'account.", "error")
         return redirect(url_for('private_wardrobe'))
 
-    # se è andato tutto bene, pulisco la sessione e torno alla home
     session.clear()
     flash("Account e dati associati eliminati definitivamente.", "success")
     return redirect(url_for('home'))
@@ -518,11 +490,6 @@ def home():
 @app.route('/products')
 @app.route('/public-wardrobe')
 def products():
-    """
-    Products / Public Wardrobe:
-    mostra TUTTI i capi di TUTTI i wardrobe degli utenti.
-    L'endpoint si chiama 'products'; /public-wardrobe è un alias.
-    """
     metadata = MetaData()
     all_capi = []
 
@@ -568,10 +535,6 @@ def contact():
 @app.route('/private-wardrobe')
 @login_required
 def private_wardrobe():
-    """
-    Unico wardrobe personale per utente.
-    Se l’utente non esiste più o la tabella è rotta, non faccio crashare tutto.
-    """
     user_id = session.get('user_id')
     if not user_id:
         session.clear()
@@ -584,7 +547,6 @@ def private_wardrobe():
         flash("Utente non trovato. Effettua di nuovo il login.", "error")
         return redirect(url_for('home'))
 
-    # recupera (o crea) il wardrobe personale
     w = get_personal_wardrobe(user)
 
     metadata = MetaData()
@@ -597,7 +559,6 @@ def private_wardrobe():
             columns = wardrobe_table.columns.keys()
             capi = [dict(zip(columns, row)) for row in rows]
     except Exception:
-        # se qualcosa va storto mostro comunque la pagina (magari vuota)
         flash("Si è verificato un problema nel caricamento del guardaroba.", "error")
 
     return render_template(
@@ -608,32 +569,22 @@ def private_wardrobe():
     )
 
 
-
 @app.route('/create-private-wardrobe', methods=['GET', 'POST'])
 @login_required
 def create_private_wardrobe():
-    """
-    NON più usata in UI (niente link nel menu).
-    La teniamo solo per compatibilità, ma idealmente da rimuovere in futuro.
-    """
     flash("La creazione di nuovi wardrobe non è più disponibile.", "info")
     return redirect(url_for('private_wardrobe'))
 
-# ---------------------------- da capire se eliminare
+
 @app.route('/select-private-wardrobe', methods=['GET', 'POST'])
 @login_required
 def select_private_wardrobe():
-    """
-    Non più necessaria con un solo wardrobe personale.
-    Reindirizziamo alla pagina principale del wardrobe.
-    """
-    return redirect(url_for('private_wardrobe')) 
+    return redirect(url_for('private_wardrobe'))
 
 
 @app.route('/gestisci-private-wardrobe/<nome_tabella>')
 @login_required
 def gestisci_private_wardrobe(nome_tabella):
-    # controllo ownership
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -662,40 +613,49 @@ def aggiungi_capo_wardrobe(nome_tabella):
         data = json.load(f)
 
     if request.method == 'POST':
-        values = {
-            field: request.form.get(field)
-            for field in ['categoria', 'tipologia', 'brand', 'destinazione', 'taglia', 'fit', 'colore']
-        }
-        file = request.files.get('immagine')
-        file2 = request.files.get('immagine2')
+        try:
+            values = {
+                field: request.form.get(field)
+                for field in ['categoria', 'tipologia', 'brand', 'destinazione', 'taglia', 'fit', 'colore']
+            }
+            file = request.files.get('immagine')
+            file2 = request.files.get('immagine2')
 
-        if not all(values.values()) or not file:
-            return "Errore: tutti i campi sono obbligatori.", 400
-        if not allowed_file(file.filename):
-            return "Errore: immagine non valida.", 400
+            if not all(values.values()) or not file:
+                flash("Tutti i campi e l'immagine principale sono obbligatori.", "error")
+                return redirect(url_for('aggiungi_capo_wardrobe', nome_tabella=nome_tabella))
 
-        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+            if not allowed_file(file.filename):
+                flash("Formato immagine non valido.", "error")
+                return redirect(url_for('aggiungi_capo_wardrobe', nome_tabella=nome_tabella))
 
-        filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        values['immagine'] = filename
+            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-        if file2 and allowed_file(file2.filename):
-                    filename2 = secure_filename(file2.filename)
-                    file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
-                    values['immagine2'] = filename2
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            values['immagine'] = filename
 
-        metadata = MetaData()
-        tbl = Table(nome_tabella, metadata, autoload_with=engine)
+            if file2 and allowed_file(file2.filename):
+                filename2 = secure_filename(file2.filename)
+                file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+                values['immagine2'] = filename2
 
-        # aggiungo created_at solo se la colonna esiste davvero
-        if 'created_at' in tbl.c:
-            values['created_at'] = datetime.utcnow().isoformat()
+            metadata = MetaData()
+            tbl = Table(nome_tabella, metadata, autoload_with=engine)
 
-        with engine.begin() as conn:
-            conn.execute(tbl.insert().values(**values))
+            # aggiungo created_at solo se la colonna esiste davvero
+            if 'created_at' in tbl.c:
+                values['created_at'] = datetime.utcnow().isoformat()
 
-        return redirect(url_for('private_wardrobe'))
+            with engine.begin() as conn:
+                conn.execute(tbl.insert().values(**values))
+
+            flash("Capo aggiunto correttamente.", "success")
+            return redirect(url_for('private_wardrobe'))
+
+        except Exception:
+            flash("Si è verificato un errore durante l'aggiunta del capo.", "error")
+            return redirect(url_for('private_wardrobe'))
 
     return render_template('aggiungi_capo_wardrobe.html', nome_tabella=nome_tabella, **data)
 
@@ -790,10 +750,6 @@ def elimina_capo_wardrobe(nome_tabella, capo_id):
 @app.route('/elimina-wardrobe/<nome_tabella>', methods=['POST'])
 @login_required
 def elimina_wardrobe(nome_tabella):
-    """
-    Con un solo wardrobe personale, in pratica questa route non dovrebbe servire.
-    La lascio per compatibilità, ma idealmente da non esporre nella UI.
-    """
     user_id = session['user_id']
     w = db_session.query(Wardrobe).filter_by(nome=nome_tabella, user_id=user_id).first()
     if not w:
@@ -817,9 +773,6 @@ def elimina_wardrobe(nome_tabella):
 @app.route('/visualizza-private-wardrobe/<nome_tabella>')
 @login_required
 def visualizza_private_wardrobe(nome_tabella):
-    """
-    Se qualcuno ci arriva, reindirizziamo al wardrobe personale.
-    """
     return redirect(url_for('private_wardrobe'))
 
 
@@ -892,85 +845,11 @@ def export_wardrobe(nome_tabella):
 
 
 # ----------------------------
-#       ADMIN: PULIZIA CAPI
-# ----------------------------
-"""
-@app.route('/admin/clear-all-items')
-def admin_clear_all_items():
-    
-    key = request.args.get('key')
-   expected = os.environ.get("ADMIN_CLEAR_KEY", "dev-reset")
-
-    if key != expected:
-       return "Not allowed", 403
-
-   metadata = MetaData()
-   wardrobes = db_session.query(Wardrobe).all()
-
-   total_deleted = 0
-   table_count = 0
-
-    for w in wardrobes:
-      try:
-          tbl = Table(w.nome, metadata, autoload_with=engine)
-       except Exception:
-        # se la tabella non esiste o dà errore, passa oltre
-           continue
-
-        with engine.begin() as conn:
-            result = conn.execute(tbl.delete())
-            # rowcount potrebbe essere None su alcuni DB, gestiamolo
-            if hasattr(result, "rowcount") and result.rowcount is not None:
-               total_deleted += result.rowcount
-       table_count += 1
-
-    return f"OK: cancellati {total_deleted} capi da {table_count} wardrobe."
-
-# ----------------------------
-#       ADMIN: RESET COMPLETO DB
-# ----------------------------
-
-@app.route('/admin/reset-all')
-def admin_reset_all():
-    
-    key = request.args.get('key')
-    expected = os.environ.get("ADMIN_RESET_KEY", "dev-reset-all")
-
-    if key != expected:
-        return "Not allowed", 403
-
-    metadata = MetaData()
-    inspector = inspect(engine)
-    table_names = inspector.get_table_names()
-
-    dropped_tables = 0
-
-    # 1) Droppa tutte le tabelle wardrobe_*
-    for tname in table_names:
-        if tname.startswith("wardrobe_"):
-            try:
-                tbl = Table(tname, metadata, autoload_with=engine)
-                tbl.drop(engine, checkfirst=True)
-                dropped_tables += 1
-            except Exception:
-                continue
-
-    # 2) Svuota le tabelle master wardrobes e users
-    with engine.begin() as conn:
-        conn.execute(text("DELETE FROM wardrobes"))
-        conn.execute(text("DELETE FROM users"))
-
-    # 3) Pulisce eventuale sessione corrente
-    session.clear()
-
-    return f"OK: droppate {dropped_tables} tabelle wardrobe_*, svuotate 'users' e 'wardrobes'."
-"""
-
-# ----------------------------
 #       AVVIO LOCALE
 # ----------------------------
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port, debug=True)
+
 

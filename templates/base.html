@@ -60,6 +60,7 @@
                 PRIVATE WARDROBE
             </a>
 
+            <!-- MENU UTENTE A TENDINA -->
             <div class="user-menu">
                 <button type="button" class="user-menu-toggle">
                     {{ current_user_username or session.get('username') }}
@@ -100,7 +101,7 @@
                         <!-- ELIMINA ACCOUNT -->
                         <form method="POST"
                               action="{{ url_for('delete_account') }}"
-                              onsubmit="return confirm('Vuoi eliminare definitivamente il tuo account e tutti i dati associati? L\\'operazione è irreversibile.');">
+                              onsubmit="return confirm('Vuoi eliminare definitivamente il tuo account e tutti i dati associati? L&#39;operazione è irreversibile.');">
                             <button type="submit"
                                     class="user-menu-btn user-menu-btn-delete">
                                 Elimina account
@@ -272,6 +273,7 @@
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
+
 
 
 
