@@ -3,16 +3,17 @@
 
 :root {
     /* Palette Stycly */
-    --col-primario: #3A4C69;   /* Soft Navy – testi importanti */
-    --col-secondario: #F2F4F7; /* Light Grey – sfondi soft */
-    --col-accent: #7DB2E0;     /* Baby Blue – bottoni, link attivi */
-    --col-hover: #1468e5;      /* Hover accent più intenso */
-    --col-white: #FFFFFF;
-    --col-warm-beige: #E8D4C0;
-    --col-accent-yellow: #F7D774;
+  --col-baby-blue:    #7DB2E0;  /* primary buttons, header */
+  --col-light-sky:    #C9E2F5;  /* sfondi soft, tab background */
+  --col-soft-pink:    #D3BCB7;  /* highlight / badge */
+  --col-warm-beige:   #E8D4C0;  /* dettagli decorativi */
+  --col-white:        #FFFFFF;  /* main background */
+  --col-soft-grey:    #F2F4F7;  /* card background, sections */
+  --col-deep-greyblue:#3A4C69;  /* testi importanti / titoli */
+  --col-soft-yellow:  #F7D774;  /* CTA speciali */
 
-    --font-main: 'Poppins', Arial, sans-serif;
-    --font-title: 'Fredoka', 'Poppins', Arial, sans-serif;
+  --font-title: 'Fredoka', 'Baloo 2', system-ui, sans-serif;
+  --font-main:  'Poppins', 'Nunito', system-ui, sans-serif;
 
     --f-sm: 0.95rem;
     --f-md: 1.05rem;
