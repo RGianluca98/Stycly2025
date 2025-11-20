@@ -11,7 +11,7 @@
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- CSS principale -->
+    <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     {% block extra_head %}{% endblock %}
@@ -73,102 +73,118 @@
     {% block content %}{% endblock %}
 </main>
 
-<!-- MODAL LOGIN/REGISTER (ADMIN) -->
-<div class="auth-modal" id="authModal">
-  <div class="auth-card" id="authContainer">
+<!-- MODAL LOGIN/REGISTER (ADMIN) – nuovo layout a tab -->
+<div id="authModal" class="auth-modal">
+  <div class="auth-card auth-tabs-card">
+    <!-- pulsante chiusura -->
+    <button type="button" id="authClose" class="auth-close-btn">×</button>
 
-    <!-- pulsante chiudi -->
-    <button type="button" id="authClose" class="auth-close-btn">&times;</button>
+    <!-- tabs LOGIN / REGISTER -->
+    <ul class="auth-tab-group">
+      <li class="auth-tab active" data-target="auth-login-panel">Accedi</li>
+      <li class="auth-tab" data-target="auth-register-panel">Registrati</li>
+    </ul>
 
-    <!-- LOGIN -->
-    <div class="form-container sign-in-container">
-      <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
+    <div class="auth-tab-content">
+
+      <!-- PANEL LOGIN -->
+      <div id="auth-login-panel" class="auth-panel active">
         <h2>Accedi</h2>
+        <form method="POST" action="{{ url_for('login') }}" autocomplete="off" class="auth-form">
+          <div class="auth-field-wrap">
+            <label>
+              Email o username<span class="req">*</span>
+            </label>
+            <input type="text"
+                   name="email_or_username"
+                   required
+                   autocomplete="off">
+          </div>
 
-        <input type="text"
-               name="email_or_username"
-               placeholder="Email o username"
-               required>
+          <div class="auth-field-wrap">
+            <label>
+              Password<span class="req">*</span>
+            </label>
+            <input type="password"
+                   name="password"
+                   required
+                   autocomplete="off">
+          </div>
 
-        <input type="password"
-               name="password"
-               placeholder="Password"
-               required>
-
-        <a href="{{ url_for('forgot_password') }}" class="forgot-link">
-          Hai dimenticato la password?
-        </a>
-
-        <button type="submit">ACCEDI</button>
-      </form>
-    </div>
-
-    <!-- REGISTER -->
-    <div class="form-container sign-up-container">
-      <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
-        <h2>Crea il tuo account</h2>
-
-        <input type="text"
-               name="username"
-               placeholder="Username"
-               required>
-
-        <input type="email"
-               name="email"
-               placeholder="Email"
-               required>
-
-        <input type="password"
-               name="password"
-               placeholder="Password"
-               required>
-
-        <input type="password"
-               name="confirm_password"
-               placeholder="Conferma password"
-               required>
-
-        <p class="password-hint">
-          Minimo 8 caratteri, almeno 1 lettera e 1 numero.
-        </p>
-
-        <button type="submit">REGISTRATI</button>
-      </form>
-    </div>
-
-    <!-- OVERLAY GRADIENT (lato destro) -->
-    <div class="overlay-container">
-      <div class="overlay">
-
-        <div class="overlay-panel overlay-left">
-          <h2>Ben tornat*!</h2>
-          <p class="auth-subtitle">
-            Hai già un account admin?<br>
-            Accedi per aggiornare il guardaroba dei capi a noleggio.
+          <p class="auth-forgot">
+            <a href="#">Hai dimenticato la password?</a>
           </p>
-          <button class="ghost" id="goToLogin">ACCEDI</button>
-        </div>
 
-        <div class="overlay-panel overlay-right">
-          <h2>Nuov* su Stycly?</h2>
-          <p class="auth-subtitle">
-            Crea un profilo admin per aggiungere,<br>
-            organizzare e pubblicare i capi a noleggio.
-          </p>
-          <button class="ghost" id="goToRegister">REGISTRATI</button>
-        </div>
-
+          <button type="submit" class="auth-button auth-button-block">
+            ACCEDI
+          </button>
+        </form>
       </div>
-    </div>
 
+      <!-- PANEL REGISTER -->
+      <div id="auth-register-panel" class="auth-panel">
+        <h2>Crea il tuo account</h2>
+        <form method="POST" action="{{ url_for('register') }}" autocomplete="off" class="auth-form">
+
+          <div class="auth-field-wrap">
+            <label>
+              Username<span class="req">*</span>
+            </label>
+            <input type="text"
+                   name="username"
+                   required
+                   autocomplete="off">
+          </div>
+
+          <div class="auth-field-wrap">
+            <label>
+              Email<span class="req">*</span>
+            </label>
+            <input type="email"
+                   name="email"
+                   required
+                   autocomplete="off">
+          </div>
+
+          <div class="auth-field-wrap">
+            <label>
+              Password<span class="req">*</span>
+            </label>
+            <input type="password"
+                   name="password"
+                   required
+                   autocomplete="off">
+          </div>
+
+          <div class="auth-field-wrap">
+            <label>
+              Conferma password<span class="req">*</span>
+            </label>
+            <input type="password"
+                   name="confirm_password"
+                   required
+                   autocomplete="off">
+          </div>
+
+          <p class="password-hint">
+            Minimo 8 caratteri, almeno 1 lettera e 1 numero.
+          </p>
+
+          <button type="submit" class="auth-button auth-button-block">
+            REGISTRATI
+          </button>
+        </form>
+      </div>
+
+    </div>
   </div>
 </div>
-
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 {% block extra_js %}{% endblock %}
 </body>
 </html>
+
 
 
 
