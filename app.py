@@ -175,6 +175,17 @@ def get_personal_wardrobe(user: User) -> Wardrobe:
 
     return w
 
+def is_strong_password(pw: str) -> bool:
+    """
+    Almeno 8 caratteri, almeno una lettera e almeno una cifra.
+    """
+    if len(pw) < 8:
+        return False
+    if not re.search(r"[A-Za-z]", pw):
+        return False
+    if not re.search(r"\d", pw):
+        return False
+    return True
 
 # ----------------------------
 #       SESSIONE / LOGIN
@@ -215,6 +226,8 @@ def login_required(view_func):
 #       AUTH ROUTES
 # ----------------------------
 
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     # gestiamo solo POST dal modal; GET → home
@@ -223,14 +236,19 @@ def register():
 
     username = request.form.get('username', '').strip()
     email = request.form.get('email', '').strip().lower()
-    password = request.form.get('password')
+    password = request.form.get('password', '') or ''
+    confirm_password = request.form.get('confirm_password', '') or ''
 
-    if not username or not email or not password:
+    if not username or not email or not password or not confirm_password:
         flash("Tutti i campi sono obbligatori.", "error")
         return redirect(url_for('home'))
 
-    if len(password) < 6:
-        flash("La password deve avere almeno 6 caratteri.", "error")
+    if password != confirm_password:
+        flash("Le password non coincidono.", "error")
+        return redirect(url_for('home'))
+
+    if not is_strong_password(password):
+        flash("La password deve avere almeno 8 caratteri e contenere almeno una lettera e un numero.", "error")
         return redirect(url_for('home'))
 
     existing_user = db_session.query(User).filter(
@@ -250,6 +268,7 @@ def register():
 
     flash("Registrazione completata, ora effettua il login dall'Area Riservata.", "success")
     return redirect(url_for('home'))
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -282,6 +301,25 @@ def login():
     session['last_active'] = datetime.utcnow().isoformat()
 
     return redirect(url_for('private_wardrobe'))
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    """
+    Pagina 'Hai dimenticato la password?'.
+    Per ora mostra solo un form email e un messaggio di conferma.
+    """
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        if not email:
+            flash("Inserisci una email valida.", "error")
+            return redirect(url_for('forgot_password'))
+
+        # Qui in futuro potrai aggiungere l'invio email/reset token
+        flash("Se l'email è registrata, riceverai le istruzioni per reimpostare la password.", "info")
+        return redirect(url_for('home'))
+
+    return render_template('forgot_password.html')
+
 
 
 @app.route('/logout')

@@ -79,63 +79,82 @@
   <div class="auth-card" id="authContainer">
     <!-- BLOCCO LOGIN -->
     <div class="form-container sign-in-container">
-      <form action="{{ url_for('login') }}" method="POST" autocomplete="off" novalidate>
-        <h2>Accedi</h2>
-        <p class="auth-subtitle">
-          Entra nell'area riservata admin di Stycly<br>
-          per gestire il guardaroba dei capi a noleggio.
-        </p>
-        <input type="text"
-       name="email_or_username"
-       placeholder="Email o username"
-       required
-       autocomplete="off">
+  <form action="{{ url_for('login') }}" method="POST" autocomplete="off" novalidate>
+    <h2>Accedi</h2>
+    <p class="auth-subtitle">
+      Entra nell'area riservata admin di Stycly<br>
+      per gestire il guardaroba dei capi a noleggio.
+    </p>
 
-<input type="password"
-       name="password"
-       placeholder="Password"
-       required
-       autocomplete="new-password">
-        <button type="submit">ACCEDI</button>
-      </form>
-    </div>
+    <input type="text"
+           name="email_or_username"
+           placeholder="Email o username"
+           required
+           autocomplete="off">
+
+    <input type="password"
+           name="password"
+           placeholder="Password"
+           required
+           autocomplete="current-password">
+
+    <!-- NUOVO LINK -->
+    <a href="{{ url_for('forgot_password') }}" class="forgot-link">
+      Hai dimenticato la password?
+    </a>
+
+    <button type="submit">ACCEDI</button>
+  </form>
+</div>
+
 
     <!-- BLOCCO REGISTER -->
     <div class="form-container sign-up-container">
-      <form action="{{ url_for('register') }}" method="POST" autocomplete="off" novalidate>
+  <form action="{{ url_for('register') }}" method="POST" autocomplete="off" novalidate>
+    <h2>Crea il tuo account</h2>
+    <p class="auth-subtitle">
+      Registrati come admin per creare e aggiornare<br>
+      il guardaroba pubblico dei capi a noleggio.
+    </p>
 
-        <h2>Crea il tuo account</h2>
-        <p class="auth-subtitle">
-          Registrati come admin per creare e aggiornare<br>
-          il guardaroba pubblico dei capi a noleggio.
-        </p>
-        <<input type="text"
-       name="username"
-       placeholder="Username"
-       required
-       autocomplete="off">
+    <input type="text"
+           name="username"
+           placeholder="Username"
+           required
+           autocomplete="off">
 
-<input type="email"
-       name="email"
-       placeholder="Email"
-       required
-       autocomplete="off">
+    <input type="email"
+           name="email"
+           placeholder="Email"
+           required
+           autocomplete="off">
 
-<input type="password"
-       name="password"
-       placeholder="Password"
-       required
-       autocomplete="new-password">
+    <input type="password"
+           name="password"
+           placeholder="Password"
+           required
+           autocomplete="new-password">
 
-        <button type="submit">REGISTRATI</button>
-      </form>
-    </div>
+    <input type="password"
+           name="confirm_password"
+           placeholder="Conferma password"
+           required
+           autocomplete="new-password">
+
+    <p class="password-hint">
+      La password deve avere almeno 8 caratteri e contenere almeno una lettera e un numero.
+    </p>
+
+    <button type="submit">REGISTRATI</button>
+  </form>
+</div>
+
 
     <!-- OVERLAY GRADIENT -->
     <div class="overlay-container">
       <div class="overlay">
         <div class="overlay-panel overlay-left">
-          <h2>Ben tornatə!</h2>
+          <h2>Ben tornat*!</h2>
           <p class="auth-subtitle">
             Hai già un account admin?<br>
             Accedi per aggiornare il guardaroba dei capi a noleggio.
@@ -143,7 +162,7 @@
           <button class="ghost" id="goToLogin">ACCEDI</button>
         </div>
         <div class="overlay-panel overlay-right">
-          <h2>Nuovə su Stycly?</h2>
+          <h2>Nuov* su Stycly?</h2>
           <p class="auth-subtitle">
             Crea un profilo admin per aggiungere,<br>
             organizzare e pubblicare i capi a noleggio.
