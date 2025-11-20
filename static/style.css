@@ -839,7 +839,7 @@ label.field.focused .psuedo_select::after {
   display: flex;
 }
 
-/* card di base del modal */
+/* card base del modal */
 .auth-card {
   background-color: #fff;
   border-radius: 16px;
@@ -851,12 +851,12 @@ label.field.focused .psuedo_select::after {
   max-width: 100%;
   min-height: 420px;
   font-family: var(--font-main);
+  padding: 2.4rem 2.6rem 2.2rem;
 }
 
-/* specifica per versione a tab */
-.auth-tabs-card {
-  padding: 2.4rem 2.6rem 2.2rem;
-  border-radius: 18px;
+/* contenitore interno */
+.auth-container {
+  width: 100%;
 }
 
 /* bottone chiusura modal */
@@ -875,18 +875,17 @@ label.field.focused .psuedo_select::after {
   z-index: 120;
 }
 
-/* gruppo tab */
-.auth-tab-group {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.8rem 0;
+/* ====== TABS ACCEDI / REGISTRATI ====== */
+
+.auth-tabs {
   display: flex;
   border-radius: 999px;
   background: #f2f4f7;
   overflow: hidden;
+  margin-bottom: 1.8rem;
 }
 
-.auth-tab-group .auth-tab {
+.auth-tab {
   flex: 1;
   text-align: center;
   padding: 0.7rem 0.5rem;
@@ -895,17 +894,19 @@ label.field.focused .psuedo_select::after {
   cursor: pointer;
   color: #4a5670;
   border: none;
+  background: transparent;
   user-select: none;
   transition: background 0.2s, color 0.2s;
+  font-family: var(--font-main);
 }
 
-.auth-tab-group .auth-tab.active {
+.auth-tab.active {
   background: var(--col-accent);
   color: var(--col-white);
 }
 
-/* contenuto tab */
-.auth-tab-content {
+/* contenuto dei pannelli */
+.auth-panels {
   width: 100%;
 }
 
@@ -930,13 +931,12 @@ label.field.focused .psuedo_select::after {
   width: 100%;
 }
 
-/* wrapper campo + label */
+/* wrapper campo + label flottante */
 .auth-field-wrap {
   position: relative;
   margin-bottom: 1.6rem;
 }
 
-/* label flottante */
 .auth-field-wrap label {
   position: absolute;
   left: 12px;
@@ -982,50 +982,53 @@ label.field.focused .psuedo_select::after {
   box-shadow: 0 0 0 2px rgba(125,178,224,0.25);
 }
 
-/* bottone */
-.auth-button {
+/* ====== BOTTONI SUBMIT (template originale adattato a Stycly) ====== */
+
+.button {
   border: 0;
   outline: none;
   border-radius: 999px;
   padding: 0.75rem 1.2rem;
   font-size: 0.9rem;
   font-weight: 600;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
   background: var(--col-accent);
   color: var(--col-white);
   cursor: pointer;
+  font-family: var(--font-main);
   transition: background 0.2s, transform 0.08s, box-shadow 0.2s;
 }
 
-.auth-button:hover,
-.auth-button:focus {
+.button:hover,
+.button:focus {
   background: var(--col-hover);
   box-shadow: 0 3px 10px rgba(20,104,229,0.25);
 }
 
-.auth-button:active {
+.button:active {
   transform: translateY(1px);
 }
 
-.auth-button-block {
+.button-block {
+  display: block;
   width: 100%;
 }
 
 /* forgot link + hint */
-.auth-forgot {
+.forgot {
   text-align: right;
   margin-top: -0.5rem;
   margin-bottom: 1.2rem;
   font-size: 0.82rem;
 }
 
-.auth-forgot a {
+.forgot a {
   color: #7b9acc;
   text-decoration: none;
 }
 
-.auth-forgot a:hover {
+.forgot a:hover {
   color: var(--col-hover);
 }
 
@@ -1037,7 +1040,7 @@ label.field.focused .psuedo_select::after {
 
 /* mobile auth modal */
 @media (max-width: 700px) {
-  .auth-card.auth-tabs-card {
+  .auth-card {
     width: 100%;
     min-height: 460px;
     padding: 1.8rem 1.4rem 1.6rem;
