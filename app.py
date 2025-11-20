@@ -342,37 +342,61 @@ def login():
 
 @app.context_processor
 def inject_user_header_info():
-    user_id = session.get('user_id')
-    if not user_id:
+    """
+    Aggiunge al contesto (solo se loggato):
+    - current_user_username
+    - current_user_email
+    - current_user_last_added (timestamp ultimo capo, se disponibile)
+
+    Qualsiasi errore interno viene “assorbito” per evitare 500.
+    """
+    try:
+        user_id = session.get('user_id')
+        if not user_id:
+            return {}
+
+        # recupero utente
+        user = db_session.query(User).get(user_id)
+        if not user:
+            # sessione “sporca”: pulisco e non rompo il rendering
+            session.clear()
+            return {}
+
+        last_added = None
+
+        # prendo il wardrobe personale (se esiste)
+        w = db_session.query(Wardrobe).filter_by(user_id=user_id).first()
+        if w:
+            metadata = MetaData()
+            inspector = inspect(engine)
+            existing_tables = set(inspector.get_table_names())
+
+            # controllo che la tabella fisica esista
+            if w.nome in existing_tables:
+                tbl = Table(w.nome, metadata, autoload_with=engine)
+
+                # solo se la colonna created_at esiste davvero
+                if 'created_at' in tbl.c:
+                    with engine.connect() as conn:
+                        row = conn.execute(
+                            tbl.select()
+                               .order_by(tbl.c.created_at.desc())
+                               .limit(1)
+                        ).first()
+                    if row:
+                        last_added = row._mapping.get('created_at')
+
+        return dict(
+            current_user_username=user.username,
+            current_user_email=user.email,
+            current_user_last_added=last_added
+        )
+
+    except Exception:
+        # in caso di qualunque errore non blocco l'app,
+        # semplicemente non inietto nulla
         return {}
 
-    user = db_session.query(User).get(user_id)
-    if not user:
-        return {}
-
-    last_added = None
-    metadata = MetaData()
-    # prendo il primo wardrobe dell'utente (quello personale)
-    w = db_session.query(Wardrobe).filter_by(user_id=user_id).first()
-    if w:
-        try:
-            tbl = Table(w.nome, metadata, autoload_with=engine)
-            # uso created_at solo se la colonna esiste
-            if 'created_at' in tbl.c:
-                with engine.connect() as conn:
-                    row = conn.execute(
-                        tbl.select().order_by(tbl.c.created_at.desc()).limit(1)
-                    ).first()
-                if row:
-                    last_added = row._mapping.get('created_at')
-        except Exception:
-            pass
-
-    return dict(
-        current_user_username=user.username,
-        current_user_email=user.email,
-        current_user_last_added=last_added
-    )
 
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
@@ -546,20 +570,35 @@ def contact():
 def private_wardrobe():
     """
     Unico wardrobe personale per utente.
-    Pagina: "<username> Personal Wardrobe" + grid di capi + card "+" per aggiungere.
+    Se l’utente non esiste più o la tabella è rotta, non faccio crashare tutto.
     """
-    user_id = session['user_id']
+    user_id = session.get('user_id')
+    if not user_id:
+        session.clear()
+        flash("Sessione non valida. Effettua di nuovo il login.", "error")
+        return redirect(url_for('home'))
+
     user = db_session.query(User).get(user_id)
+    if not user:
+        session.clear()
+        flash("Utente non trovato. Effettua di nuovo il login.", "error")
+        return redirect(url_for('home'))
 
     # recupera (o crea) il wardrobe personale
     w = get_personal_wardrobe(user)
 
     metadata = MetaData()
-    wardrobe_table = Table(w.nome, metadata, autoload_with=engine)
-    with engine.connect() as conn:
-        rows = conn.execute(wardrobe_table.select()).fetchall()
-        columns = wardrobe_table.columns.keys()
-        capi = [dict(zip(columns, row)) for row in rows]
+    capi = []
+
+    try:
+        wardrobe_table = Table(w.nome, metadata, autoload_with=engine)
+        with engine.connect() as conn:
+            rows = conn.execute(wardrobe_table.select()).fetchall()
+            columns = wardrobe_table.columns.keys()
+            capi = [dict(zip(columns, row)) for row in rows]
+    except Exception:
+        # se qualcosa va storto mostro comunque la pagina (magari vuota)
+        flash("Si è verificato un problema nel caricamento del guardaroba.", "error")
 
     return render_template(
         'private_wardrobe.html',
@@ -567,6 +606,7 @@ def private_wardrobe():
         nome_tabella=w.nome,
         username=user.username
     )
+
 
 
 @app.route('/create-private-wardrobe', methods=['GET', 'POST'])
@@ -641,16 +681,20 @@ def aggiungi_capo_wardrobe(nome_tabella):
         values['immagine'] = filename
 
         if file2 and allowed_file(file2.filename):
-            filename2 = secure_filename(file2.filename)
-            file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
-            values['immagine2'] = filename2
-        # timestamp inserimento
-        values['created_at'] = datetime.utcnow().isoformat()
+                    filename2 = secure_filename(file2.filename)
+                    file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+                    values['immagine2'] = filename2
 
         metadata = MetaData()
         tbl = Table(nome_tabella, metadata, autoload_with=engine)
+
+        # aggiungo created_at solo se la colonna esiste davvero
+        if 'created_at' in tbl.c:
+            values['created_at'] = datetime.utcnow().isoformat()
+
         with engine.begin() as conn:
             conn.execute(tbl.insert().values(**values))
+
         return redirect(url_for('private_wardrobe'))
 
     return render_template('aggiungi_capo_wardrobe.html', nome_tabella=nome_tabella, **data)
