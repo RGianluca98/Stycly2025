@@ -126,9 +126,7 @@
     {% block content %}{% endblock %}
 </main>
 
-<!-- =========================
-     MODAL LOGIN / REGISTER
-     ========================= -->
+<!-- MODAL LOGIN / REGISTER -->
 <div id="authModal" class="auth-modal">
   <div class="auth-card">
     <!-- Pulsante chiusura -->
@@ -271,8 +269,10 @@
 </div>
 
 <script src="{{ url_for('static', filename='main.js') }}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
+
 
 
 
