@@ -130,6 +130,19 @@ def allowed_file(filename: str) -> bool:
         and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
     )
 
+def validate_password_strength(password: str) -> str | None:
+    """
+    Controlla robustezza password.
+    Ritorna messaggio di errore, oppure None se ok.
+    """
+    if len(password) < 8:
+        return "La password deve avere almeno 8 caratteri."
+    if not re.search(r"[A-Za-z]", password):
+        return "La password deve contenere almeno una lettera."
+    if not re.search(r"\d", password):
+        return "La password deve contenere almeno un numero."
+    return None
+
 
 def crea_tabella_wardrobe(nome_tabella: str) -> str:
     """Crea dinamicamente la tabella del wardrobe (per utente)."""
@@ -146,10 +159,13 @@ def crea_tabella_wardrobe(nome_tabella: str) -> str:
         Column('brand', String),
         Column('destinazione', String),
         Column('immagine', String),
-        Column('immagine2', String)
+        Column('immagine2', String),
+        # nuovo campo: data inserimento capo (ISO string)
+        Column('created_at', String)
     )
     metadata.create_all(engine)
     return nome_tabella
+
 
 
 def get_personal_wardrobe(user: User) -> Wardrobe:
@@ -230,14 +246,13 @@ def login_required(view_func):
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # gestiamo solo POST dal modal; GET → home
     if request.method == 'GET':
         return redirect(url_for('home'))
 
     username = request.form.get('username', '').strip()
-    email = request.form.get('email', '').strip().lower()
-    password = request.form.get('password', '') or ''
-    confirm_password = request.form.get('confirm_password', '') or ''
+    email = (request.form.get('email') or '').strip().lower()
+    password = request.form.get('password') or ''
+    confirm_password = request.form.get('confirm_password') or ''
 
     if not username or not email or not password or not confirm_password:
         flash("Tutti i campi sono obbligatori.", "error")
@@ -247,8 +262,9 @@ def register():
         flash("Le password non coincidono.", "error")
         return redirect(url_for('home'))
 
-    if not is_strong_password(password):
-        flash("La password deve avere almeno 8 caratteri e contenere almeno una lettera e un numero.", "error")
+    err = validate_password_strength(password)
+    if err:
+        flash(err, "error")
         return redirect(url_for('home'))
 
     existing_user = db_session.query(User).filter(
@@ -271,14 +287,28 @@ def register():
 
 
 
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    # gestiamo solo POST dal modal; GET → home
     if request.method == 'GET':
         return redirect(url_for('home'))
 
-    email_or_username = request.form.get('email_or_username', '').strip()
-    password = request.form.get('password')
+    # piccolo rate limiting per tentativi falliti
+    failed_count = session.get("login_failed_count", 0)
+    last_failed_str = session.get("login_last_failed")
+    if last_failed_str:
+        try:
+            last_failed = datetime.fromisoformat(last_failed_str)
+            if datetime.utcnow() - last_failed < timedelta(minutes=10) and failed_count >= 5:
+                flash("Troppi tentativi falliti. Riprova tra qualche minuto.", "error")
+                return redirect(url_for('home'))
+        except Exception:
+            session.pop("login_failed_count", None)
+            session.pop("login_last_failed", None)
+
+    email_or_username = (request.form.get('email_or_username') or '').strip()
+    password = request.form.get('password') or ''
 
     if not email_or_username or not password:
         flash("Inserisci credenziali valide.", "error")
@@ -289,18 +319,61 @@ def login():
     ).first()
 
     if not user or not check_password_hash(user.password_hash, password):
+        session["login_failed_count"] = failed_count + 1
+        session["login_last_failed"] = datetime.utcnow().isoformat()
         flash("Credenziali non valide.", "error")
         return redirect(url_for('home'))
 
-    # assicuriamo l'esistenza del wardrobe personale
+    # login ok → reset rate limit
+    session.pop("login_failed_count", None)
+    session.pop("login_last_failed", None)
+
+    # assicuro il wardrobe personale
     get_personal_wardrobe(user)
 
     session.clear()
     session['user_id'] = user.id
     session['username'] = user.username
+    session['email'] = user.email
     session['last_active'] = datetime.utcnow().isoformat()
 
     return redirect(url_for('private_wardrobe'))
+
+
+@app.context_processor
+def inject_user_header_info():
+    user_id = session.get('user_id')
+    if not user_id:
+        return {}
+
+    user = db_session.query(User).get(user_id)
+    if not user:
+        return {}
+
+    last_added = None
+    metadata = MetaData()
+    # prendo il primo wardrobe dell'utente (quello personale)
+    w = db_session.query(Wardrobe).filter_by(user_id=user_id).first()
+    if w:
+        try:
+            tbl = Table(w.nome, metadata, autoload_with=engine)
+            # uso created_at solo se la colonna esiste
+            if 'created_at' in tbl.c:
+                with engine.connect() as conn:
+                    row = conn.execute(
+                        tbl.select().order_by(tbl.c.created_at.desc()).limit(1)
+                    ).first()
+                if row:
+                    last_added = row._mapping.get('created_at')
+        except Exception:
+            pass
+
+    return dict(
+        current_user_username=user.username,
+        current_user_email=user.email,
+        current_user_last_added=last_added
+    )
+
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
@@ -320,6 +393,54 @@ def forgot_password():
 
     return render_template('forgot_password.html')
 
+
+@app.route('/clear-wardrobe', methods=['POST'])
+@login_required
+def clear_wardrobe():
+    user_id = session['user_id']
+    w = db_session.query(Wardrobe).filter_by(user_id=user_id).first()
+    if not w:
+        flash("Nessun wardrobe da svuotare.", "info")
+        return redirect(url_for('private_wardrobe'))
+
+    metadata = MetaData()
+    try:
+        tbl = Table(w.nome, metadata, autoload_with=engine)
+        with engine.begin() as conn:
+            conn.execute(tbl.delete())
+        flash("Wardrobe svuotato con successo.", "success")
+    except Exception:
+        flash("Errore durante la pulizia del wardrobe.", "error")
+
+    return redirect(url_for('private_wardrobe'))
+
+@app.route('/delete-account', methods=['POST'])
+@login_required
+def delete_account():
+    user_id = session['user_id']
+    user = db_session.query(User).get(user_id)
+    if not user:
+        flash("Utente non trovato.", "error")
+        return redirect(url_for('home'))
+
+    metadata = MetaData()
+
+    # elimino tutte le tabelle wardrobe_* dell'utente
+    wardrobes = db_session.query(Wardrobe).filter_by(user_id=user_id).all()
+    for w in wardrobes:
+        try:
+            tbl = Table(w.nome, metadata, autoload_with=engine)
+            tbl.drop(engine, checkfirst=True)
+        except Exception:
+            pass
+        db_session.delete(w)
+
+    db_session.delete(user)
+    db_session.commit()
+
+    session.clear()
+    flash("Account e dati associati eliminati definitivamente.", "success")
+    return redirect(url_for('home'))
 
 
 @app.route('/logout')
@@ -490,6 +611,8 @@ def aggiungi_capo_wardrobe(nome_tabella):
             filename2 = secure_filename(file2.filename)
             file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
             values['immagine2'] = filename2
+        # timestamp inserimento
+        values['created_at'] = datetime.utcnow().isoformat()
 
         metadata = MetaData()
         tbl = Table(nome_tabella, metadata, autoload_with=engine)

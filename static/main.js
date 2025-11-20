@@ -102,6 +102,33 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ================================
+   *  USER MENU DROPDOWN
+   * ============================== */
+  const userMenu = document.querySelector('.user-menu');
+  const userMenuToggle = document.querySelector('.user-menu-toggle');
+
+  if (userMenu && userMenuToggle) {
+    userMenuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userMenu.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => {
+      userMenu.classList.remove('open');
+    });
+
+    // evita chiusura se clicco dentro il dropdown
+    const dropdown = userMenu.querySelector('.user-menu-dropdown');
+    if (dropdown) {
+      dropdown.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    }
+  }
+
+
+
+  /* ================================
    *  LABEL FLOTTANTI (login / register)
    * ============================== */
   function initFloatingLabels() {

@@ -158,6 +158,129 @@ body {
     white-space: nowrap;
 }
 
+
+/* ========== USER MENU DROPDOWN ========== */
+
+.user-menu {
+  position: relative;
+  margin-left: 0.8rem;
+}
+
+.user-menu-toggle {
+  border: none;
+  background: transparent;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--col-primario);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.user-menu-arrow {
+  font-size: 0.8rem;
+}
+
+.user-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 120%;
+  min-width: 230px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  padding: 0.9rem 1rem 0.8rem;
+  display: none;
+  z-index: 120;
+}
+
+.user-menu.open .user-menu-dropdown {
+  display: block;
+}
+
+.user-menu-info {
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.user-menu-name {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  color: var(--col-primario);
+}
+
+.user-menu-email {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.user-menu-last {
+  font-size: 0.78rem;
+  color: #6b7280;
+  margin-top: 0.35rem;
+}
+
+.user-menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.user-menu-btn {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.8rem;
+  font-family: var(--font-main);
+  cursor: pointer;
+  text-align: center;
+}
+
+.user-menu-btn-clear {
+  background: #f2f4f7;
+  color: #374151;
+}
+
+.user-menu-btn-clear:hover {
+  background: #e5e7eb;
+}
+
+.user-menu-btn-delete {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.user-menu-btn-delete:hover {
+  background: #fee2e2;
+}
+
+.user-menu-link-logout {
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 0.2rem;
+}
+
+.user-menu-link-logout:hover {
+  color: var(--col-primario);
+}
+
+/* su mobile, mettiamo il menu utente a tutta larghezza */
+@media (max-width: 900px) {
+  .user-menu-dropdown {
+    right: auto;
+    left: 0;
+  }
+}
+
+
+
 /* --- HAMBURGER (mobile) --- */
 .stycly-nav-hamburger {
     display: none;
