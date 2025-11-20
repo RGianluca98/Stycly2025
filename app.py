@@ -414,30 +414,63 @@ def clear_wardrobe():
 
     return redirect(url_for('private_wardrobe'))
 
-@app.route('/delete-account', methods=['POST'])
+@app.route('/delete-account', methods=['GET', 'POST'])
 @login_required
 def delete_account():
-    user_id = session['user_id']
-    user = db_session.query(User).get(user_id)
+    # se qualcuno arriva in GET, niente errore: rimando alla pagina privata
+    if request.method == 'GET':
+        return redirect(url_for('private_wardrobe'))
+
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Sessione non valida.", "error")
+        return redirect(url_for('home'))
+
+    try:
+        user = db_session.query(User).get(user_id)
+    except Exception:
+        flash("Errore interno durante il recupero dell'utente.", "error")
+        return redirect(url_for('private_wardrobe'))
+
     if not user:
+        # se per qualche motivo l'utente non esiste più, pulisco la sessione
+        session.clear()
         flash("Utente non trovato.", "error")
         return redirect(url_for('home'))
 
     metadata = MetaData()
 
-    # elimino tutte le tabelle wardrobe_* dell'utente
-    wardrobes = db_session.query(Wardrobe).filter_by(user_id=user_id).all()
-    for w in wardrobes:
-        try:
-            tbl = Table(w.nome, metadata, autoload_with=engine)
-            tbl.drop(engine, checkfirst=True)
-        except Exception:
-            pass
-        db_session.delete(w)
+    try:
+        # tutti i wardrobe associati all'utente
+        wardrobes = db_session.query(Wardrobe).filter_by(user_id=user_id).all()
 
-    db_session.delete(user)
-    db_session.commit()
+        # elenco tabelle esistenti nel DB (per evitare errori se il nome non esiste)
+        inspector = inspect(engine)
+        existing_tables = set(inspector.get_table_names())
 
+        for w in wardrobes:
+            # se esiste una tabella fisica col nome del wardrobe, provo a dropparla
+            if w.nome in existing_tables:
+                try:
+                    tbl = Table(w.nome, metadata, autoload_with=engine)
+                    tbl.drop(engine, checkfirst=True)
+                except Exception:
+                    # se il drop fallisce, non blocco l'intero processo
+                    pass
+
+            # elimino il record dalla tabella master "wardrobes"
+            db_session.delete(w)
+
+        # infine elimino l'utente
+        db_session.delete(user)
+        db_session.commit()
+
+    except Exception:
+        db_session.rollback()
+        flash("Si è verificato un errore durante l'eliminazione dell'account.", "error")
+        return redirect(url_for('private_wardrobe'))
+
+    # se è andato tutto bene, pulisco la sessione e torno alla home
     session.clear()
     flash("Account e dati associati eliminati definitivamente.", "success")
     return redirect(url_for('home'))
