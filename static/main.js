@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const panels     = document.querySelectorAll('.auth-panel');
 
   function activateTab(targetId) {
-    // attiva il bottone
+    // attiva il bottone giusto
     tabButtons.forEach(btn => {
       const t = btn.getAttribute('data-target');
       if (t === targetId) {
@@ -44,11 +44,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function openAuth(defaultTabId = 'loginPanel') {
     if (!authModal) return;
+
+    // mostra il modal
     authModal.classList.add('open');
     document.body.style.overflow = 'hidden';
-    // di default vai sulla tab login
+
+    // reset dei campi (login + register) ogni volta che apro il modal
+    const inputs = authModal.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+      input.value = '';
+    });
+
+    // attivo di default la tab di login
     activateTab(defaultTabId);
-    initFloatingLabels(); // assicura label corrette
+
+    // riallineo le label flottanti allo stato vuoto
+    initFloatingLabels();
   }
 
   function closeAuth() {
@@ -57,10 +68,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = '';
   }
 
+  // click su "AREA RISERVATA" ➜ apri direttamente LOGIN
   if (areaLink) {
     areaLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openAuth('loginPanel');
+      openAuth('loginPanel'); // forza sempre il pannello login
     });
   }
 
@@ -69,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (authModal) {
-    // chiusura cliccando fuori dalla card
+    // chiusura cliccando sullo sfondo scuro
     authModal.addEventListener('click', (e) => {
       if (e.target === authModal) {
         closeAuth();
@@ -77,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // click sulle tab
+  // click sulle tab "Accedi" / "Registrati"
   if (tabButtons.length) {
     tabButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -104,6 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const update = () => {
         if (input.value.trim() === '') {
           label.classList.remove('active');
+          label.classList.remove('highlight');
         } else {
           label.classList.add('active');
         }
@@ -125,14 +138,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       input.addEventListener('input', update);
 
-      // stato iniziale se il browser compila qualcosa
+      // stato iniziale (utile se il browser ha provato ad autocompilare)
       update();
     });
   }
 
-  // inizializza una volta (nel caso in cui il modal parta già aperto)
+  // inizializzazione generale (nel caso il modal sia già visibile)
   initFloatingLabels();
 });
+
 
 
 
