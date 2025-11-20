@@ -198,7 +198,7 @@ def get_personal_wardrobe(user: User) -> Wardrobe:
 # ----------------------------
 
 def login_required(view_func):
-    """Decorator per proteggere le route: richiede utente loggato e sessione non scaduta."""
+    """Decorator per proteggere le route: richiede utente loggato, sessione non scaduta e utente esistente."""
     @wraps(view_func)
     def wrapped_view(*args, **kwargs):
         user_id = session.get("user_id")
@@ -206,6 +206,13 @@ def login_required(view_func):
 
         if not user_id:
             flash("Devi fare login per accedere a questa pagina.", "error")
+            return redirect(url_for("home"))
+
+        # Controllo che l'utente esista ancora nel DB
+        user = db_session.query(User).get(user_id)
+        if not user:
+            session.clear()
+            flash("La tua sessione non è più valida. Effettua di nuovo il login.", "error")
             return redirect(url_for("home"))
 
         if last_active:
@@ -225,6 +232,7 @@ def login_required(view_func):
         return view_func(*args, **kwargs)
 
     return wrapped_view
+
 
 
 # ----------------------------
@@ -419,39 +427,35 @@ def delete_account():
 
     user_id = session.get('user_id')
     if not user_id:
+        session.clear()
         flash("Sessione non valida.", "error")
         return redirect(url_for('home'))
 
     try:
-        user = db_session.query(User).get(user_id)
-    except Exception as e:
-        print("Errore recupero utente in delete_account:", e)
-        flash("Errore interno durante il recupero dell'utente.", "error")
-        return redirect(url_for('private_wardrobe'))
-
-    if not user:
-        session.clear()
-        flash("Utente non trovato.", "error")
-        return redirect(url_for('home'))
-
-    metadata = MetaData()
-
-    try:
+        # 1) Recupero tutti i wardrobe dell'utente
         wardrobes = db_session.query(Wardrobe).filter_by(user_id=user_id).all()
+
+        metadata = MetaData()
         inspector = inspect(engine)
         existing_tables = set(inspector.get_table_names())
 
+        # 2) Svuoto le tabelle fisiche dei wardrobe (NON le droppo)
         for w in wardrobes:
             if w.nome in existing_tables:
                 try:
                     tbl = Table(w.nome, metadata, autoload_with=engine)
-                    tbl.drop(engine, checkfirst=True)
+                    with engine.begin() as conn:
+                        conn.execute(tbl.delete())
                 except Exception as e:
-                    print("Errore drop tabella wardrobe:", w.nome, e)
+                    print("Errore nello svuotare la tabella wardrobe:", w.nome, e)
 
-            db_session.delete(w)
+        # 3) Cancello le righe nella tabella master wardrobes
+        db_session.query(Wardrobe).filter_by(user_id=user_id).delete(synchronize_session=False)
 
-        db_session.delete(user)
+        # 4) Cancello l'utente
+        db_session.query(User).filter_by(id=user_id).delete(synchronize_session=False)
+
+        # 5) Commit finale
         db_session.commit()
 
     except Exception as e:
@@ -460,9 +464,11 @@ def delete_account():
         flash("Si è verificato un errore durante l'eliminazione dell'account.", "error")
         return redirect(url_for('private_wardrobe'))
 
+    # 6) Pulisco la sessione e porto alla home
     session.clear()
     flash("Account e dati associati eliminati definitivamente.", "success")
     return redirect(url_for('home'))
+
 
 
 @app.route('/logout')
