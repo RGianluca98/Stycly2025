@@ -51,6 +51,18 @@
         <input type="hidden" name="{{ campo }}" required>
       </label>
       {% endfor %}
+      
+      <!-- Quantità -->
+      <label class="field">
+        <span>Quantità</span>
+        <input
+          type="number"
+          name="quantita"
+          min="1"
+          value="1"
+          required
+          style="width: 100%; padding: 0.5rem 0.4rem; border: 1px solid #ccc; border-radius: 8px;">
+      </label>
 
       <!-- Immagine -->
       <label class="field">

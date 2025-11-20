@@ -516,9 +516,6 @@ def home():
 @app.route('/products')
 @app.route('/public-wardrobe')
 def products():
-    """
-    Products = somma di tutti i wardrobe (per ora).
-    """
     metadata = MetaData()
     all_capi = []
 
@@ -536,10 +533,32 @@ def products():
 
             for row in rows:
                 rd = dict(zip(columns, row))
-                rd["wardrobe_name"] = w.nome
                 all_capi.append(rd)
 
-    return render_template("public_wardrobe.html", capi=all_capi)
+    # --- AGGREGAZIONE CAPi UGUALI ---
+    aggregated = {}
+    for r in all_capi:
+        key = (
+            r.get('categoria'),
+            r.get('tipologia'),
+            r.get('taglia'),
+            r.get('fit'),
+            r.get('colore'),
+            r.get('brand'),
+            r.get('destinazione'),
+            r.get('immagine'),
+            r.get('immagine2'),
+        )
+        if key not in aggregated:
+            item = dict(r)
+            item['disponibilita'] = 1
+            aggregated[key] = item
+        else:
+            aggregated[key]['disponibilita'] += 1
+
+    capi_aggregati = list(aggregated.values())
+
+    return render_template("public_wardrobe.html", capi=capi_aggregati)
 
 
 @app.route('/about')
@@ -645,26 +664,26 @@ def aggiungi_capo_wardrobe(nome_tabella):
         flash("Non hai accesso a questo wardrobe.", "error")
         return redirect(url_for('private_wardrobe'))
 
-    # carico i dati dal JSON (tipologie, taglie ecc.)
-    try:
-        with open(os.path.join(BASE_DIR, 'static', 'data', 'form_data.json'), encoding='utf-8') as f:
-            data = json.load(f)
-    except Exception as e:
-        print("Errore lettura form_data.json:", e)
-        flash("Errore interno: file di configurazione form non trovato.", "error")
-        return redirect(url_for('private_wardrobe'))
+    with open('static/data/form_data.json') as f:
+        data = json.load(f)
 
     if request.method == 'POST':
         try:
-            values = {
+            values_base = {
                 field: request.form.get(field)
                 for field in ['categoria', 'tipologia', 'brand', 'destinazione', 'taglia', 'fit', 'colore']
             }
             file = request.files.get('immagine')
             file2 = request.files.get('immagine2')
 
-            # controllo campi obbligatori
-            if not all(values.values()) or not file:
+            # quantita (quanti capi uguali inserire)
+            quantita_raw = request.form.get('quantita', '1')
+            try:
+                quantita = max(1, int(quantita_raw))
+            except ValueError:
+                quantita = 1
+
+            if not all(values_base.values()) or not file:
                 flash("Tutti i campi e l'immagine principale sono obbligatori.", "error")
                 return redirect(url_for('aggiungi_capo_wardrobe', nome_tabella=nome_tabella))
 
@@ -674,38 +693,39 @@ def aggiungi_capo_wardrobe(nome_tabella):
 
             os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
+            # salvo l'immagine principale UNA volta
             filename = secure_filename(file.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(file_path)
-            values['immagine'] = filename
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            values_base['immagine'] = filename
 
+            # immagine retro (se presente) — sempre la stessa per tutti i capi uguali
             if file2 and allowed_file(file2.filename):
                 filename2 = secure_filename(file2.filename)
-                file2_path = os.path.join(app.config['UPLOAD_FOLDER'], filename2)
-                file2.save(file2_path)
-                values['immagine2'] = filename2
+                file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+                values_base['immagine2'] = filename2
             else:
-                values['immagine2'] = None
+                values_base['immagine2'] = None
 
             metadata = MetaData()
             tbl = Table(nome_tabella, metadata, autoload_with=engine)
 
-            # aggiungo created_at solo se la colonna esiste davvero
-            if 'created_at' in tbl.c:
-                values['created_at'] = datetime.now(timezone.utc).isoformat()
-
             with engine.begin() as conn:
-                conn.execute(tbl.insert().values(**values))
+                for _ in range(quantita):
+                    values = dict(values_base)
+                    # created_at per ogni capo
+                    if 'created_at' in tbl.c:
+                        values['created_at'] = datetime.now(timezone.utc).isoformat()
+                    conn.execute(tbl.insert().values(**values))
 
-            flash("Capo aggiunto correttamente.", "success")
+            flash(f"{quantita} capo/capi aggiunti correttamente.", "success")
             return redirect(url_for('private_wardrobe'))
 
-        except Exception as e:
-            print("Errore aggiungi_capo_wardrobe:", e)
+        except Exception:
             flash("Si è verificato un errore durante l'aggiunta del capo.", "error")
             return redirect(url_for('private_wardrobe'))
 
     return render_template('aggiungi_capo_wardrobe.html', nome_tabella=nome_tabella, **data)
+
 
 
 @app.route('/modifica-capo-wardrobe/<nome_tabella>/<int:capo_id>', methods=['GET', 'POST'])

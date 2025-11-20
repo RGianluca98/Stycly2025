@@ -5,20 +5,9 @@
 <section class="stycly-hero">
   <div class="wardrobe-view-layout">
 
-    <!-- Sidebar filtri -->
+        <!-- Sidebar filtri -->
     <aside class="wardrobe-filters">
       <h3>Filtra capi</h3>
-
-      <div style="margin-bottom: 1.2rem;">
-        <label style="font-size: 0.9rem; font-weight: 500;">Wardrobe</label>
-        <select class="filter-select" data-filter="wardrobe_name"
-                style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
-          <option value="">Tutti</option>
-          {% for w_name in capi|map(attribute='wardrobe_name')|unique %}
-            <option value="{{ w_name }}">{{ w_name.replace('wardrobe_', '').replace('_', ' ').title() }}</option>
-          {% endfor %}
-        </select>
-      </div>
 
       <div style="margin-bottom: 1.2rem;">
         <label style="font-size: 0.9rem; font-weight: 500;">Categoria</label>
@@ -27,7 +16,20 @@
           <option value="">Tutte</option>
           {% for cat in capi|map(attribute='categoria')|unique %}
             {% if cat %}
-            <option value="{{ cat }}">{{ cat }}</option>
+              <option value="{{ cat }}">{{ cat }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.2rem;">
+        <label style="font-size: 0.9rem; font-weight: 500;">Taglia</label>
+        <select class="filter-select" data-filter="taglia"
+                style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+          <option value="">Tutte</option>
+          {% for t in capi|map(attribute='taglia')|unique %}
+            {% if t %}
+              <option value="{{ t }}">{{ t }}</option>
             {% endif %}
           {% endfor %}
         </select>
@@ -40,7 +42,20 @@
           <option value="">Tutti</option>
           {% for b in capi|map(attribute='brand')|unique %}
             {% if b %}
-            <option value="{{ b }}">{{ b }}</option>
+              <option value="{{ b }}">{{ b }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="margin-bottom: 1.2rem;">
+        <label style="font-size: 0.9rem; font-weight: 500;">Destinazione</label>
+        <select class="filter-select" data-filter="destinazione"
+                style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+          <option value="">Tutte</option>
+          {% for d in capi|map(attribute='destinazione')|unique %}
+            {% if d %}
+              <option value="{{ d }}">{{ d }}</option>
             {% endif %}
           {% endfor %}
         </select>
@@ -60,6 +75,7 @@
         Reset filtri
       </button>
     </aside>
+
 
     <!-- Contenuto principale -->
     <div class="wardrobe-main">
@@ -137,7 +153,6 @@ function openDetailPopup(capo) {
 
   document.getElementById('popup-image').src = buildImageURL(frontImg);
   document.getElementById('popup-details').innerHTML = `
-    <p><b>Wardrobe:</b> ${capo.wardrobe_name.replace('wardrobe_', '').replaceAll('_', ' ')}</p>
     <p><b>Categoria:</b> ${capo.categoria || ''}</p>
     <p><b>Tipologia:</b> ${capo.tipologia || ''}</p>
     <p><b>Taglia:</b> ${capo.taglia || ''}</p>
@@ -145,6 +160,7 @@ function openDetailPopup(capo) {
     <p><b>Brand:</b> ${capo.brand || ''}</p>
     <p><b>Destinazione:</b> ${capo.destinazione || ''}</p>
     ${capo.fit ? `<p><b>Fit:</b> ${capo.fit}</p>` : ''}
+    <p><b>Disponibilità:</b> ${capo.disponibilita || 1}</p>
   `;
   document.getElementById("detail-modal").style.display = "flex";
 }
@@ -214,3 +230,4 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 {% endblock %}
+
