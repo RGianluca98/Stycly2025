@@ -969,6 +969,7 @@ def export_wardrobe(nome_tabella):
 
 
 
+""""
 
 @app.route('/_debug-users')
 def debug_users():
@@ -982,14 +983,12 @@ def debug_users():
             out.append(f"<li>ID: {u.id} – username: {u.username} – email: {u.email}</li>")
         out.append("</ul>")
     return "".join(out)
-
+    #https://stycly.onrender.com/_debug-users
+"""
+"""
 @app.route('/_wipe-all-users-and-wardrobes-123')
 def wipe_all_users_and_wardrobes():
-    """
-    ATTENZIONE: cancella TUTTI gli utenti, TUTTI i wardrobe,
-    e tutte le tabelle fisiche wardrobe_* collegate.
-    Usala solo per ripartire da zero, poi rimuovila dal codice.
-    """
+    
     metadata = MetaData()
     inspector = inspect(engine)
 
@@ -1019,7 +1018,9 @@ def wipe_all_users_and_wardrobes():
     except Exception as e:
         db_session.rollback()
         return f"Errore durante il wipe: {e}", 500
+#https://stycly.onrender.com/_wipe-all-users-and-wardrobes-123
 
+        """
 
 # ----------------------------
 #       AVVIO LOCALE
