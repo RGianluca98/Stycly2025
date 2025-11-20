@@ -71,19 +71,21 @@ body {
 
 .stycly-nav > a,
 .stycly-nav-dropdown-btn {
-    font-size: 0.95rem;
+    font-size: 0.9rem;          /* leggermente più piccolo */
     color: var(--col-primario);
     text-decoration: none;
     background: none;
     border: none;
     font-family: var(--font-main);
     font-weight: 500;
-    padding: 6px 10px;
+    padding: 4px 8px;           /* meno padding orizzontale */
     cursor: pointer;
     transition: color 0.18s;
     position: relative;
     letter-spacing: 0.03em;
+    white-space: nowrap;        /* evita che le voci vadano a capo male */
 }
+
 
 /* hover link */
 .stycly-nav > a:hover,
@@ -272,7 +274,7 @@ body {
 }
 
 /* su mobile, mettiamo il menu utente a tutta larghezza */
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .user-menu-dropdown {
     right: auto;
     left: 0;
