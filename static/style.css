@@ -3,17 +3,16 @@
 
 :root {
     /* Palette Stycly */
-  --col-baby-blue:    #7DB2E0;  /* primary buttons, header */
-  --col-light-sky:    #C9E2F5;  /* sfondi soft, tab background */
-  --col-soft-pink:    #D3BCB7;  /* highlight / badge */
-  --col-warm-beige:   #E8D4C0;  /* dettagli decorativi */
-  --col-white:        #FFFFFF;  /* main background */
-  --col-soft-grey:    #F2F4F7;  /* card background, sections */
-  --col-deep-greyblue:#3A4C69;  /* testi importanti / titoli */
-  --col-soft-yellow:  #F7D774;  /* CTA speciali */
+    --col-primario: #3A4C69;   /* Soft Navy – testi importanti */
+    --col-secondario: #F2F4F7; /* Light Grey – sfondi soft */
+    --col-accent: #7DB2E0;     /* Baby Blue – bottoni, link attivi */
+    --col-hover: #1468e5;      /* Hover accent più intenso */
+    --col-white: #FFFFFF;
+    --col-warm-beige: #E8D4C0;
+    --col-accent-yellow: #F7D774;
 
-  --font-title: 'Fredoka', 'Baloo 2', system-ui, sans-serif;
-  --font-main:  'Poppins', 'Nunito', system-ui, sans-serif;
+    --font-main: 'Poppins', Arial, sans-serif;
+    --font-title: 'Fredoka', 'Poppins', Arial, sans-serif;
 
     --f-sm: 0.95rem;
     --f-md: 1.05rem;
@@ -840,27 +839,32 @@ label.field.focused .psuedo_select::after {
   display: flex;
 }
 
-/* card base del modal */
+/* card base del modal: altezza fissa + contenuto scrollabile */
 .auth-card {
   background-color: #fff;
   border-radius: 16px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
               0 10px 10px rgba(0, 0, 0, 0.22);
   position: relative;
-  overflow: hidden;
   width: 768px;
   max-width: 100%;
-  min-height: 420px;
+  max-height: 90vh;              /* limite in altezza */
   font-family: var(--font-main);
-  padding: 2.4rem 2.6rem 2.2rem;
+  padding: 2rem 2.4rem 2rem;
+  display: flex;
+  flex-direction: column;        /* header in alto, contenuto sotto */
+  overflow: hidden;
 }
 
-/* contenitore interno */
+/* contenitore interno: colonna + area pannelli che può scrollare */
 .auth-container {
   width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-/* bottone chiusura modal */
+/* bottone chiusura modal – colore diverso dai tab */
 .auth-close-btn {
   position: absolute;
   top: 16px;
@@ -868,9 +872,9 @@ label.field.focused .psuedo_select::after {
   width: 34px;
   height: 34px;
   border-radius: 999px;
-  background-color: #7DB2E0;
+  background-color: #D3BCB7;     /* Soft Pink */
   border: none;
-  color: #fff;
+  color: #3A4C69;                /* Deep Grey-Blue per la X */
   font-size: 20px;
   cursor: pointer;
   z-index: 120;
@@ -881,19 +885,19 @@ label.field.focused .psuedo_select::after {
 .auth-tabs {
   display: flex;
   border-radius: 999px;
-  background: #f2f4f7;
+  background: #F2F4F7;
   overflow: hidden;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.6rem;
 }
 
 .auth-tab {
   flex: 1;
   text-align: center;
-  padding: 0.7rem 0.5rem;
-  font-size: 0.95rem;
+  padding: 0.55rem 0.4rem;       /* più basso */
+  font-size: 0.9rem;             /* testo più piccolo */
   font-weight: 600;
   cursor: pointer;
-  color: #4a5670;
+  color: #3A4C69;
   border: none;
   background: transparent;
   user-select: none;
@@ -902,13 +906,16 @@ label.field.focused .psuedo_select::after {
 }
 
 .auth-tab.active {
-  background: var(--col-accent);
-  color: var(--col-white);
+  background: #7DB2E0;           /* Baby Blue */
+  color: #FFFFFF;
 }
 
-/* contenuto dei pannelli */
+/* contenuto dei pannelli – parte che può scrollare */
 .auth-panels {
   width: 100%;
+  flex: 1;                       /* occupa lo spazio rimanente */
+  overflow-y: auto;              /* scroll se il contenuto è alto (es. Registrati) */
+  padding-right: 0.15rem;        /* piccolo margine dalla scrollbar */
 }
 
 .auth-panel {
@@ -922,27 +929,29 @@ label.field.focused .psuedo_select::after {
 /* titoli pannelli */
 .auth-panel h2 {
   font-family: var(--font-title);
-  font-size: 1.5rem;
-  margin: 0 0 1.4rem 0;
+  font-size: 1.4rem;
+  margin: 0 0 1.2rem 0;
   color: var(--col-primario);
 }
 
-/* form */
+/* form – più stretto e centrato */
 .auth-form {
   width: 100%;
+  max-width: 640px;              /* restringe i campi */
+  margin: 0 auto 0.5rem;
 }
 
 /* wrapper campo + label flottante */
 .auth-field-wrap {
   position: relative;
-  margin-bottom: 1.6rem;
+  margin-bottom: 1.4rem;
 }
 
 .auth-field-wrap label {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 10px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #9aa3b5;
   pointer-events: none;
   transition: all 0.2s ease;
@@ -950,22 +959,22 @@ label.field.focused .psuedo_select::after {
 
 .auth-field-wrap label .req {
   margin-left: 2px;
-  color: var(--col-accent);
+  color: #F7D774;                /* Soft Yellow per l’asterisco */
 }
 
 .auth-field-wrap label.active {
   transform: translateY(-18px);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 }
 
 .auth-field-wrap label.highlight {
-  color: var(--col-accent);
+  color: #7DB2E0;                /* Baby Blue */
 }
 
 /* input */
 .auth-field-wrap input {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #d5d9e3;
   padding: 0.75rem 0.9rem;
   padding-top: 1.1rem;
@@ -978,24 +987,24 @@ label.field.focused .psuedo_select::after {
 
 .auth-field-wrap input:focus {
   outline: none;
-  border-color: var(--col-accent);
+  border-color: #7DB2E0;
   background-color: #ffffff;
   box-shadow: 0 0 0 2px rgba(125,178,224,0.25);
 }
 
-/* ====== BOTTONI SUBMIT (template originale adattato a Stycly) ====== */
+/* ====== BOTTONI SUBMIT ====== */
 
 .button {
   border: 0;
   outline: none;
   border-radius: 999px;
-  padding: 0.75rem 1.2rem;
+  padding: 0.8rem 1.4rem;
   font-size: 0.9rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  background: var(--col-accent);
-  color: var(--col-white);
+  background: #7DB2E0;           /* Baby Blue */
+  color: #FFFFFF;
   cursor: pointer;
   font-family: var(--font-main);
   transition: background 0.2s, transform 0.08s, box-shadow 0.2s;
@@ -1003,7 +1012,7 @@ label.field.focused .psuedo_select::after {
 
 .button:hover,
 .button:focus {
-  background: var(--col-hover);
+  background: #3A4C69;           /* Deep Grey-Blue */
   box-shadow: 0 3px 10px rgba(20,104,229,0.25);
 }
 
@@ -1019,18 +1028,18 @@ label.field.focused .psuedo_select::after {
 /* forgot link + hint */
 .forgot {
   text-align: right;
-  margin-top: -0.5rem;
+  margin-top: 0.2rem;
   margin-bottom: 1.2rem;
   font-size: 0.82rem;
 }
 
 .forgot a {
-  color: #7b9acc;
+  color: #7DB2E0;
   text-decoration: none;
 }
 
 .forgot a:hover {
-  color: var(--col-hover);
+  color: #3A4C69;
 }
 
 .password-hint {
@@ -1043,15 +1052,25 @@ label.field.focused .psuedo_select::after {
 @media (max-width: 700px) {
   .auth-card {
     width: 100%;
-    min-height: 460px;
-    padding: 1.8rem 1.4rem 1.6rem;
+    max-height: 90vh;
+    padding: 1.8rem 1.4rem 1.4rem;
   }
 
   .auth-panel h2 {
-    font-size: 1.3rem;
+    font-size: 1.25rem;
     text-align: center;
   }
+
+  .auth-tabs {
+    margin-bottom: 1.2rem;
+  }
+
+  .auth-tab {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.3rem;
+  }
 }
+
 
 
 
