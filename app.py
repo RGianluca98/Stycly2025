@@ -983,6 +983,42 @@ def debug_users():
         out.append("</ul>")
     return "".join(out)
 
+@app.route('/_wipe-all-users-and-wardrobes-123')
+def wipe_all_users_and_wardrobes():
+    """
+    ATTENZIONE: cancella TUTTI gli utenti, TUTTI i wardrobe,
+    e tutte le tabelle fisiche wardrobe_* collegate.
+    Usala solo per ripartire da zero, poi rimuovila dal codice.
+    """
+    metadata = MetaData()
+    inspector = inspect(engine)
+
+    try:
+        # 1) Recupero tutti i wardrobes registrati
+        all_wardrobes = db_session.query(Wardrobe).all()
+
+        with engine.begin() as conn:
+            # 2) Per ognuno, se esiste la tabella fisica, la droppo
+            existing_tables = set(inspector.get_table_names())
+            for w in all_wardrobes:
+                if w.nome in existing_tables:
+                    try:
+                        tbl = Table(w.nome, metadata, autoload_with=engine)
+                        tbl.drop(conn, checkfirst=True)
+                    except Exception:
+                        pass
+
+        # 3) Cancello tutte le righe dalla tabella wardrobes
+        db_session.query(Wardrobe).delete()
+
+        # 4) Cancello tutte le righe dalla tabella users
+        db_session.query(User).delete()
+
+        db_session.commit()
+        return "Tutti gli utenti e i wardrobes (e relative tabelle) sono stati eliminati."
+    except Exception as e:
+        db_session.rollback()
+        return f"Errore durante il wipe: {e}", 500
 
 
 # ----------------------------
