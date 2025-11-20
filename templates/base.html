@@ -77,61 +77,62 @@
 <!-- =========================
      MODAL LOGIN / REGISTER
      ========================= -->
+<!-- MODAL LOGIN/REGISTER (ADMIN) -->
 <div id="authModal" class="auth-modal">
-  <div class="auth-modal-content auth-card">
-
+  <div class="auth-card">
     <!-- Pulsante chiusura -->
-    <button id="authClose" class="auth-close-btn">&times;</button>
+    <button id="authClose" class="auth-close-btn" type="button">&times;</button>
 
-    <div id="authContainer" class="auth-container">
-
+    <div class="auth-container">
       <!-- TABS -->
       <div class="auth-tabs">
         <button
           type="button"
           class="auth-tab active"
-          data-target="#auth-login">
+          data-target="loginPanel">
           Accedi
         </button>
         <button
           type="button"
           class="auth-tab"
-          data-target="#auth-register">
+          data-target="registerPanel">
           Registrati
         </button>
       </div>
 
-      <!-- CONTENUTO TAB -->
+      <!-- CONTENUTO PANNELLI -->
       <div class="auth-panels">
+        <!-- PANNELLO LOGIN -->
+        <div id="loginPanel" class="auth-panel active">
+          <h2>Accedi</h2>
 
-        <!-- LOGIN -->
-        <div id="auth-login" class="auth-panel active">
           <form method="POST"
                 action="{{ url_for('login') }}"
                 class="auth-form"
                 autocomplete="off">
-            <h2>Accedi</h2>
-
+            
             <div class="auth-field-wrap">
               <label for="login_email_or_username">
                 Email o username<span class="req">*</span>
               </label>
-              <input type="text"
-                     id="login_email_or_username"
-                     name="email_or_username"
-                     required
-                     autocomplete="off">
+              <input
+                id="login_email_or_username"
+                type="text"
+                name="email_or_username"
+                required
+                autocomplete="off">
             </div>
 
             <div class="auth-field-wrap">
               <label for="login_password">
                 Password<span class="req">*</span>
               </label>
-              <input type="password"
-                     id="login_password"
-                     name="password"
-                     required
-                     autocomplete="off">
+              <input
+                id="login_password"
+                type="password"
+                name="password"
+                required
+                autocomplete="off">
             </div>
 
             <p class="forgot">
@@ -141,77 +142,80 @@
             </p>
 
             <button type="submit" class="button button-block">
-              ACCEDI
+              Accedi
             </button>
           </form>
         </div>
 
-        <!-- REGISTER -->
-        <div id="auth-register" class="auth-panel">
+        <!-- PANNELLO REGISTRAZIONE -->
+        <div id="registerPanel" class="auth-panel">
+          <h2>Crea il tuo account</h2>
+
           <form method="POST"
                 action="{{ url_for('register') }}"
                 class="auth-form"
                 autocomplete="off">
-            <h2>Crea il tuo account</h2>
 
             <div class="auth-field-wrap">
               <label for="reg_username">
                 Username<span class="req">*</span>
               </label>
-              <input type="text"
-                     id="reg_username"
-                     name="username"
-                     required
-                     autocomplete="off">
+              <input
+                id="reg_username"
+                type="text"
+                name="username"
+                required
+                autocomplete="off">
             </div>
 
             <div class="auth-field-wrap">
               <label for="reg_email">
                 Email<span class="req">*</span>
               </label>
-              <input type="email"
-                     id="reg_email"
-                     name="email"
-                     required
-                     autocomplete="off">
+              <input
+                id="reg_email"
+                type="email"
+                name="email"
+                required
+                autocomplete="off">
             </div>
 
             <div class="auth-field-wrap">
               <label for="reg_password">
                 Password<span class="req">*</span>
               </label>
-              <input type="password"
-                     id="reg_password"
-                     name="password"
-                     required
-                     autocomplete="new-password">
+              <input
+                id="reg_password"
+                type="password"
+                name="password"
+                required
+                autocomplete="off">
             </div>
 
             <div class="auth-field-wrap">
               <label for="reg_confirm_password">
                 Conferma password<span class="req">*</span>
               </label>
-              <input type="password"
-                     id="reg_confirm_password"
-                     name="confirm_password"
-                     required
-                     autocomplete="new-password">
+              <input
+                id="reg_confirm_password"
+                type="password"
+                name="confirm_password"
+                required
+                autocomplete="off">
             </div>
 
             <p class="password-hint">
-              Minimo 8 caratteri, almeno 1 lettera e 1 numero.
+              La password deve avere almeno 8 caratteri e contenere
+              almeno una lettera e un numero.
             </p>
 
             <button type="submit" class="button button-block">
-              REGISTRATI
+              Registrati
             </button>
           </form>
         </div>
-
-      </div> <!-- /auth-panels -->
-
-    </div> <!-- /auth-container -->
-
+      </div>
+    </div>
   </div>
 </div>
 
