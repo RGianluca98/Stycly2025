@@ -968,6 +968,37 @@ def export_wardrobe(nome_tabella):
     )
 
 
+
+
+
+@app.route('/_hard-reset-db-123')
+def hard_reset_db():
+    """
+    ATTENZIONE: questa route cancella TUTTE le tabelle del DB e le ricrea pulite.
+    Usala solo per ripartire da zero, poi cancellala dal codice.
+    """
+    from sqlalchemy import MetaData
+    from sqlalchemy import inspect
+
+    metadata = MetaData()
+    inspector = inspect(engine)
+
+    # 1) DROP di tutte le tabelle esistenti
+    with engine.begin() as conn:
+        for table_name in inspector.get_table_names():
+            try:
+                tbl = Table(table_name, metadata, autoload_with=engine)
+                tbl.drop(conn)
+            except Exception:
+                # se qualcosa non si dropa, lo ignoriamo
+                pass
+
+    # 2) Ricreiamo lo schema "pulito" (users + wardrobes)
+    ensure_schema()
+
+    return "Database resettato completamente. Ora è vuoto."
+
+
 # ----------------------------
 #       AVVIO LOCALE
 # ----------------------------
