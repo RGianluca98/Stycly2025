@@ -338,7 +338,7 @@ def inject_user_header_info():
     Aggiunge al contesto (solo se loggato):
     - current_user_username
     - current_user_email
-    - current_user_last_added (timestamp ultimo capo, se disponibile)
+    - current_user_last_added (timestamp ultimo capo, formattato)
     """
     try:
         user_id = session.get('user_id')
@@ -368,7 +368,15 @@ def inject_user_header_info():
                                .limit(1)
                         ).first()
                     if row:
-                        last_added = row._mapping.get('created_at')
+                        raw_ts = row._mapping.get('created_at')
+                        if raw_ts:
+                            try:
+                                dt = datetime.fromisoformat(raw_ts)
+                                # formato DD/MM/YYYY HH:MM
+                                last_added = dt.strftime("%d/%m/%Y %H:%M")
+                            except Exception:
+                                # in caso di errore lascio la stringa grezza
+                                last_added = raw_ts
 
         return dict(
             current_user_username=user.username,
@@ -377,6 +385,7 @@ def inject_user_header_info():
         )
     except Exception:
         return {}
+
 
 
 @app.route('/forgot-password', methods=['GET', 'POST'])

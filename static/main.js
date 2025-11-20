@@ -126,8 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-
-
   /* ================================
    *  LABEL FLOTTANTI (login / register)
    * ============================== */
@@ -172,6 +170,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // inizializzazione generale (nel caso il modal sia già visibile)
   initFloatingLabels();
+
+  /* ================================
+   *  FLASH TOAST (auto-hide)
+   * ============================== */
+  const flashes = document.querySelectorAll('.flash');
+  flashes.forEach(flash => {
+    // chiudo al click
+    flash.addEventListener('click', () => {
+      flash.classList.add('flash-hide');
+      setTimeout(() => flash.remove(), 300);
+    });
+
+    // auto-hide dopo 4 secondi
+    setTimeout(() => {
+      flash.classList.add('flash-hide');
+      setTimeout(() => flash.remove(), 300);
+    }, 4000);
+  });
 });
 
 
