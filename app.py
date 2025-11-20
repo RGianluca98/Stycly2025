@@ -3,7 +3,12 @@ import os
 import re
 import io
 import csv
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,timezone
+try:
+    from zoneinfo import ZoneInfo
+except ImportError:
+    ZoneInfo = None
+
 from functools import wraps
 
 from flask import (
@@ -338,7 +343,7 @@ def inject_user_header_info():
     Aggiunge al contesto (solo se loggato):
     - current_user_username
     - current_user_email
-    - current_user_last_added (timestamp ultimo capo, formattato)
+    - current_user_last_added (timestamp ultimo capo, formattato in ora di Roma)
     """
     try:
         user_id = session.get('user_id')
@@ -372,8 +377,20 @@ def inject_user_header_info():
                         if raw_ts:
                             try:
                                 dt = datetime.fromisoformat(raw_ts)
+
+                                # se nel DB è senza tz, assumiamo che sia UTC
+                                if dt.tzinfo is None:
+                                    dt = dt.replace(tzinfo=timezone.utc)
+
+                                # converto in ora di Roma
+                                if ZoneInfo is not None:
+                                    dt_local = dt.astimezone(ZoneInfo("Europe/Rome"))
+                                else:
+                                    # fallback semplice: +1h (non perfetto ma meglio di niente)
+                                    dt_local = dt + timedelta(hours=1)
+
                                 # formato DD/MM/YYYY HH:MM
-                                last_added = dt.strftime("%d/%m/%Y %H:%M")
+                                last_added = dt_local.strftime("%d/%m/%Y %H:%M")
                             except Exception:
                                 # in caso di errore lascio la stringa grezza
                                 last_added = raw_ts
@@ -385,6 +402,7 @@ def inject_user_header_info():
         )
     except Exception:
         return {}
+
 
 
 
@@ -674,7 +692,7 @@ def aggiungi_capo_wardrobe(nome_tabella):
 
             # aggiungo created_at solo se la colonna esiste davvero
             if 'created_at' in tbl.c:
-                values['created_at'] = datetime.utcnow().isoformat()
+                values['created_at'] = datetime.now(timezone.utc).isoformat()
 
             with engine.begin() as conn:
                 conn.execute(tbl.insert().values(**values))
