@@ -72,6 +72,35 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+  /* LABEL FLOTANTI NEL MODAL AUTH */
+  const authInputs = document.querySelectorAll('.auth-field input');
+
+  authInputs.forEach((input) => {
+    const label = input.nextElementSibling;
+    if (!label) return;
+
+    const update = () => {
+      if (input.value.trim() !== '') {
+        label.classList.add('active');
+      } else {
+        label.classList.remove('active');
+      }
+    };
+
+    input.addEventListener('focus', () => {
+      label.classList.add('highlight');
+    });
+
+    input.addEventListener('blur', () => {
+      label.classList.remove('highlight');
+      update();
+    });
+
+    input.addEventListener('input', update);
+
+    // inizializza stato corretto se il browser ha messo valori
+    update();
+  });
 
 
 

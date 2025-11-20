@@ -1033,6 +1033,85 @@ label.field.focused .psuedo_select::after {
   text-decoration: underline;
 }
 
+/* --- AUTH FORM: CAMPI CON LABEL FLOTANTE --- */
+.auth-card .auth-field {
+  position: relative;
+  width: 100%;
+  margin: 8px 0 22px;
+}
+
+.auth-card .auth-field input {
+  width: 100%;
+  padding: 14px 14px 8px;
+  margin: 0;
+  border-radius: 8px;
+  border: 1px solid #d0d6e6;
+  background-color: #EEF3FF;
+  font-size: 0.95rem;
+  color: #3A4C69;
+}
+
+.auth-card .auth-field input:focus {
+  border-color: var(--col-accent);
+  box-shadow: 0 0 0 1px rgba(125,178,224,0.3);
+}
+
+.auth-card .auth-label {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  color: #7DB2E0;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+.auth-card .auth-label .req {
+  margin-left: 3px;
+  color: #cc3d3d;
+}
+
+/* label quando il campo è pieno / attivo */
+.auth-card .auth-label.active {
+  top: 4px;
+  transform: none;
+  font-size: 0.7rem;
+  color: #3A4C69;
+}
+
+.auth-card .auth-label.highlight {
+  color: var(--col-hover);
+}
+
+/* link "Hai dimenticato la password?" */
+.auth-card .forgot {
+  margin-top: -8px;
+  margin-bottom: 6px;
+  width: 100%;
+  text-align: right;
+}
+
+.auth-card .forgot a {
+  font-size: 0.8rem;
+  color: #4a5670;
+  text-decoration: underline;
+}
+
+.auth-card .forgot a:hover {
+  color: var(--col-hover);
+}
+
+/* testo con regole password */
+.auth-card .password-hint {
+  font-size: 0.75rem;
+  color: #6b768c;
+  margin-top: 0.2rem;
+  margin-bottom: 0;
+}
+
+
+
 .password-hint {
   font-size: 0.8rem;
   color: #4a5670;
