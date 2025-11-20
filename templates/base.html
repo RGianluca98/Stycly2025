@@ -54,64 +54,70 @@
             CONTACT
         </a>
 
-              {% if session.get('user_id') %}
-        <a href="{{ url_for('private_wardrobe') }}"
-           class="{% if request.endpoint == 'private_wardrobe' %}nav-active{% endif %}">
-            PRIVATE WARDROBE
-        </a>
+        {% if session.get('user_id') %}
+            <a href="{{ url_for('private_wardrobe') }}"
+               class="{% if request.endpoint == 'private_wardrobe' %}nav-active{% endif %}">
+                PRIVATE WARDROBE
+            </a>
 
-        <div class="user-menu">
-          <button type="button" class="user-menu-toggle">
-            {{ current_user_username or session.get('username') }}
-            <span class="user-menu-arrow">▾</span>
-          </button>
-
-          <div class="user-menu-dropdown">
-            <div class="user-menu-info">
-              <div class="user-menu-name">
-                {{ current_user_username or session.get('username') }}
-              </div>
-              <div class="user-menu-email">
-                {{ current_user_email or session.get('email') }}
-              </div>
-              {% if current_user_last_added %}
-                <div class="user-menu-last">
-                  Ultimo capo inserito:<br>
-                  <strong>{{ current_user_last_added }}</strong>
-                </div>
-              {% else %}
-                <div class="user-menu-last">
-                  Nessun capo inserito finora.
-                </div>
-              {% endif %}
-            </div>
-
-            <div class="user-menu-actions">
-              <form action="{{ url_for('clear_wardrobe') }}" method="POST"
-                    onsubmit="return confirm('Vuoi svuotare completamente il tuo wardrobe?');">
-                <button type="submit" class="user-menu-btn user-menu-btn-clear">
-                  Svuota wardrobe
+            <div class="user-menu">
+                <button type="button" class="user-menu-toggle">
+                    {{ current_user_username or session.get('username') }}
+                    <span class="user-menu-arrow">▾</span>
                 </button>
-              </form>
 
-              <form action="{{ url_for('delete_account') }}" method="POST"
-                    onsubmit="return confirm('Vuoi eliminare definitivamente il tuo account e tutti i dati associati?');">
-                <button type="submit" class="user-menu-btn user-menu-btn-delete">
-                  Elimina account
-                </button>
-              </form>
+                <div class="user-menu-dropdown">
+                    <div class="user-menu-info">
+                        <div class="user-menu-name">
+                            {{ current_user_username or session.get('username') }}
+                        </div>
+                        <div class="user-menu-email">
+                            {{ current_user_email or session.get('email') }}
+                        </div>
+                        {% if current_user_last_added %}
+                            <div class="user-menu-last">
+                                Ultimo capo inserito:<br>
+                                <strong>{{ current_user_last_added }}</strong>
+                            </div>
+                        {% else %}
+                            <div class="user-menu-last">
+                                Nessun capo inserito finora.
+                            </div>
+                        {% endif %}
+                    </div>
 
-              <a href="{{ url_for('logout') }}" class="user-menu-link-logout">
-                Logout
-              </a>
+                    <div class="user-menu-actions">
+                        <!-- SVUOTA WARDROBE -->
+                        <form method="POST"
+                              action="{{ url_for('clear_wardrobe') }}"
+                              onsubmit="return confirm('Vuoi svuotare completamente il tuo wardrobe?');">
+                            <button type="submit"
+                                    class="user-menu-btn user-menu-btn-clear">
+                                Svuota wardrobe
+                            </button>
+                        </form>
+
+                        <!-- ELIMINA ACCOUNT -->
+                        <form method="POST"
+                              action="{{ url_for('delete_account') }}"
+                              onsubmit="return confirm('Vuoi eliminare definitivamente il tuo account e tutti i dati associati? L\\'operazione è irreversibile.');">
+                            <button type="submit"
+                                    class="user-menu-btn user-menu-btn-delete">
+                                Elimina account
+                            </button>
+                        </form>
+
+                        <!-- LOGOUT -->
+                        <a href="{{ url_for('logout') }}"
+                           class="user-menu-link-logout">
+                            Logout
+                        </a>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-    {% else %}
-        <a href="#" id="area-riservata-link">AREA RISERVATA</a>
-    {% endif %}
-
-
+        {% else %}
+            <a href="#" id="area-riservata-link">AREA RISERVATA</a>
+        {% endif %}
     </nav>
 </header>
 
@@ -122,7 +128,6 @@
 <!-- =========================
      MODAL LOGIN / REGISTER
      ========================= -->
-<!-- MODAL LOGIN/REGISTER (ADMIN) -->
 <div id="authModal" class="auth-modal">
   <div class="auth-card">
     <!-- Pulsante chiusura -->
@@ -155,7 +160,7 @@
                 action="{{ url_for('login') }}"
                 class="auth-form"
                 autocomplete="off">
-            
+
             <div class="auth-field-wrap">
               <label for="login_email_or_username">
                 Email o username<span class="req">*</span>
