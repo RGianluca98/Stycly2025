@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
-  /* NAV HAMBURGER */
+  /* ================================
+   *  NAV HAMBURGER
+   * ============================== */
   const navToggle = document.getElementById('navToggle');
-  const mainNav = document.getElementById('mainNav');
+  const mainNav   = document.getElementById('mainNav');
 
   if (navToggle && mainNav) {
     navToggle.addEventListener('click', () => {
@@ -10,21 +12,43 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* AUTH MODAL */
-  const authModal = document.getElementById('authModal');
-  const areaLink = document.getElementById('area-riservata-link');
-  const authClose = document.getElementById('authClose');
+  /* ================================
+   *  AUTH MODAL (login / register)
+   * ============================== */
+  const authModal  = document.getElementById('authModal');
+  const areaLink   = document.getElementById('area-riservata-link');
+  const authClose  = document.getElementById('authClose');
+  const tabButtons = document.querySelectorAll('.auth-tab');
+  const panels     = document.querySelectorAll('.auth-panel');
 
-  function openAuth() {
+  function activateTab(targetId) {
+    // attiva il bottone
+    tabButtons.forEach(btn => {
+      const t = btn.getAttribute('data-target');
+      if (t === targetId) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // mostra il pannello corrispondente
+    panels.forEach(panel => {
+      if (panel.id === targetId) {
+        panel.classList.add('active');
+      } else {
+        panel.classList.remove('active');
+      }
+    });
+  }
+
+  function openAuth(defaultTabId = 'loginPanel') {
     if (!authModal) return;
     authModal.classList.add('open');
     document.body.style.overflow = 'hidden';
-
-    // di default mostra il tab "Accedi"
-    const loginTabLink = document.querySelector('.auth-tab-group .auth-tab:first-child a');
-    if (loginTabLink) {
-      loginTabLink.click();
-    }
+    // di default vai sulla tab login
+    activateTab(defaultTabId);
+    initFloatingLabels(); // assicura label corrette
   }
 
   function closeAuth() {
@@ -36,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (areaLink) {
     areaLink.addEventListener('click', (e) => {
       e.preventDefault();
-      openAuth();
+      openAuth('loginPanel');
     });
   }
 
@@ -45,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   if (authModal) {
+    // chiusura cliccando fuori dalla card
     authModal.addEventListener('click', (e) => {
       if (e.target === authModal) {
         closeAuth();
@@ -52,60 +77,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* TAB LOGIN / REGISTRAZIONE */
-  const tabLinks = document.querySelectorAll('.auth-tab-group .auth-tab a');
-  const panes = document.querySelectorAll('.auth-tab-content .auth-pane');
-
-  if (tabLinks.length && panes.length) {
-    tabLinks.forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetId = link.getAttribute('href').replace('#', '');
-
-        // attiva tab
-        document.querySelectorAll('.auth-tab-group .auth-tab')
-          .forEach((li) => li.classList.remove('active'));
-        link.parentElement.classList.add('active');
-
-        // mostra il pane giusto
-        panes.forEach((pane) => {
-          pane.classList.toggle('active', pane.id === targetId);
-        });
+  // click sulle tab
+  if (tabButtons.length) {
+    tabButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        if (targetId) {
+          activateTab(targetId);
+        }
       });
     });
   }
 
-  /* LABEL FLOTANTI NEI CAMPI AUTH */
-  const authInputs = document.querySelectorAll('.auth-field input');
+  /* ================================
+   *  LABEL FLOTTANTI (login / register)
+   * ============================== */
+  function initFloatingLabels() {
+    const inputs = document.querySelectorAll(
+      '.auth-field-wrap input, .auth-field-wrap textarea'
+    );
 
-  authInputs.forEach((input) => {
-    const label = input.nextElementSibling;
-    if (!label) return;
+    inputs.forEach(input => {
+      const label = input.previousElementSibling;
+      if (!label) return;
 
-    const update = () => {
-      if (input.value.trim() !== '') {
-        label.classList.add('active');
-      } else {
-        label.classList.remove('active');
-      }
-    };
+      const update = () => {
+        if (input.value.trim() === '') {
+          label.classList.remove('active');
+        } else {
+          label.classList.add('active');
+        }
+      };
 
-    input.addEventListener('focus', () => {
-      label.classList.add('highlight');
-    });
+      input.addEventListener('focus', () => {
+        label.classList.add('highlight');
+        if (input.value.trim() !== '') {
+          label.classList.add('active');
+        }
+      });
 
-    input.addEventListener('blur', () => {
-      label.classList.remove('highlight');
+      input.addEventListener('blur', () => {
+        label.classList.remove('highlight');
+        if (input.value.trim() === '') {
+          label.classList.remove('active');
+        }
+      });
+
+      input.addEventListener('input', update);
+
+      // stato iniziale se il browser compila qualcosa
       update();
     });
+  }
 
-    input.addEventListener('input', update);
-
-    // inizializza (utile se il browser precompila)
-    update();
-  });
+  // inizializza una volta (nel caso in cui il modal parta già aperto)
+  initFloatingLabels();
 });
-
 
 
 
