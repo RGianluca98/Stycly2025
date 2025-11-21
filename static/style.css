@@ -47,12 +47,21 @@ body {
     box-shadow: 0 2px 12px rgba(123,154,204,0.07);
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     position: sticky;
     top: 0;
     z-index: 10;
     min-height: 68px;
-    padding: 0 16px;
+    padding: 0 24px;
+}
+
+.stycly-header-inner {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: flex-start;
 }
 
 .stycly-logo img {
@@ -67,6 +76,11 @@ body {
     align-items: center;
     gap: 0.8rem;
     position: relative;
+    flex: 1;
+    flex-wrap: wrap;
+    column-gap: 0.75rem;
+    row-gap: 0.3rem;
+    justify-content: flex-start;
 }
 
 .stycly-nav > a,
@@ -893,6 +907,10 @@ label.field.focused .psuedo_select::after {
         min-height: 56px;
     }
 
+    .stycly-header-inner {
+        gap: 0.6rem;
+    }
+
     .stycly-logo img {
         height: 40px;
     }
@@ -944,6 +962,12 @@ label.field.focused .psuedo_select::after {
     .stycly-nav-dropdown-menu a {
         padding: 6px 12px;
         font-size: 0.95rem;
+    }
+
+    .header-icons-group {
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start;
     }
 }
 
@@ -1253,7 +1277,7 @@ label.field.focused .psuedo_select::after {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    margin-left: 1rem;
+    margin-left: auto;
 }
 
 .header-icon-btn {

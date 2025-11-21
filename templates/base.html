@@ -95,21 +95,22 @@
   </svg>
 
 <header class="stycly-header">
-    <div class="stycly-logo">
-        <a href="{{ url_for('home') }}">
-            <img src="{{ url_for('static', filename='stycly-logo.png') }}" alt="Stycly logo">
-        </a>
-    </div>
+    <div class="stycly-header-inner">
+        <div class="stycly-logo">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='stycly-logo.png') }}" alt="Stycly logo">
+            </a>
+        </div>
 
     <!-- HAMBURGER -->
-    <button class="stycly-nav-hamburger" id="navToggle" aria-label="Apri menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
+        <button class="stycly-nav-hamburger" id="navToggle" aria-label="Apri menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
     <!-- MENU DESKTOP / MOBILE -->
-    <nav class="stycly-nav" id="mainNav">
+        <nav class="stycly-nav" id="mainNav">
         <a href="{{ url_for('home') }}"
            class="{% if request.endpoint == 'home' %}nav-active{% endif %}">
             HOME
@@ -227,7 +228,8 @@
                 </svg>
             </button>
         </div>
-    </nav>
+        </nav>
+    </div>
 </header>
 
 <main>
