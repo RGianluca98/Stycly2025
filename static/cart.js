@@ -46,7 +46,8 @@ function renderCart() {
 
     row.innerHTML = `
       <div class="mini-cart-img">
-        <img src="/static/uploads/${item.img || ''}" alt="${item.name || ''}">
+        <img src="/immagini/${item.img || ''}" alt="${item.name || ''}">
+
       </div>
       <div class="mini-cart-info">
         <div class="mini-cart-header">

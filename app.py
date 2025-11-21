@@ -68,6 +68,55 @@ SESSION_TIMEOUT_MINUTES = 60
 DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///guardaroba.db")
 engine = create_engine(DATABASE_URL)
 
+def get_aggregated_capi():
+    """
+    Legge tutti i capi da tutti i wardrobe e li aggrega
+    come nella pagina public_wardrobe (disponibilita).
+    Ritorna una lista di dict.
+    """
+    metadata = MetaData()
+    all_capi = []
+
+    wardrobes = db_session.query(Wardrobe).all()
+
+    for w in wardrobes:
+        try:
+            tbl = Table(w.nome, metadata, autoload_with=engine)
+        except Exception:
+            continue
+
+        with engine.connect() as conn:
+            rows = conn.execute(tbl.select()).fetchall()
+            columns = tbl.columns.keys()
+
+            for row in rows:
+                rd = dict(zip(columns, row))
+                all_capi.append(rd)
+
+    # --- AGGREGAZIONE CAPi UGUALI ---
+    aggregated = {}
+    for r in all_capi:
+        key = (
+            r.get('categoria'),
+            r.get('tipologia'),
+            r.get('taglia'),
+            r.get('fit'),
+            r.get('colore'),
+            r.get('brand'),
+            r.get('destinazione'),
+            r.get('immagine'),
+            r.get('immagine2'),
+        )
+        if key not in aggregated:
+            item = dict(r)
+            item['disponibilita'] = 1
+            aggregated[key] = item
+        else:
+            aggregated[key]['disponibilita'] += 1
+
+    return list(aggregated.values())
+
+
 
 def ensure_schema():
     """
@@ -510,55 +559,28 @@ def logout():
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    capi_aggregati = get_aggregated_capi()
+
+    # ordino per created_at (i più recenti primi, se presente)
+    sorted_capi = sorted(
+        capi_aggregati,
+        key=lambda x: x.get('created_at') or '',
+        reverse=True
+    )
+
+    # prendo max 8 capi come "featured"
+    featured_capi = sorted_capi[:8]
+
+    return render_template('index.html', featured_capi=featured_capi)
+
 
 
 @app.route('/products')
 @app.route('/public-wardrobe')
 def products():
-    metadata = MetaData()
-    all_capi = []
-
-    wardrobes = db_session.query(Wardrobe).all()
-
-    for w in wardrobes:
-        try:
-            tbl = Table(w.nome, metadata, autoload_with=engine)
-        except Exception:
-            continue
-
-        with engine.connect() as conn:
-            rows = conn.execute(tbl.select()).fetchall()
-            columns = tbl.columns.keys()
-
-            for row in rows:
-                rd = dict(zip(columns, row))
-                all_capi.append(rd)
-
-    # --- AGGREGAZIONE CAPi UGUALI ---
-    aggregated = {}
-    for r in all_capi:
-        key = (
-            r.get('categoria'),
-            r.get('tipologia'),
-            r.get('taglia'),
-            r.get('fit'),
-            r.get('colore'),
-            r.get('brand'),
-            r.get('destinazione'),
-            r.get('immagine'),
-            r.get('immagine2'),
-        )
-        if key not in aggregated:
-            item = dict(r)
-            item['disponibilita'] = 1
-            aggregated[key] = item
-        else:
-            aggregated[key]['disponibilita'] += 1
-
-    capi_aggregati = list(aggregated.values())
-
+    capi_aggregati = get_aggregated_capi()
     return render_template("public_wardrobe.html", capi=capi_aggregati)
+
 
 
 @app.route('/about')

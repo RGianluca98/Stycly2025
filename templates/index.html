@@ -13,12 +13,155 @@
       Scegli i capi, prenota il noleggio e pensa solo alle foto.
     </p>
 
-    <!-- ⬇⬇ IMPORTANTE: endpoint = public_wardrobe ⬇⬇ -->
+    <!-- CTA verso pagina prodotti -->
     <a href="{{ url_for('products') }}" class="stycly-cta-btn">
       Products
     </a>
   </div>
 </section>
+
+{% if featured_capi %}
+<section class="product-store featured-section">
+  <div class="container-md">
+    <div class="display-header">
+      <h2 class="section-title">Featured Products</h2>
+      <a href="{{ url_for('products') }}" class="view-all-link">View all</a>
+    </div>
+
+    <div class="product-content">
+      <div class="product-grid">
+        {% for capo in featured_capi %}
+        <div class="product-card">
+          <div class="card-img">
+            <img
+              src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
+              alt="{{ capo['tipologia'] or '' }}"
+              class="product-image">
+
+            <!-- Icone in hover -->
+            <div class="card-icons">
+              <!-- Aggiungi al carrello -->
+              <button type="button"
+                      class="icon-btn circle add-to-cart"
+                      data-id="{{ capo['id'] }}"
+                      data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
+                      data-img="{{ (capo['immagine'] or '').split('/')[-1] }}">
+                <svg class="icon-20">
+                  <use xlink:href="#shopping-carriage"></use>
+                </svg>
+              </button>
+
+              <!-- Info capo (quick view) -->
+              <button type="button"
+                      class="icon-btn circle featured-info-btn"
+                      data-capo='{{ capo|tojson|safe }}'>
+                <svg class="icon-20">
+                  <use xlink:href="#quick-view"></use>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="card-detail">
+            <h3 class="card-title">
+              {{ capo['categoria'] }} - {{ capo['tipologia'] }}
+            </h3>
+            <p class="card-meta">
+              Taglia: {{ capo['taglia'] or '-' }}
+              {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
+              {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
+              {% if capo['destinazione'] %} · Destinazione: {{ capo['destinazione'] }}{% endif %}
+            </p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Modal dettagli capo (solo per la home) -->
+<div id="featured-detail-modal" class="stycly-modal" style="display:none;">
+  <div class="stycly-modal-content" style="max-width: 900px;">
+    <button class="stycly-modal-close" onclick="closeFeaturedDetail()">&times;</button>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+      <div style="flex: 1; text-align:center;">
+        <img id="featured-popup-image" src="" alt="Capo"
+             style="max-width: 100%; max-height: 380px; border-radius: 8px;">
+        <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center;">
+          <button onclick="showFeaturedFront()" class="capo-icon-btn" title="Fronte">⬅</button>
+          <button onclick="showFeaturedBack()" class="capo-icon-btn" title="Retro">➡</button>
+        </div>
+      </div>
+      <div id="featured-popup-details" style="flex:1; font-size: 0.95rem;"></div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
+
+{% block extra_js %}
+<script>
+// --- helper per immagini (stessa logica di public_wardrobe) ---
+function buildImageURLHome(filename) {
+  if (!filename) return "";
+  const cleanName = filename.toString().split("/").pop();
+  return "/immagini/" + cleanName;
+}
+
+let featuredFront = "";
+let featuredBack  = "";
+
+// apre popup con i dettagli
+function openFeaturedDetail(capo) {
+  featuredFront = capo.immagine;
+  featuredBack  = capo.immagine2 || "";
+
+  document.getElementById('featured-popup-image').src =
+    buildImageURLHome(featuredFront);
+
+  document.getElementById('featured-popup-details').innerHTML = `
+    <p><b>Categoria:</b> ${capo.categoria || ''}</p>
+    <p><b>Tipologia:</b> ${capo.tipologia || ''}</p>
+    <p><b>Taglia:</b> ${capo.taglia || ''}</p>
+    <p><b>Colore:</b> ${capo.colore || ''}</p>
+    <p><b>Brand:</b> ${capo.brand || ''}</p>
+    <p><b>Destinazione:</b> ${capo.destinazione || ''}</p>
+    ${capo.fit ? `<p><b>Fit:</b> ${capo.fit}</p>` : ''}
+    <p><b>Disponibilità:</b> ${capo.disponibilita || 1}</p>
+  `;
+  document.getElementById("featured-detail-modal").style.display = "flex";
+}
+
+function closeFeaturedDetail() {
+  document.getElementById("featured-detail-modal").style.display = "none";
+}
+
+function showFeaturedFront() {
+  if (featuredFront) {
+    document.getElementById('featured-popup-image').src =
+      buildImageURLHome(featuredFront);
+  }
+}
+
+function showFeaturedBack() {
+  if (featuredBack) {
+    document.getElementById('featured-popup-image').src =
+      buildImageURLHome(featuredBack);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.featured-info-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const capo = JSON.parse(this.getAttribute('data-capo'));
+      openFeaturedDetail(capo);
+    });
+  });
+});
+</script>
+{% endblock %}
+
 
 
