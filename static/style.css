@@ -1726,4 +1726,31 @@ label.field.focused .psuedo_select::after {
     }
 }
 
+/* --- FIX dimensioni Featured Products per Stycly --- */
+
+/* contenitore quadrato, card più piccole */
+.featured-section .product-card .card-img {
+    position: relative;
+    width: 100%;
+    padding-top: 100%;       /* 1:1 quadrato */
+    overflow: hidden;
+}
+
+/* override aggressivo della regola del template */
+.featured-section .product-card img.product-image {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 0.35s ease;
+}
+
+/* hover come nel template (leggero zoom) */
+.featured-section .product-card:hover img.product-image {
+    transform: scale(1.05);
+}
 

@@ -131,7 +131,12 @@
             CONTACT
         </a>
 
-        {% if session.get('user_id') %}
+        
+
+        <!-- 🔔 NUOVE ICONE: CARRELLO + SEARCH, SEMPRE VISIBILI -->
+        <div class="header-icons-group">
+
+          {% if session.get('user_id') %}
             <a href="{{ url_for('private_wardrobe') }}"
                class="{% if request.endpoint == 'private_wardrobe' %}nav-active{% endif %}">
                 PRIVATE WARDROBE
@@ -206,8 +211,9 @@
             </button>
         {% endif %}
 
-        <!-- 🔔 NUOVE ICONE: CARRELLO + SEARCH, SEMPRE VISIBILI -->
-        <div class="header-icons-group">
+
+
+
             <!-- CARRELLO -->
             <button type="button"
                     id="open-cart"
