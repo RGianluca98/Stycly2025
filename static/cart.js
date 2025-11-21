@@ -123,6 +123,8 @@ document.addEventListener('DOMContentLoaded', function () {
   loadCart();
   renderCart();
 
+
+  window.styclyAddToCart = addToCart;
   // Click su "aggiungi al carrello" (products.html, ecc.)
   // Basta avere un elemento con classe .add-to-cart e:
   // data-id, data-name, data-img

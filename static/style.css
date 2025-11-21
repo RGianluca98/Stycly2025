@@ -1477,9 +1477,14 @@ label.field.focused .psuedo_select::after {
     font-size: 0.9rem;
 }
 
-/* --- Featured Products in home --- */
+/* --- Featured Products layout --- */
 .featured-section {
     padding: 3rem 1rem 3.5rem;
+}
+
+.container-md {
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .display-header {
@@ -1492,6 +1497,7 @@ label.field.focused .psuedo_select::after {
 .section-title {
     font-size: 1.4rem;
     font-weight: 600;
+    margin: 0;
 }
 
 .view-all-link {
@@ -1507,69 +1513,217 @@ label.field.focused .psuedo_select::after {
     gap: 1.5rem;
 }
 
+/* card stile ecommerce */
 .product-card {
     background: #fff;
-    border-radius: 14px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .product-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 26px rgba(0,0,0,0.08);
+    transform: translateY(-6px);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.10);
 }
 
 .product-card .card-img {
     position: relative;
+    width: 100%;
+    padding-top: 100%;            /* 1:1 square */
     overflow: hidden;
 }
 
 .product-card .product-image {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    display: block;
+    height: 100%;
     object-fit: cover;
+    transform: scale(1);
+    transition: transform 0.35s ease;
 }
 
-/* Icone in hover sopra l'immagine */
+/* overlay scuro leggero */
+.card-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.25), rgba(0,0,0,0.4));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+/* Icone in hover (stile template) */
 .card-icons {
     position: absolute;
     left: 50%;
-    bottom: 1.5rem;
-    transform: translateX(-50%);
+    bottom: 1.3rem;
+    transform: translate(-50%, 20px);
     display: flex;
     gap: 0.75rem;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.3s ease;
+    transition: all 0.35s ease;
 }
 
 .product-card:hover .card-icons {
     opacity: 1;
-    bottom: 2.1rem;
+    transform: translate(-50%, 0);
     pointer-events: auto;
 }
 
-.icon-btn.circle {
-    width: 44px;
-    height: 44px;
-    border-radius: 999px;
-    background: #fff;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+.product-card:hover .product-image {
+    transform: scale(1.05);
 }
 
+.product-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.icon-btn.circle {
+    width: 46px;
+    height: 46px;
+    border-radius: 999px;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.22);
+}
+
+/* testo card */
 .card-detail {
-    padding: 0.75rem 1rem 1rem;
+    padding: 0.85rem 1rem 1.1rem;
 }
 
 .card-title {
     font-size: 0.95rem;
     font-weight: 600;
-    margin: 0 0 0.2rem;
+    margin: 0 0 0.25rem;
 }
 
 .card-meta {
     font-size: 0.8rem;
     color: #666;
+    margin: 0;
 }
+
+/* --- QUICK VIEW MODAL stile template --- */
+.quickview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.quickview-modal {
+    background: #fff;
+    border-radius: 16px;
+    max-width: 820px;
+    width: 100%;
+    padding: 1.5rem 1.75rem 1.75rem;
+    box-shadow: 0 22px 50px rgba(0,0,0,0.35);
+    position: relative;
+}
+
+.quickview-close {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.9rem;
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.quickview-layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.quickview-image-wrap {
+    flex: 1 1 45%;
+}
+
+.quickview-image-wrap img {
+    width: 100%;
+    max-height: 320px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.quickview-info {
+    flex: 1 1 50%;
+}
+
+.quickview-title {
+    margin: 0 0 0.25rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.quickview-subtitle {
+    margin: 0 0 0.75rem;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.quickview-description {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.75rem;
+}
+
+.quickview-meta {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.quickview-meta li + li {
+    margin-top: 0.25rem;
+}
+
+.quickview-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.quickview-qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quickview-add-btn {
+    padding: 0.55rem 1.8rem;
+    border-radius: 999px;
+    border: none;
+    background: #111;
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.quickview-categories {
+    font-size: 0.8rem;
+    color: #555;
+}
+
+/* responsivo */
+@media (max-width: 768px) {
+    .quickview-modal {
+        margin: 0 1rem;
+    }
+    .quickview-layout {
+        flex-direction: column;
+    }
+}
+
 

@@ -38,6 +38,9 @@
               alt="{{ capo['tipologia'] or '' }}"
               class="product-image">
 
+            <!-- overlay scuro leggero -->
+            <div class="card-overlay"></div>
+
             <!-- Icone in hover -->
             <div class="card-icons">
               <!-- Aggiungi al carrello -->
@@ -70,7 +73,6 @@
               Taglia: {{ capo['taglia'] or '-' }}
               {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
               {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
-              {% if capo['destinazione'] %} · Destinazione: {{ capo['destinazione'] }}{% endif %}
             </p>
           </div>
         </div>
@@ -81,20 +83,49 @@
 </section>
 {% endif %}
 
-<!-- Modal dettagli capo (solo per la home) -->
-<div id="featured-detail-modal" class="stycly-modal" style="display:none;">
-  <div class="stycly-modal-content" style="max-width: 900px;">
-    <button class="stycly-modal-close" onclick="closeFeaturedDetail()">&times;</button>
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
-      <div style="flex: 1; text-align:center;">
-        <img id="featured-popup-image" src="" alt="Capo"
-             style="max-width: 100%; max-height: 380px; border-radius: 8px;">
-        <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center;">
-          <button onclick="showFeaturedFront()" class="capo-icon-btn" title="Fronte">⬅</button>
-          <button onclick="showFeaturedBack()" class="capo-icon-btn" title="Retro">➡</button>
-        </div>
+<!-- QUICK VIEW MODAL stile template ecommerce -->
+<div id="featured-detail-modal" class="quickview-overlay" style="display:none;">
+  <div class="quickview-modal">
+    <button class="quickview-close" id="quickview-close-btn" type="button">&times;</button>
+
+    <div class="quickview-layout">
+      <div class="quickview-image-wrap">
+        <img id="quickview-image" src="" alt="Capo">
       </div>
-      <div id="featured-popup-details" style="flex:1; font-size: 0.95rem;"></div>
+
+      <div class="quickview-info">
+        <h2 id="quickview-title" class="quickview-title"></h2>
+
+        <p id="quickview-subtitle" class="quickview-subtitle"></p>
+
+        <div id="quickview-description" class="quickview-description"></div>
+
+        <ul class="quickview-meta">
+          <li><strong>Taglia:</strong> <span id="quickview-taglia"></span></li>
+          <li><strong>Colore:</strong> <span id="quickview-colore"></span></li>
+          <li><strong>Brand:</strong> <span id="quickview-brand"></span></li>
+          <li><strong>Destinazione:</strong> <span id="quickview-destinazione"></span></li>
+          <li><strong>Fit:</strong> <span id="quickview-fit"></span></li>
+          <li><strong>Disponibilità:</strong> <span id="quickview-dispo"></span></li>
+        </ul>
+
+        <!-- quantità + add to cart stile template -->
+        <div class="quickview-actions">
+          <div class="quickview-qty">
+            <button type="button" id="quickview-minus" class="qty-btn">-</button>
+            <span id="quickview-qty-value" class="qty-value">1</span>
+            <button type="button" id="quickview-plus" class="qty-btn">+</button>
+          </div>
+          <button type="button" id="quickview-add-cart" class="quickview-add-btn">
+            Add to cart
+          </button>
+        </div>
+
+        <p class="quickview-categories">
+          <strong>Categoria:</strong>
+          <span id="quickview-categoria"></span>
+        </p>
+      </div>
     </div>
   </div>
 </div>
@@ -110,58 +141,120 @@ function buildImageURLHome(filename) {
   return "/immagini/" + cleanName;
 }
 
-let featuredFront = "";
-let featuredBack  = "";
+let qvFront = "";
+let qvBack  = "";
+let qvQty   = 1;
+let qvProduct = null;
 
-// apre popup con i dettagli
 function openFeaturedDetail(capo) {
-  featuredFront = capo.immagine;
-  featuredBack  = capo.immagine2 || "";
+  qvFront = capo.immagine;
+  qvBack  = capo.immagine2 || "";
+  qvQty   = 1;
 
-  document.getElementById('featured-popup-image').src =
-    buildImageURLHome(featuredFront);
+  const title = (capo.categoria || '') + (capo.tipologia ? ' - ' + capo.tipologia : '');
+  document.getElementById('quickview-title').textContent = title;
 
-  document.getElementById('featured-popup-details').innerHTML = `
-    <p><b>Categoria:</b> ${capo.categoria || ''}</p>
-    <p><b>Tipologia:</b> ${capo.tipologia || ''}</p>
-    <p><b>Taglia:</b> ${capo.taglia || ''}</p>
-    <p><b>Colore:</b> ${capo.colore || ''}</p>
-    <p><b>Brand:</b> ${capo.brand || ''}</p>
-    <p><b>Destinazione:</b> ${capo.destinazione || ''}</p>
-    ${capo.fit ? `<p><b>Fit:</b> ${capo.fit}</p>` : ''}
-    <p><b>Disponibilità:</b> ${capo.disponibilita || 1}</p>
-  `;
-  document.getElementById("featured-detail-modal").style.display = "flex";
+  document.getElementById('quickview-subtitle').textContent =
+    capo.brand ? capo.brand : '';
+
+  document.getElementById('quickview-description').textContent =
+    capo.destinazione ? ('Perfetto per: ' + capo.destinazione) : '';
+
+  document.getElementById('quickview-taglia').textContent       = capo.taglia || '-';
+  document.getElementById('quickview-colore').textContent       = capo.colore || '-';
+  document.getElementById('quickview-brand').textContent        = capo.brand || '-';
+  document.getElementById('quickview-destinazione').textContent = capo.destinazione || '-';
+  document.getElementById('quickview-fit').textContent          = capo.fit || '-';
+  document.getElementById('quickview-dispo').textContent        = capo.disponibilita || 1;
+  document.getElementById('quickview-categoria').textContent    = capo.categoria || '-';
+
+  document.getElementById('quickview-image').src = buildImageURLHome(qvFront);
+  document.getElementById('quickview-qty-value').textContent = qvQty;
+
+  // oggetto prodotto per il carrello
+  qvProduct = {
+    id: capo.id,
+    name: title,
+    img: (capo.immagine || '').toString().split('/').pop()
+  };
+
+  document.getElementById('featured-detail-modal').style.display = 'flex';
 }
 
 function closeFeaturedDetail() {
-  document.getElementById("featured-detail-modal").style.display = "none";
+  document.getElementById('featured-detail-modal').style.display = 'none';
 }
 
 function showFeaturedFront() {
-  if (featuredFront) {
-    document.getElementById('featured-popup-image').src =
-      buildImageURLHome(featuredFront);
+  if (qvFront) {
+    document.getElementById('quickview-image').src = buildImageURLHome(qvFront);
   }
 }
 
 function showFeaturedBack() {
-  if (featuredBack) {
-    document.getElementById('featured-popup-image').src =
-      buildImageURLHome(featuredBack);
+  if (qvBack) {
+    document.getElementById('quickview-image').src = buildImageURLHome(qvBack);
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  // apertura quick view
   document.querySelectorAll('.featured-info-btn').forEach(btn => {
     btn.addEventListener('click', function () {
       const capo = JSON.parse(this.getAttribute('data-capo'));
       openFeaturedDetail(capo);
     });
   });
+
+  // chiusura quick view
+  document.getElementById('quickview-close-btn').addEventListener('click', closeFeaturedDetail);
+  document.getElementById('featured-detail-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'featured-detail-modal') {
+      closeFeaturedDetail();
+    }
+  });
+
+  // cambio fronte/retro cliccando sull'immagine
+  document.getElementById('quickview-image').addEventListener('click', () => {
+    // toggla fronte/retro se esiste
+    if (!qvBack) return;
+    const current = document.getElementById('quickview-image').getAttribute('src');
+    const frontURL = buildImageURLHome(qvFront);
+    const backURL  = buildImageURLHome(qvBack);
+    document.getElementById('quickview-image').src =
+      (current === frontURL) ? backURL : frontURL;
+  });
+
+  // gestione quantità
+  document.getElementById('quickview-minus').addEventListener('click', () => {
+    if (qvQty > 1) {
+      qvQty--;
+      document.getElementById('quickview-qty-value').textContent = qvQty;
+    }
+  });
+
+  document.getElementById('quickview-plus').addEventListener('click', () => {
+    qvQty++;
+    document.getElementById('quickview-qty-value').textContent = qvQty;
+  });
+
+  // Add to cart dal popup
+  document.getElementById('quickview-add-cart').addEventListener('click', () => {
+    if (!qvProduct) return;
+    if (typeof window.styclyAddToCart !== 'function') {
+      alert('Carrello non disponibile al momento.');
+      return;
+    }
+
+    for (let i = 0; i < qvQty; i++) {
+      window.styclyAddToCart(qvProduct);
+    }
+    closeFeaturedDetail();
+  });
 });
 </script>
 {% endblock %}
+
 
 
 
