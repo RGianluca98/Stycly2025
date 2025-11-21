@@ -21,66 +21,42 @@
 </section>
 
 {% if featured_capi %}
-<section class="product-store featured-section">
-  <div class="container-md">
-    <div class="display-header">
-      <h2 class="section-title">Featured Products</h2>
-      <a href="{{ url_for('products') }}" class="view-all-link">View all</a>
-    </div>
+<<section class="featured-section">
+  <div class="featured-header">
+    <h2>Featured Products</h2>
+    <a href="{{ url_for('products') }}" class="view-all-link">View all</a>
+  </div>
 
-    <div class="product-content">
-      <div class="product-grid">
-        {% for capo in featured_capi %}
-        <div class="product-card">
-          <div class="card-img">
-            <img
-              src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
-              alt="{{ capo['tipologia'] or '' }}"
-              class="product-image">
-
-            <!-- overlay scuro leggero -->
-            <div class="card-overlay"></div>
-
-            <!-- Icone in hover -->
-            <div class="card-icons">
-              <!-- Aggiungi al carrello -->
-              <button type="button"
-                      class="icon-btn circle add-to-cart"
-                      data-id="{{ capo['id'] }}"
-                      data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
-                      data-img="{{ (capo['immagine'] or '').split('/')[-1] }}">
-                <svg class="icon-20">
-                  <use xlink:href="#shopping-carriage"></use>
-                </svg>
-              </button>
-
-              <!-- Info capo (quick view) -->
-              <button type="button"
-                      class="icon-btn circle featured-info-btn"
-                      data-capo='{{ capo|tojson|safe }}'>
-                <svg class="icon-20">
-                  <use xlink:href="#quick-view"></use>
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="card-detail">
-            <h3 class="card-title">
-              {{ capo['categoria'] }} - {{ capo['tipologia'] }}
-            </h3>
-            <p class="card-meta">
-              Taglia: {{ capo['taglia'] or '-' }}
-              {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
-              {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
-            </p>
-          </div>
+  <div class="featured-grid">
+    {% for capo in featured %}
+    <div class="product-card">
+      
+      <div class="card-img">
+        <img 
+          class="product-image"
+          src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
+          alt="Capo"
+        >
+        
+        <div class="card-actions">
+          <button class="action-btn add-to-cart" data-id="{{ capo['id'] }}">
+            🛒
+          </button>
+          <button class="action-btn view-details" onclick="openFeaturedDetail({{ capo|tojson|safe }})">
+            🔍
+          </button>
         </div>
-        {% endfor %}
       </div>
+
+      <div class="card-info">
+        <h4>{{ capo.tipologia or "Item" }}</h4>
+      </div>
+
     </div>
+    {% endfor %}
   </div>
 </section>
+
 {% endif %}
 
 <!-- QUICK VIEW MODAL stile template ecommerce -->
