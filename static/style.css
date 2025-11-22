@@ -1754,3 +1754,102 @@ label.field.focused .psuedo_select::after {
     transform: scale(1.05);
 }
 
+/* --- Featured Products Stycly --- */
+.stycly-featured {
+    padding: 3rem 1rem 3.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.stycly-featured-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.stycly-featured-header h2 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* griglia a card piccole, tipo ecommerce */
+.stycly-featured-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+/* card ~220px fissa, anche se ce n’è solo una */
+.stycly-featured-card {
+    flex: 0 0 220px;
+    max-width: 220px;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.06);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stycly-featured-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.10);
+}
+
+/* contenitore quadrato per l’immagine */
+.stycly-featured-card-img {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;         /* quadrato */
+    overflow: hidden;
+}
+
+.stycly-featured-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 0.35s ease;
+}
+
+/* overlay + icone in hover */
+.stycly-featured-card-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+.stycly-featured-card:hover .stycly-featured-card-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.stycly-featured-card:hover .stycly-featured-card-img img {
+    transform: scale(1.05);
+}
+
+.stycly-featured-card-body {
+    padding: 0.85rem 0.9rem 1.1rem;
+}
+
+.stycly-featured-card-body .card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+}
+
+.stycly-featured-card-body .card-meta {
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0;
+}
+
