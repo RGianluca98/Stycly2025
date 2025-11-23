@@ -478,6 +478,23 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(animation);
   }
 
+  // Parallax leggero su hero (bg + shade + testo)
+  const heroBg = document.querySelector('.hero-bg-gradient');
+  const heroShade = document.querySelector('.hero-shade');
+  const heroText = document.querySelector('.stycly-hero-content');
+  const heroArrow = document.querySelector('.hero-arrow');
+
+  function updateHeroParallax() {
+    const sc = window.scrollY;
+    const scale = 1 + Math.min(sc * 0.0004, 0.05);
+    if (heroBg) heroBg.style.transform = `scale(${scale}) translateZ(0)`;
+    if (heroShade) heroShade.style.opacity = Math.min(0.45, sc / 500);
+    if (heroText) heroText.style.transform = `translateY(${Math.min(0, -sc * 0.1)}px)`;
+    if (heroArrow) heroArrow.style.opacity = Math.max(0, 1 - sc / 200);
+    requestAnimationFrame(updateHeroParallax);
+  }
+  requestAnimationFrame(updateHeroParallax);
+
   document.querySelectorAll('.stycly-nav a[href*="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
       const url = new URL(link.href, window.location.href);
@@ -485,7 +502,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = document.getElementById(url.hash.substring(1));
         if (target) {
           e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          const y = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          smoothScrollTo(y);
         }
       }
     });

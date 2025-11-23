@@ -4,6 +4,7 @@
 {% block content %}
 <section id="home" class="stycly-hero hero-split">
   <div class="hero-bg-gradient"></div>
+  <div class="hero-shade"></div>
   <div class="stycly-hero-content">
     <div class="hero-pill">Non solo capi</div>
     <div class="typewriter">
@@ -22,11 +23,15 @@
       <span>Noleggio rapido e flessibile</span>
       <span>Flip-card fronte/retro</span>
     </div>
-
   </div>
   <div class="hero-visual hero-collage">
     <div class="hero-shot vertical" style="background-image: url('{{ url_for('immagini', filename='shoot1.jpg') }}');"></div>
     <div class="hero-shot horizontal" style="background-image: url('{{ url_for('immagini', filename='shoot3.jpg') }}');"></div>
+  </div>
+  <div class="hero-arrow bouncy">
+    <svg height="30" width="60" viewBox="0 0 50 25">
+      <polygon points="0,0 25,10 50,0 25,25" fill="rgba(255,255,255,.7)" stroke-width="0" />
+    </svg>
   </div>
 </section>
 
