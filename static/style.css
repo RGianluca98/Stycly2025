@@ -61,8 +61,8 @@ main {
 
 .stycly-header-inner {
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
+    max-width: 1200px;
+    
     display: grid;
     grid-template-columns: auto 1fr auto;
     align-items: center;
@@ -356,10 +356,7 @@ main {
 
 .hero-split {
     overflow: hidden;
-    display: grid;
-    grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
-    gap: 1.5rem;
-    align-items: center;
+    
 }
 
 .hero-bg-gradient {
@@ -371,7 +368,8 @@ main {
 
 .hero-visual {
     position: relative;
-    width: 100%;
+    flex: 1;
+    max-width: 520px;
     min-height: 360px;
     display: flex;
     align-items: flex-end;
@@ -1173,7 +1171,7 @@ label.field.focused .psuedo_select::after {
     }
 
     .hero-split {
-        display: flex;
+     
         flex-direction: column;
         gap: 1.2rem;
     }
@@ -1490,8 +1488,8 @@ label.field.focused .psuedo_select::after {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    margin-left: auto;
-    justify-content: flex-end;
+    margin-left: 0;
+    
 }
 
 .header-icon-btn {
