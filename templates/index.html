@@ -28,52 +28,65 @@
   </div>
 
   <div class="stycly-featured-grid">
+
     {% for capo in featured_capi %}
     <article class="stycly-featured-card">
+
+      <!-- IMMAGINE QUADRATA CON OVERLAY -->
       <div class="stycly-featured-card-img">
         <img
           src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
           alt="{{ capo['tipologia'] or '' }}"
+          draggable="false"
         >
 
+        <!-- OVERLAY CON ANIMAZIONE TEMPLATE -->
         <div class="stycly-featured-card-overlay">
-          <!-- Aggiungi al carrello -->
+
+          <!-- ICONA CARRELLO -->
           <button type="button"
-                  class="icon-btn circle add-to-cart"
-                  data-id="{{ capo['id'] }}"
-                  data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
-                  data-img="{{ (capo['immagine'] or '').split('/')[-1] }}">
+            class="icon-btn"
+            data-id="{{ capo['id'] }}"
+            data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
+            data-img="{{ (capo['immagine'] or '').split('/')[-1] }}"
+            >
             <svg class="icon-20">
               <use xlink:href="#shopping-carriage"></use>
             </svg>
           </button>
 
-          <!-- Quick view -->
+          <!-- ICONA QUICK VIEW -->
           <button type="button"
-                  class="icon-btn circle featured-info-btn"
-                  data-capo='{{ capo|tojson|safe }}'>
+            class="icon-btn featured-info-btn"
+            data-capo='{{ capo|tojson|safe }}'>
             <svg class="icon-20">
               <use xlink:href="#quick-view"></use>
             </svg>
           </button>
+
         </div>
       </div>
 
+      <!-- INFO SOTTO -->
       <div class="stycly-featured-card-body">
         <h3 class="card-title">
-          {{ capo['categoria'] }} - {{ capo['tipologia'] }}
+          {{ capo['categoria'] }} – {{ capo['tipologia'] }}
         </h3>
+
         <p class="card-meta">
           Taglia: {{ capo['taglia'] or '-' }}
           {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
           {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
         </p>
       </div>
+
     </article>
     {% endfor %}
+
   </div>
 </section>
 {% endif %}
+
 
 <!-- QUICK VIEW MODAL stile template ecommerce -->
 <div id="featured-detail-modal" class="quickview-overlay" style="display:none;">

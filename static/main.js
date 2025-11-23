@@ -190,6 +190,64 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+/* =====================================================
+   FEATURED PRODUCTS – ANIMAZIONI AVANZATE + RIPPLE
+===================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+
+  /* ========== 1) Entrata animata delle card in viewport ========== */
+  const featuredCards = document.querySelectorAll('.stycly-featured-card');
+
+  if ('IntersectionObserver' in window && featuredCards.length) {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.25 }
+    );
+
+    featuredCards.forEach(card => observer.observe(card));
+
+  } else {
+    // fallback se il browser non supporta IntersectionObserver
+    featuredCards.forEach(card => card.classList.add('in-view'));
+  }
+
+
+
+  /* ========== 2) Ripple effect su card e icone overlay ========== */
+  const rippleTargets = document.querySelectorAll(
+    '.stycly-featured-card, .stycly-featured-card-overlay .icon-btn'
+  );
+
+  rippleTargets.forEach(el => {
+    el.addEventListener('click', e => {
+
+      // Recupera la posizione assoluta
+      const rect = el.getBoundingClientRect();
+      const circle = document.createElement('span');
+      const size = Math.max(rect.width, rect.height);
+
+      // Imposta la classe ripple
+      circle.classList.add('ripple-circle');
+      circle.style.width = circle.style.height = `${size}px`;
+      circle.style.left = `${e.clientX - rect.left - size / 2}px`;
+      circle.style.top = `${e.clientY - rect.top - size / 2}px`;
+
+      el.appendChild(circle);
+
+      // Rimuovi dopo animazione
+      setTimeout(() => circle.remove(), 500);
+    });
+  });
+
+});
 
 
 
