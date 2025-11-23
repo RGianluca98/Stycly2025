@@ -448,9 +448,36 @@
 
 {% block extra_js %}{% endblock %}
 <!-- 🔔 JS CARRELLO -->
+<script src="{{ url_for('static', filename='cart.js') }}"></script>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
 <script>
-// Smooth scroll per link con ancora nella stessa pagina
+// Smooth scroll con easing (ispirato allo scroll jQuery-style)
 document.addEventListener('DOMContentLoaded', () => {
+  const header = document.querySelector('.stycly-header');
+  const offset = header ? header.offsetHeight + 8 : 0;
+
+  function smoothScrollTo(targetY, duration = 800) {
+    const startY = window.pageYOffset;
+    const distance = targetY - startY;
+    let startTime = null;
+
+    function easeInOutQuad(t, b, c, d) {
+      t /= d / 2;
+      if (t < 1) return c / 2 * t * t + b;
+      t--;
+      return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+
+    function animation(currentTime) {
+      if (startTime === null) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const next = easeInOutQuad(Math.min(elapsed, duration), startY, distance, duration);
+      window.scrollTo(0, next);
+      if (elapsed < duration) requestAnimationFrame(animation);
+    }
+    requestAnimationFrame(animation);
+  }
+
   document.querySelectorAll('.stycly-nav a[href*="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
       const url = new URL(link.href, window.location.href);
