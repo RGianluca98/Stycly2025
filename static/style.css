@@ -1717,4 +1717,32 @@ label.field.focused .psuedo_select::after {
     overflow: hidden;
 }
 
+/* === Bounce animation SOLO per overlay dei featured products === */
+@keyframes styclyBounceFeatured {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.16); }
+    55%  { transform: scale(0.90); }
+    75%  { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Target preciso dei bottoni nel featured overlay */
+.stycly-featured-card-overlay .icon-btn,
+.stycly-featured-card-overlay .add-to-cart,
+.stycly-featured-card-overlay .featured-info-btn {
+    transition: transform 0.18s ease;
+}
+
+.stycly-featured-card-overlay .icon-btn:hover,
+.stycly-featured-card-overlay .add-to-cart:hover,
+.stycly-featured-card-overlay .featured-info-btn:hover {
+    animation: styclyBounceFeatured 0.35s ease-out;
+    transform-origin: center;
+}
+
+.stycly-featured-card-overlay .icon-btn:active,
+.stycly-featured-card-overlay .add-to-cart:active,
+.stycly-featured-card-overlay .featured-info-btn:active {
+    transform: scale(0.88);
+}
 
