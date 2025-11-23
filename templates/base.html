@@ -495,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   requestAnimationFrame(updateHeroParallax);
 
-  document.querySelectorAll('.stycly-nav a[href*="#"]').forEach(link => {
+  document.querySelectorAll('.stycly-nav a[href*="#"], .hero-arrow[href*="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
       const url = new URL(link.href, window.location.href);
       if (url.pathname === window.location.pathname && url.hash) {

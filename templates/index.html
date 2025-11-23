@@ -28,11 +28,11 @@
     <div class="hero-shot vertical" style="background-image: url('{{ url_for('immagini', filename='shoot1.jpg') }}');"></div>
     <div class="hero-shot horizontal" style="background-image: url('{{ url_for('immagini', filename='shoot3.jpg') }}');"></div>
   </div>
-  <div class="hero-arrow bouncy">
+  <a href="#featured" class="hero-arrow bouncy" aria-label="Scorri ai featured">
     <svg height="30" width="60" viewBox="0 0 50 25">
       <polygon points="0,0 25,10 50,0 25,25" fill="rgba(255,255,255,.7)" stroke-width="0" />
     </svg>
-  </div>
+  </a>
 </section>
 
 {% if featured_capi %}
