@@ -1541,7 +1541,13 @@ label.field.focused .psuedo_select::after {
     gap: 1.5rem;
 }
 
-/* card ~220px fissa, anche se ce n’è solo una */
+/* =====================================================
+   FEATURED PRODUCTS – ANIMAZIONI AVANZATE STYCLY
+   (override delle regole precedenti)
+===================================================== */
+
+/* Card base: parte leggermente più bassa e trasparente,
+   poi entra con animazione quando aggiungiamo .in-view */
 .stycly-featured-card {
     flex: 0 0 220px;
     max-width: 220px;
@@ -1549,54 +1555,125 @@ label.field.focused .psuedo_select::after {
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 10px 26px rgba(0,0,0,0.06);
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transform: translateY(18px);
+    opacity: 0;
+    transition:
+        transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1),
+        box-shadow 0.35s ease,
+        opacity 0.45s ease;
 }
 
-.stycly-featured-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 34px rgba(0,0,0,0.10);
+/* Quando entra in viewport */
+.stycly-featured-card.in-view {
+    transform: translateY(0);
+    opacity: 1;
 }
 
-/* contenitore quadrato per l’immagine */
+/* Hover: leggero sollevamento + micro scala */
+.stycly-featured-card.in-view:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+}
+
+/* Contenitore immagine quadrato */
 .stycly-featured-card-img {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;         /* quadrato */
+    aspect-ratio: 1 / 1;
     overflow: hidden;
 }
 
+/* Zoom immagine in hover, stile template ecommerce */
 .stycly-featured-card-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transform: scale(1);
-    transition: transform 0.35s ease;
+    transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* overlay + icone in hover */
+.stycly-featured-card.in-view:hover .stycly-featured-card-img img {
+    transform: scale(1.08);
+}
+
+/* Overlay glassy che appare in hover */
 .stycly-featured-card-overlay {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
     display: flex;
     align-items: flex-end;
     justify-content: center;
     gap: 0.75rem;
     padding-bottom: 1rem;
+
+    /* effetto glass */
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.26),
+        rgba(255,255,255,0.02)
+    );
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,0.6);
+
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s ease;
+    transform: translateY(10px);
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.stycly-featured-card:hover .stycly-featured-card-overlay {
+/* Mostra overlay solo quando la card è attiva e in hover */
+.stycly-featured-card.in-view:hover .stycly-featured-card-overlay {
     opacity: 1;
     pointer-events: auto;
+    transform: translateY(0);
 }
 
-.stycly-featured-card:hover .stycly-featured-card-img img {
-    transform: scale(1.05);
+/* Icone dentro l’overlay */
+.stycly-featured-card-overlay .icon-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255,255,255,0.92);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    cursor: pointer;
+
+    /* per il ripple */
+    position: relative;
+    overflow: hidden;
+
+    opacity: 0;
+    transform: translateY(12px);
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
+/* Le icone appaiono leggermente sfasate come nel template */
+.stycly-featured-card.in-view:hover .icon-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stycly-featured-card.in-view:hover .icon-btn:nth-child(1) {
+    transition-delay: 0.05s;
+}
+.stycly-featured-card.in-view:hover .icon-btn:nth-child(2) {
+    transition-delay: 0.10s;
+}
+
+/* Hover icona */
+.stycly-featured-card-overlay .icon-btn:hover {
+    background: #f4f4f4;
+    transform: translateY(-3px);
+}
+
+/* Titolo/sottotitolo card (li lasciamo uguali, ma ti do leggero refine) */
 .stycly-featured-card-body {
     padding: 0.85rem 0.9rem 1.1rem;
 }
@@ -1611,5 +1688,32 @@ label.field.focused .psuedo_select::after {
     font-size: 0.8rem;
     color: #666;
     margin: 0;
+}
+
+/* =====================
+   Animazione "ripple"
+===================== */
+
+.ripple-circle {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    background: rgba(0,0,0,0.18);
+    opacity: 0.65;
+    pointer-events: none;
+    animation: stycly-ripple 0.5s ease-out forwards;
+}
+
+@keyframes stycly-ripple {
+    to {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+
+/* Anche la card può avere ripple se vuoi cliccarla tutta */
+.stycly-featured-card {
+    position: relative;
+    overflow: hidden;
 }
 
