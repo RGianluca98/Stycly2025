@@ -382,14 +382,29 @@ main {
     z-index: 1;
 }
 
-.hero-image {
-    width: 100%;
-    height: 100%;
-    min-height: 320px;
+.hero-collage {
+    gap: 1rem;
+}
+
+.hero-shot {
     background-size: cover;
     background-position: center;
-    border-radius: 24px;
-    box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+    border-radius: 22px;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.14);
+    animation: floatY 8s ease-in-out infinite;
+}
+
+.hero-shot.vertical {
+    width: 56%;
+    aspect-ratio: 3 / 4;
+    animation-delay: 0.4s;
+}
+
+.hero-shot.horizontal {
+    width: 44%;
+    aspect-ratio: 4 / 3;
+    align-self: flex-start;
+    animation-delay: 1s;
 }
 
 .hero-badge {
@@ -764,6 +779,11 @@ main {
 @keyframes blink-caret {
     from, to { border-color: transparent; }
     50% { border-color: var(--col-accent); }
+}
+
+@keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
 /* --- WARDROBE GRID (GESTIONE / PRIVATE) --- */
