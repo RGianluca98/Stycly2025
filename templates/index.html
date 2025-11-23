@@ -1,8 +1,8 @@
 {% extends "base.html" %}
-{% block title %}Stycly ? Noleggio abiti per bambini{% endblock %}
+{% block title %}Stycly - Noleggio abiti per bambini{% endblock %}
 
 {% block content %}
-<section class="stycly-hero hero-split">
+<section id="home" class="stycly-hero hero-split">
   <div class="hero-bg-gradient"></div>
   <div class="stycly-hero-content">
     <div class="typewriter">
@@ -22,10 +22,7 @@
       <span>Selezione pronta per set</span>
     </div>
 
-    <!-- CTA verso pagina prodotti -->
-    <a href="{{ url_for('products') }}" class="stycly-cta-btn">
-      Products
-    </a>
+    <a href="#featured" class="stycly-cta-btn">Vai ai featured</a>
   </div>
   <div class="hero-visual">
     <div class="hero-image" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
@@ -33,64 +30,76 @@
   </div>
 </section>
 
-<!-- Use cases con immagini di sfondo -->
-<section class="stycly-usecases">
-  <h2 class="section-heading">Scelti per ogni set</h2>
-  <div class="usecase-grid">
-    <article class="usecase-card" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');">
-      <div class="usecase-overlay">
-        <h3>Shooting moda</h3>
-        <p>Look editorial per neonati, kids e tween.</p>
+{% if featured_capi %}
+<section id="featured" class="stycly-featured section-band">
+  <div class="stycly-featured-header">
+    <h2>Featured Products</h2>
+    <a href="#products" class="view-all-link">Vai ai prodotti</a>
+  </div>
+
+  <div class="stycly-featured-grid">
+    {% for capo in featured_capi %}
+    <article class="stycly-featured-card">
+      <div class="stycly-featured-card-img">
+        <img
+          src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
+          alt="{{ capo['tipologia'] or '' }}"
+          draggable="false">
+
+        <div class="stycly-featured-card-overlay">
+          <button type="button"
+            class="icon-btn add-to-cart"
+            data-id="{{ capo['id'] }}"
+            data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
+            data-img="{{ (capo['immagine'] or '').split('/')[-1] }}">
+            <svg class="icon-20">
+              <use xlink:href="#shopping-carriage"></use>
+            </svg>
+          </button>
+
+          <button type="button"
+            class="icon-btn featured-info-btn"
+            data-capo='{{ capo|tojson|safe }}'>
+            <svg class="icon-20">
+              <use xlink:href="#quick-view"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="stycly-featured-card-body">
+        <h3 class="card-title">
+          {{ capo['categoria'] }} - {{ capo['tipologia'] }}
+        </h3>
+
+        <p class="card-meta">
+          Taglia: {{ capo['taglia'] or '-' }}
+          {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
+          {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
+        </p>
       </div>
     </article>
-    <article class="usecase-card" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');">
-      <div class="usecase-overlay">
-        <h3>Eventi & red carpet</h3>
-        <p>Outfit eleganti per serate e cerimonie.</p>
-      </div>
-    </article>
-    <article class="usecase-card" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');">
-      <div class="usecase-overlay">
-        <h3>Spot e adv</h3>
-        <p>Capi versatili per spot TV, short e campagne.</p>
-      </div>
-    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section id="products" class="section-band-light products-embed">
+  <div class="section-heading-wrap">
+    <h2>Products</h2>
+    <p class="section-sub">Visualizza la pagina prodotti direttamente qui sotto.</p>
+  </div>
+  <div class="products-iframe-wrap">
+    <iframe src="{{ url_for('products') }}" title="Products" loading="lazy"></iframe>
   </div>
 </section>
 
-<!-- Temi rapidi -->
-<section class="stycly-themes">
-  <div class="themes-header">
-    <h2 class="section-heading">Moodboard rapide</h2>
-    <p class="themes-sub">Scegli un tema e costruisci il set in pochi click.</p>
-  </div>
-  <div class="themes-grid">
-    <div class="theme-card">
-      <div class="theme-thumb" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
-      <span>Boho soft</span>
-    </div>
-    <div class="theme-card">
-      <div class="theme-thumb" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
-      <span>Formal chic</span>
-    </div>
-    <div class="theme-card">
-      <div class="theme-thumb" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
-      <span>Color pop</span>
-    </div>
-    <div class="theme-card">
-      <div class="theme-thumb" style="background-image: url('/static/img/theme-minimal.jpg');"></div>
-      <span>Minimal cool</span>
-    </div>
-  </div>
-</section>
-
-<!-- Come funziona -->
-<section class="stycly-how">
+<section id="how" class="stycly-how section-band">
   <div class="how-bg"></div>
   <div class="how-card">
     <div class="how-head">
       <h2 class="section-heading">Come funziona il noleggio</h2>
-      <p class="how-sub">Seguire il processo di noleggio su Stycly &egrave; semplice e veloce. Ecco tutti i passaggi:</p>
+      <p class="how-sub">Seguire il processo di noleggio su Stycly è semplice e veloce. Ecco tutti i passaggi:</p>
     </div>
     <div class="how-steps">
       <div class="how-step">
@@ -105,7 +114,7 @@
         <span class="how-number">2</span>
         <div>
           <h4>Aggiungi al carrello</h4>
-          <p>Scegli gli articoli e la quantit&aacute;; desiderata, poi aggiungili al carrello.</p>
+          <p>Scegli gli articoli e la quantità desiderata, poi aggiungili al carrello.</p>
         </div>
       </div>
       <div class="how-step">
@@ -114,7 +123,7 @@
           <h4>Invia una richiesta di noleggio</h4>
           <p>Nel carrello clicca su Avanti e:</p>
           <ul class="how-bullets">
-            <li>seleziona le date di noleggio dal calendario (uno o pi&uacute; giorni);</li>
+            <li>seleziona le date di noleggio dal calendario (uno o più giorni);</li>
             <li>inserisci i tuoi dati di contatto;</li>
             <li>conferma la richiesta.</li>
           </ul>
@@ -124,7 +133,7 @@
         <span class="how-number">4</span>
         <div>
           <h4>Ricevi il preventivo</h4>
-          <p>Entro 24 ore ti contattiamo via email per confermare disponibilit&aacute; e inviarti il preventivo personalizzato.</p>
+          <p>Entro 24 ore ti contattiamo via email per confermare disponibilità e inviarti il preventivo personalizzato.</p>
           <p>Completa ordine via email o telefono.</p>
         </div>
       </div>
@@ -139,121 +148,23 @@
   </div>
 </section>
 
-{% if featured_capi %}
-<section class="stycly-featured">
-  <div class="stycly-featured-header">
-    <h2>Featured Products</h2>
-    <a href="{{ url_for('products') }}" class="view-all-link">View all</a>
-  </div>
-
-  <div class="stycly-featured-grid">
-
-    {% for capo in featured_capi %}
-    <article class="stycly-featured-card">
-
-      <!-- IMMAGINE QUADRATA CON OVERLAY -->
-      <div class="stycly-featured-card-img">
-        <img
-          src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
-          alt="{{ capo['tipologia'] or '' }}"
-          draggable="false"
-        >
-
-        <!-- OVERLAY CON ANIMAZIONE TEMPLATE -->
-        <div class="stycly-featured-card-overlay">
-
-          <!-- ICONA CARRELLO -->
-          <button type="button"
-            class="icon-btn add-to-cart"
-            data-id="{{ capo['id'] }}"
-            data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
-            data-img="{{ (capo['immagine'] or '').split('/')[-1] }}"
-            >
-            <svg class="icon-20">
-              <use xlink:href="#shopping-carriage"></use>
-            </svg>
-          </button>
-
-          <!-- ICONA QUICK VIEW -->
-          <button type="button"
-            class="icon-btn featured-info-btn"
-            data-capo='{{ capo|tojson|safe }}'>
-            <svg class="icon-20">
-              <use xlink:href="#quick-view"></use>
-            </svg>
-          </button>
-
-        </div>
-      </div>
-
-      <!-- INFO SOTTO -->
-      <div class="stycly-featured-card-body">
-        <h3 class="card-title">
-          {{ capo['categoria'] }} ? {{ capo['tipologia'] }}
-        </h3>
-
-        <p class="card-meta">
-          Taglia: {{ capo['taglia'] or '-' }}
-          {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
-          {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
-        </p>
-      </div>
-
-    </article>
-    {% endfor %}
-
+<section id="about" class="section-band-light about-placeholder">
+  <div class="section-heading-wrap">
+    <h2>About Us</h2>
+    <p class="section-sub">Presto aggiorneremo questa sezione con la nostra storia e il team.</p>
   </div>
 </section>
-{% endif %}
 
-
-<!-- QUICK VIEW MODAL stile template ecommerce -->
-<div id="featured-detail-modal" class="quickview-overlay" style="display:none;">
-  <div class="quickview-modal">
-    <button class="quickview-close" id="quickview-close-btn" type="button">&times;</button>
-
-    <div class="quickview-layout">
-      <div class="quickview-image-wrap">
-        <img id="quickview-image" src="" alt="Capo">
-      </div>
-
-      <div class="quickview-info">
-        <h2 id="quickview-title" class="quickview-title"></h2>
-
-        <p id="quickview-subtitle" class="quickview-subtitle"></p>
-
-        <div id="quickview-description" class="quickview-description"></div>
-
-        <ul class="quickview-meta">
-          <li><strong>Taglia:</strong> <span id="quickview-taglia"></span></li>
-          <li><strong>Colore:</strong> <span id="quickview-colore"></span></li>
-          <li><strong>Brand:</strong> <span id="quickview-brand"></span></li>
-          <li><strong>Destinazione:</strong> <span id="quickview-destinazione"></span></li>
-          <li><strong>Fit:</strong> <span id="quickview-fit"></span></li>
-          <li><strong>Disponibilità:</strong> <span id="quickview-dispo"></span></li>
-        </ul>
-
-        <!-- quantità + add to cart stile template -->
-        <div class="quickview-actions">
-          <div class="quickview-qty">
-            <button type="button" id="quickview-minus" class="qty-btn">-</button>
-            <span id="quickview-qty-value" class="qty-value">1</span>
-            <button type="button" id="quickview-plus" class="qty-btn">+</button>
-          </div>
-          <button type="button" id="quickview-add-cart" class="quickview-add-btn">
-            Add to cart
-          </button>
-        </div>
-
-        <p class="quickview-categories">
-          <strong>Categoria:</strong>
-          <span id="quickview-categoria"></span>
-        </p>
-      </div>
-    </div>
+<section id="contact" class="section-band contact-placeholder">
+  <div class="section-heading-wrap">
+    <h2>Contact</h2>
+    <p class="section-sub">Inseriremo indirizzo, mappa e contatti in questo blocco.</p>
   </div>
-</div>
+</section>
 
+<footer class="stycly-footer">
+  <p>© {{ current_year or '2025' }} Stycly. All rights reserved.</p>
+</footer>
 {% endblock %}
 
 {% block extra_js %}
@@ -295,7 +206,6 @@ function openFeaturedDetail(capo) {
   document.getElementById('quickview-image').src = buildImageURLHome(qvFront);
   document.getElementById('quickview-qty-value').textContent = qvQty;
 
-  // oggetto prodotto per il carrello
   qvProduct = {
     id: capo.id,
     name: title,
@@ -331,60 +241,101 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // chiusura quick view
-  document.getElementById('quickview-close-btn').addEventListener('click', closeFeaturedDetail);
-  document.getElementById('featured-detail-modal').addEventListener('click', (e) => {
-    if (e.target.id === 'featured-detail-modal') {
-      closeFeaturedDetail();
-    }
-  });
+  const modal = document.getElementById('featured-detail-modal');
+  if (modal) {
+    document.getElementById('quickview-close-btn').addEventListener('click', closeFeaturedDetail);
+    modal.addEventListener('click', (e) => {
+      if (e.target.id === 'featured-detail-modal') {
+        closeFeaturedDetail();
+      }
+    });
+  }
 
   // cambio fronte/retro cliccando sull'immagine
-  document.getElementById('quickview-image').addEventListener('click', () => {
-    // toggla fronte/retro se esiste
-    if (!qvBack) return;
-    const current = document.getElementById('quickview-image').getAttribute('src');
-    const frontURL = buildImageURLHome(qvFront);
-    const backURL  = buildImageURLHome(qvBack);
-    document.getElementById('quickview-image').src =
-      (current === frontURL) ? backURL : frontURL;
-  });
+  const qvImage = document.getElementById('quickview-image');
+  if (qvImage) {
+    qvImage.addEventListener('click', () => {
+      if (!qvBack) return;
+      const current = qvImage.getAttribute('src');
+      const frontURL = buildImageURLHome(qvFront);
+      const backURL  = buildImageURLHome(qvBack);
+      qvImage.src = (current === frontURL) ? backURL : frontURL;
+    });
+  }
 
   // gestione quantità
-  document.getElementById('quickview-minus').addEventListener('click', () => {
-    if (qvQty > 1) {
-      qvQty--;
+  const minus = document.getElementById('quickview-minus');
+  const plus = document.getElementById('quickview-plus');
+  if (minus && plus) {
+    minus.addEventListener('click', () => {
+      if (qvQty > 1) {
+        qvQty--;
+        document.getElementById('quickview-qty-value').textContent = qvQty;
+      }
+    });
+    plus.addEventListener('click', () => {
+      qvQty++;
       document.getElementById('quickview-qty-value').textContent = qvQty;
-    }
-  });
-
-  document.getElementById('quickview-plus').addEventListener('click', () => {
-    qvQty++;
-    document.getElementById('quickview-qty-value').textContent = qvQty;
-  });
+    });
+  }
 
   // Add to cart dal popup
-  document.getElementById('quickview-add-cart').addEventListener('click', () => {
-    if (!qvProduct) return;
-    if (typeof window.styclyAddToCart !== 'function') {
-      alert('Carrello non disponibile al momento.');
-      return;
-    }
+  const addCartBtn = document.getElementById('quickview-add-cart');
+  if (addCartBtn) {
+    addCartBtn.addEventListener('click', () => {
+      if (!qvProduct) return;
+      if (typeof window.styclyAddToCart !== 'function') {
+        alert('Carrello non disponibile al momento.');
+        return;
+      }
+      for (let i = 0; i < qvQty; i++) {
+        window.styclyAddToCart(qvProduct);
+      }
+      closeFeaturedDetail();
+    });
+  }
+});
+</script>
+<script>
+// Attiva voce menu su scroll per le sezioni di questa pagina
+document.addEventListener('DOMContentLoaded', () => {
+  const navLinks = Array.from(document.querySelectorAll('.stycly-nav a'));
+  const sections = Array.from(document.querySelectorAll('section[id]'));
 
-    for (let i = 0; i < qvQty; i++) {
-      window.styclyAddToCart(qvProduct);
+  const activate = (id) => {
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href') || '';
+      if (href.includes(`#${id}`)) {
+        link.classList.add('nav-active');
+      } else if (href.includes('#')) {
+        link.classList.remove('nav-active');
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        activate(entry.target.id);
+      }
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0.1 });
+
+  sections.forEach(sec => observer.observe(sec));
+
+  navLinks.forEach(link => {
+    const href = link.getAttribute('href') || '';
+    if (href.includes('#')) {
+      link.addEventListener('click', (e) => {
+        const targetId = href.split('#')[1];
+        const target = document.getElementById(targetId);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
     }
-    closeFeaturedDetail();
   });
 });
-
-
-
-
-
 </script>
 {% endblock %}
-
-
-
-
-

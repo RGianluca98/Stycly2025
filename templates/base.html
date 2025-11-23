@@ -111,22 +111,22 @@
 
     <!-- MENU DESKTOP / MOBILE -->
         <nav class="stycly-nav" id="mainNav">
-        <a href="{{ url_for('home') }}"
+        <a href="{{ url_for('home') }}#home"
            class="{% if request.endpoint == 'home' %}nav-active{% endif %}">
             HOME
         </a>
 
-        <a href="{{ url_for('products') }}"
+        <a href="{{ url_for('home') }}#products"
            class="{% if request.endpoint in ['products'] %}nav-active{% endif %}">
             PRODUCTS
         </a>
 
-        <a href="{{ url_for('about') }}"
+        <a href="{{ url_for('home') }}#about"
            class="{% if request.endpoint == 'about' %}nav-active{% endif %}">
             ABOUT US
         </a>
 
-        <a href="{{ url_for('contact') }}"
+        <a href="{{ url_for('home') }}#contact"
            class="{% if request.endpoint == 'contact' %}nav-active{% endif %}">
             CONTACT
         </a>
