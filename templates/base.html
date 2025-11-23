@@ -448,6 +448,23 @@
 
 {% block extra_js %}{% endblock %}
 <!-- 🔔 JS CARRELLO -->
+<script>
+// Smooth scroll per link con ancora nella stessa pagina
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.stycly-nav a[href*="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const url = new URL(link.href, window.location.href);
+      if (url.pathname === window.location.pathname && url.hash) {
+        const target = document.getElementById(url.hash.substring(1));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    });
+  });
+});
+</script>
 <script src="{{ url_for('static', filename='cart.js') }}"></script>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
