@@ -564,8 +564,8 @@ body {
 }
 
 .how-number {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     background: var(--col-accent);
     color: #fff;
@@ -573,6 +573,9 @@ body {
     align-items: center;
     justify-content: center;
     font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
 
 .how-step h4 {
