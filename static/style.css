@@ -521,14 +521,14 @@ main {
     padding: 3rem 1rem;
     display: flex;
     justify-content: center;
+    background: #f6f6f6;
 }
 
 .how-bg {
     position: absolute;
     inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 0.12;
+    background: var(--col-warm-beige);
+    opacity: 0.16;
 }
 
 .how-card {
@@ -575,8 +575,9 @@ main {
     display: inline-block;
     font-weight: 700;
     font-size: 1rem;
-    line-height: 1.2;
+    line-height: 1;
     color: var(--col-accent);
+    margin-top: 0.15rem;
 }
 
 .how-step h4 {
