@@ -578,8 +578,8 @@ def home():
 @app.route('/products')
 @app.route('/public-wardrobe')
 def products():
-    capi_aggregati = get_aggregated_capi()
-    return render_template("public_wardrobe.html", capi=capi_aggregati)
+    # Ora la sezione Products � integrata nella home; reindirizziamo all'anchor
+    return redirect(url_for('home') + "#products")
 
 
 
