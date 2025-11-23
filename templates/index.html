@@ -28,7 +28,7 @@
     </a>
   </div>
   <div class="hero-visual">
-    <div class="hero-image" style="background-image: url('immagini/test.jpg;');"></div>
+    <div class="hero-image" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
     <div class="hero-badge">Noleggio kids 0-12</div>
   </div>
 </section>
@@ -37,19 +37,19 @@
 <section class="stycly-usecases">
   <h2 class="section-heading">Scelti per ogni set</h2>
   <div class="usecase-grid">
-    <article class="usecase-card" style="background-image: url('immagini/test.jpg;');">
+    <article class="usecase-card" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');">
       <div class="usecase-overlay">
         <h3>Shooting moda</h3>
         <p>Look editorial per neonati, kids e tween.</p>
       </div>
     </article>
-    <article class="usecase-card" style="background-image: url('immagini/test.jpg;');">
+    <article class="usecase-card" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');">
       <div class="usecase-overlay">
         <h3>Eventi & red carpet</h3>
         <p>Outfit eleganti per serate e cerimonie.</p>
       </div>
     </article>
-    <article class="usecase-card" style="background-image: url('immagini/test.jpg;');">
+    <article class="usecase-card" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');">
       <div class="usecase-overlay">
         <h3>Spot e adv</h3>
         <p>Capi versatili per spot TV, short e campagne.</p>
@@ -66,15 +66,15 @@
   </div>
   <div class="themes-grid">
     <div class="theme-card">
-      <div class="theme-thumb" style="background-image: url('immagini/test.jpg;');"></div>
+      <div class="theme-thumb" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
       <span>Boho soft</span>
     </div>
     <div class="theme-card">
-      <div class="theme-thumb" style="background-image: url('immagini/test.jpg;');"></div>
+      <div class="theme-thumb" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
       <span>Formal chic</span>
     </div>
     <div class="theme-card">
-      <div class="theme-thumb" style="background-image: url('immagini/test.jpg;');"></div>
+      <div class="theme-thumb" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
       <span>Color pop</span>
     </div>
     <div class="theme-card">
@@ -86,29 +86,53 @@
 
 <!-- Come funziona -->
 <section class="stycly-how">
-  <div class="how-bg" style="background-image: url('immagini/test.jpg;');"></div>
+  <div class="how-bg" style="background-image: url('{{ url_for('immagini', filename='test.jpg') }}');"></div>
   <div class="how-card">
-    <h2 class="section-heading">Come funziona</h2>
+    <div class="how-head">
+      <h2 class="section-heading">Come funziona il noleggio</h2>
+      <p class="how-sub">Seguire il processo di noleggio su Stycly ? semplice e veloce. Ecco tutti i passaggi:</p>
+    </div>
     <div class="how-steps">
       <div class="how-step">
         <span class="how-number">1</span>
         <div>
-          <h4>Scegli</h4>
-          <p>Filtra per età, taglia, tema e seleziona i look.</p>
+          <h4>Cerca i prodotti</h4>
+          <p>Naviga in Prodotti e scopri capi, accessori, props e oggetti per bambini.</p>
+          <p>Filtra per categoria e guarda i dettagli di ogni articolo.</p>
         </div>
       </div>
       <div class="how-step">
         <span class="how-number">2</span>
         <div>
-          <h4>Prenota</h4>
-          <p>Conferma le date di noleggio e la spedizione veloce.</p>
+          <h4>Aggiungi al carrello</h4>
+          <p>Scegli gli articoli e la quantit? desiderata, poi aggiungili al carrello.</p>
         </div>
       </div>
       <div class="how-step">
         <span class="how-number">3</span>
         <div>
-          <h4>Ricevi</h4>
-          <p>Prova i capi, fai il fitting e vai diretto allo shooting.</p>
+          <h4>Invia una richiesta di noleggio</h4>
+          <p>Nel carrello clicca su Avanti e:</p>
+          <ul class="how-bullets">
+            <li>seleziona le date di noleggio dal calendario (uno o pi? giorni);</li>
+            <li>inserisci i tuoi dati di contatto;</li>
+            <li>conferma la richiesta.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="how-step">
+        <span class="how-number">4</span>
+        <div>
+          <h4>Ricevi il preventivo</h4>
+          <p>Entro 24 ore ti contattiamo via email per confermare disponibilit? e inviarti il preventivo personalizzato.</p>
+          <p>Completi l?ordine via email o telefono.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <span class="how-number">5</span>
+        <div>
+          <h4>Pagamento e fatturazione</h4>
+          <p>Pagamento concordato con il nostro operatore (non online al momento) e ricezione della fattura.</p>
         </div>
       </div>
     </div>
