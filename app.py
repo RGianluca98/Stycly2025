@@ -571,7 +571,7 @@ def home():
     # prendo max 8 capi come "featured"
     featured_capi = sorted_capi[:8]
 
-    return render_template('index.html', featured_capi=featured_capi)
+    return render_template('index.html', featured_capi=featured_capi, capi=capi_aggregati)
 
 
 

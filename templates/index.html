@@ -87,12 +87,132 @@
 {% endif %}
 
 <section id="products" class="section-band-light">
-  <div class="section-inner section-heading-wrap">
-    <h2>Products</h2>
-    <p class="section-sub">Qui inseriremo la nuova sezione prodotti. Per ora visita la pagina dedicata.</p>
-    <a class="stycly-cta-btn" href="{{ url_for('products') }}">Vai alla pagina Products</a>
+  <div class="section-inner">
+    <div class="wardrobe-view-layout">
+      <aside class="wardrobe-filters">
+        <h3>Filtra capi</h3>
+
+        <div style="margin-bottom: 1.2rem;">
+          <label style="font-size: 0.9rem; font-weight: 500;">Categoria</label>
+          <select class="filter-select" data-filter="categoria"
+                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+            <option value="">Tutte</option>
+            {% for cat in capi|map(attribute='categoria')|unique %}
+              {% if cat %}
+                <option value="{{ cat }}">{{ cat }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.2rem;">
+          <label style="font-size: 0.9rem; font-weight: 500;">Taglia</label>
+          <select class="filter-select" data-filter="taglia"
+                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+            <option value="">Tutte</option>
+            {% for t in capi|map(attribute='taglia')|unique %}
+              {% if t %}
+                <option value="{{ t }}">{{ t }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.2rem;">
+          <label style="font-size: 0.9rem; font-weight: 500;">Brand</label>
+          <select class="filter-select" data-filter="brand"
+                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+            <option value="">Tutti</option>
+            {% for b in capi|map(attribute='brand')|unique %}
+              {% if b %}
+                <option value="{{ b }}">{{ b }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <div style="margin-bottom: 1.2rem;">
+          <label style="font-size: 0.9rem; font-weight: 500;">Destinazione</label>
+          <select class="filter-select" data-filter="destinazione"
+                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+            <option value="">Tutte</option>
+            {% for d in capi|map(attribute='destinazione')|unique %}
+              {% if d %}
+                <option value="{{ d }}">{{ d }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+        </div>
+
+        <button onclick="resetFilters()" style="
+          padding: 0.5rem 1rem;
+          background-color: #e6ecf9;
+          border: none;
+          border-radius: 6px;
+          color: #2b4ca3;
+          font-weight: 500;
+          cursor: pointer;
+          margin-top: 1rem;
+          width: 100%;
+        ">
+          Reset filtri
+        </button>
+      </aside>
+
+      <div class="wardrobe-main">
+        <h2>Products</h2>
+        <p style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;">
+          Tutti i capi caricati dagli Admin.
+        </p>
+
+        <p id="item-count" style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;"></p>
+
+        <div class="wardrobe-grid wardrobe-grid-3col">
+          {% if capi %}
+            {% for capo in capi %}
+            <div class="capo-flip-card"
+                 data-capo='{{ capo|tojson|safe }}'>
+              <div class="capo-flip-inner">
+                <div class="capo-flip-front">
+                  <img src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
+                       alt="fronte" class="capo-img">
+                </div>
+                <div class="capo-flip-back">
+                  {% if capo['immagine2'] %}
+                    <img src="{{ url_for('immagini', filename=(capo['immagine2'] or '').split('/')[-1]) }}"
+                         alt="retro" class="capo-img">
+                  {% else %}
+                    <p style="text-align:center; font-size: 0.8rem;">Nessuna retro immagine</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          {% else %}
+            <p>Nessun capo presente nei wardrobe pubblici al momento.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
   </div>
 </section>
+
+<!-- Modal dettagli capo -->
+<div id="detail-modal" class="stycly-modal" style="display:none;">
+  <div class="stycly-modal-content" style="max-width: 900px;">
+    <button class="stycly-modal-close" onclick="closeDetailPopup()">&times;</button>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+      <div style="flex: 1; text-align:center;">
+        <img id="popup-image" src="" alt="Capo" style="max-width: 100%; max-height: 380px; border-radius: 8px;">
+        <div style="margin-top: 10px; display: flex; gap: 0.5rem; justify-content: center;">
+          <button onclick="showFront()" class="capo-icon-btn" title="Fronte">F</button>
+          <button onclick="showBack()" class="capo-icon-btn" title="Retro">R</button>
+        </div>
+      </div>
+      <div id="popup-details" style="flex:1; font-size: 0.95rem;"></div>
+    </div>
+  </div>
+</div>
 
 <section id="how" class="stycly-how section-band">
   <div class="how-bg"></div>
@@ -336,6 +456,98 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
+});
+</script>
+<script>
+// Sezione prodotti embedded (filtri + popup)
+let frontImg = "";
+let backImg  = "";
+
+function buildImageURL(filename) {
+  if (!filename) return "";
+  const cleanName = filename.toString().split("/").pop();
+  return "/immagini/" + cleanName;
+}
+
+function openDetailPopup(capo) {
+  frontImg = capo.immagine;
+  backImg  = capo.immagine2 || "";
+
+  document.getElementById('popup-image').src = buildImageURL(frontImg);
+  document.getElementById('popup-details').innerHTML = `
+    <p><b>Categoria:</b> ${capo.categoria || ''}</p>
+    <p><b>Tipologia:</b> ${capo.tipologia || ''}</p>
+    <p><b>Taglia:</b> ${capo.taglia || ''}</p>
+    <p><b>Colore:</b> ${capo.colore || ''}</p>
+    <p><b>Brand:</b> ${capo.brand || ''}</p>
+    <p><b>Destinazione:</b> ${capo.destinazione || ''}</p>
+    ${capo.fit ? `<p><b>Fit:</b> ${capo.fit}</p>` : ''}
+    <p><b>Disponibilità:</b> ${capo.disponibilita || 1}</p>
+  `;
+  document.getElementById("detail-modal").style.display = "flex";
+}
+
+function closeDetailPopup() {
+  document.getElementById("detail-modal").style.display = "none";
+}
+
+function showFront() {
+  if (frontImg) {
+    document.getElementById('popup-image').src = buildImageURL(frontImg);
+  }
+}
+
+function showBack() {
+  if (backImg) {
+    document.getElementById('popup-image').src = buildImageURL(backImg);
+  }
+}
+
+function applyFilters() {
+  const filters = {};
+  document.querySelectorAll('.filter-select').forEach(select => {
+    const key = select.dataset.filter;
+    const val = select.value;
+    if (val) filters[key] = val;
+  });
+
+  let visibleCount = 0;
+  document.querySelectorAll('.capo-flip-card').forEach(card => {
+    const capo = JSON.parse(card.getAttribute('data-capo'));
+    const match = Object.entries(filters).every(([key, val]) => {
+      const v = (capo[key] || '').toString().toLowerCase();
+      return v === val.toString().toLowerCase();
+    });
+    card.style.display = match ? 'flex' : 'none';
+    if (match) visibleCount++;
+  });
+
+  const ic = document.getElementById("item-count");
+  if (ic) {
+    ic.textContent = `${visibleCount} cap${visibleCount === 1 ? 'o' : 'i'} trovati`;
+  }
+}
+
+function resetFilters() {
+  document.querySelectorAll('.filter-select').forEach(select => {
+    select.value = "";
+  });
+  applyFilters();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.capo-flip-card').forEach(card => {
+    card.addEventListener('click', function () {
+      const capo = JSON.parse(this.getAttribute('data-capo'));
+      openDetailPopup(capo);
+    });
+  });
+
+  document.querySelectorAll('.filter-select').forEach(select => {
+    select.addEventListener('change', applyFilters);
+  });
+
+  applyFilters();
 });
 </script>
 {% endblock %}
