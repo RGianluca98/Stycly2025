@@ -322,6 +322,42 @@ body {
     line-height: 1.5;
 }
 
+.typewriter {
+    display: inline-block;
+    max-width: 760px;
+}
+
+.typewriter-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 3px solid var(--col-accent);
+    letter-spacing: 0.02em;
+    animation: typing 3.6s steps(36, end), blink-caret 0.8s step-end infinite;
+}
+
+.hero-subtitle {
+    margin-top: 0.3rem;
+    color: #41526b;
+}
+
+.hero-highlights {
+    display: inline-flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 0.6rem 0 1.2rem;
+    font-size: 0.95rem;
+    color: #2d3b52;
+}
+
+.hero-highlights span {
+    background: #eef4ff;
+    color: #2e4d8c;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid #d8e5ff;
+}
+
 .stycly-cta-btn {
     font: inherit;
     font-size: var(--f-md);
@@ -413,6 +449,17 @@ body {
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to   { opacity: 1; transform: translateY(0); }
+}
+
+/* CSS Tricks style typewriter animation */
+@keyframes typing {
+    from { width: 0; }
+    to   { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--col-accent); }
 }
 
 /* --- WARDROBE GRID (GESTIONE / PRIVATE) --- */
