@@ -257,6 +257,70 @@ document.addEventListener('DOMContentLoaded', () => {
     closeFeaturedDetail();
   });
 });
+
+
+/* ============================================================
+   MIGLIORIE QUICKVIEW (animazioni + modal smooth)
+============================================================ */
+
+// Fade elegante per cambio immagine fronte/retro
+function qvFadeImage(newSrc) {
+  const img = document.getElementById("quickview-image");
+  img.classList.remove("fade-in");
+  img.classList.add("fade-out");
+
+  setTimeout(() => {
+    img.src = newSrc;
+    img.classList.remove("fade-out");
+    img.classList.add("fade-in");
+  }, 150);
+}
+
+// SOVRASCRIVE SOLO LA PARTE VISIVA, NON LA LOGICA
+const originalOpen = openFeaturedDetail;
+openFeaturedDetail = function(capo) {
+  originalOpen(capo);
+
+  const overlay = document.getElementById('featured-detail-modal');
+  const modal   = overlay.querySelector('.quickview-modal');
+
+  // Reset classi (per riaprire con animazione)
+  overlay.classList.remove('open');
+  modal.classList.remove('open');
+
+  // Attiva animazione
+  setTimeout(() => {
+    overlay.classList.add('open');
+    modal.classList.add('open');
+  }, 10);
+};
+
+// Chiusura animata
+const originalClose = closeFeaturedDetail;
+closeFeaturedDetail = function() {
+  const overlay = document.getElementById('featured-detail-modal');
+  const modal   = overlay.querySelector('.quickview-modal');
+
+  modal.classList.remove('open');
+  overlay.classList.remove('open');
+
+  setTimeout(() => {
+    originalClose();
+  }, 280);
+};
+
+// Rende front/back elegante
+document.getElementById('quickview-image').addEventListener('click', () => {
+  if (!qvBack) return;
+  const current = document.getElementById("quickview-image").src;
+  const front   = buildImageURLHome(qvFront);
+  const back    = buildImageURLHome(qvBack);
+
+  qvFadeImage(current === front ? back : front);
+});
+
+
+
 </script>
 {% endblock %}
 
