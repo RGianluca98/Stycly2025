@@ -301,6 +301,8 @@ main {
     margin: 0 auto;
     text-align: center;
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 
 .stycly-hero-content h1 {
@@ -356,7 +358,11 @@ main {
 
 .hero-split {
     overflow: hidden;
-    
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .hero-bg-gradient {
@@ -368,8 +374,6 @@ main {
 
 .hero-visual {
     position: relative;
-    flex: 1;
-    max-width: 520px;
     min-height: 360px;
     display: flex;
     align-items: flex-end;
@@ -531,7 +535,7 @@ main {
 
 .how-card {
     position: relative;
-    max-width: 1100px;
+    max-width: 1400px;
     width: 100%;
     background: rgba(255,255,255,0.8);
     border-radius: 20px;
@@ -555,7 +559,7 @@ main {
 
 .how-steps {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1rem;
     margin-top: 1.2rem;
 }
@@ -575,7 +579,7 @@ main {
     font-size: 1rem;
     line-height: 1;
     color: var(--col-accent);
-    margin-top: 0.15rem;
+    margin-top: 2px;
 }
 
 .how-step h4 {
@@ -1177,7 +1181,7 @@ label.field.focused .psuedo_select::after {
     }
 
     .hero-visual {
-        max-width: 100%;
+        width: 100%;
         min-height: 240px;
     }
 }
