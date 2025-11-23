@@ -31,66 +31,66 @@
 </section>
 
 {% if featured_capi %}
-<section id="featured" class="stycly-featured section-band">
-  <div class="stycly-featured-header">
-    <h2>Featured Products</h2>
-    <a href="#products" class="view-all-link">Vai ai prodotti</a>
-  </div>
+<section id="featured" class="section-band featured-band">
+  <div class="section-inner">
+    <div class="stycly-featured-header">
+      <h2>Featured Products</h2>
+      <a href="{{ url_for('products') }}" class="view-all-link">Vai ai prodotti</a>
+    </div>
 
-  <div class="stycly-featured-grid">
-    {% for capo in featured_capi %}
-    <article class="stycly-featured-card">
-      <div class="stycly-featured-card-img">
-        <img
-          src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
-          alt="{{ capo['tipologia'] or '' }}"
-          draggable="false">
+    <div class="stycly-featured-grid">
+      {% for capo in featured_capi %}
+      <article class="stycly-featured-card">
+        <div class="stycly-featured-card-img">
+          <img
+            src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
+            alt="{{ capo['tipologia'] or '' }}"
+            draggable="false">
 
-        <div class="stycly-featured-card-overlay">
-          <button type="button"
-            class="icon-btn add-to-cart"
-            data-id="{{ capo['id'] }}"
-            data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
-            data-img="{{ (capo['immagine'] or '').split('/')[-1] }}">
-            <svg class="icon-20">
-              <use xlink:href="#shopping-carriage"></use>
-            </svg>
-          </button>
+          <div class="stycly-featured-card-overlay">
+            <button type="button"
+              class="icon-btn add-to-cart"
+              data-id="{{ capo['id'] }}"
+              data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
+              data-img="{{ (capo['immagine'] or '').split('/')[-1] }}">
+              <svg class="icon-20">
+                <use xlink:href="#shopping-carriage"></use>
+              </svg>
+            </button>
 
-          <button type="button"
-            class="icon-btn featured-info-btn"
-            data-capo='{{ capo|tojson|safe }}'>
-            <svg class="icon-20">
-              <use xlink:href="#quick-view"></use>
-            </svg>
-          </button>
+            <button type="button"
+              class="icon-btn featured-info-btn"
+              data-capo='{{ capo|tojson|safe }}'>
+              <svg class="icon-20">
+                <use xlink:href="#quick-view"></use>
+              </svg>
+            </button>
+          </div>
         </div>
-      </div>
 
-      <div class="stycly-featured-card-body">
-        <h3 class="card-title">
-          {{ capo['categoria'] }} - {{ capo['tipologia'] }}
-        </h3>
+        <div class="stycly-featured-card-body">
+          <h3 class="card-title">
+            {{ capo['categoria'] }} - {{ capo['tipologia'] }}
+          </h3>
 
-        <p class="card-meta">
-          Taglia: {{ capo['taglia'] or '-' }}
-          {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
-          {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
-        </p>
-      </div>
-    </article>
-    {% endfor %}
+          <p class="card-meta">
+            Taglia: {{ capo['taglia'] or '-' }}
+            {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
+            {% if capo['brand'] %} · Brand: {{ capo['brand'] }}{% endif %}
+          </p>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
   </div>
 </section>
 {% endif %}
 
-<section id="products" class="section-band-light products-embed">
-  <div class="section-heading-wrap">
+<section id="products" class="section-band-light">
+  <div class="section-inner section-heading-wrap">
     <h2>Products</h2>
-    <p class="section-sub">Visualizza la pagina prodotti direttamente qui sotto.</p>
-  </div>
-  <div class="products-iframe-wrap">
-    <iframe src="{{ url_for('products') }}" title="Products" loading="lazy"></iframe>
+    <p class="section-sub">Qui inseriremo la nuova sezione prodotti. Per ora visita la pagina dedicata.</p>
+    <a class="stycly-cta-btn" href="{{ url_for('products') }}">Vai alla pagina Products</a>
   </div>
 </section>
 
