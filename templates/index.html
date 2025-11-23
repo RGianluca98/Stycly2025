@@ -2,7 +2,8 @@
 {% block title %}Stycly – Noleggio abiti per bambini{% endblock %}
 
 {% block content %}
-<section class="stycly-hero">
+<section class="stycly-hero hero-split">
+  <div class="hero-bg-gradient"></div>
   <div class="stycly-hero-content">
     <div class="typewriter">
       <h1 class="typewriter-text">
@@ -25,6 +26,92 @@
     <a href="{{ url_for('products') }}" class="stycly-cta-btn">
       Products
     </a>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-image" style="background-image: url('immagini/test.jpg;');"></div>
+    <div class="hero-badge">Noleggio kids 0-12</div>
+  </div>
+</section>
+
+<!-- Use cases con immagini di sfondo -->
+<section class="stycly-usecases">
+  <h2 class="section-heading">Scelti per ogni set</h2>
+  <div class="usecase-grid">
+    <article class="usecase-card" style="background-image: url('immagini/test.jpg;');">
+      <div class="usecase-overlay">
+        <h3>Shooting moda</h3>
+        <p>Look editorial per neonati, kids e tween.</p>
+      </div>
+    </article>
+    <article class="usecase-card" style="background-image: url('immagini/test.jpg;');">
+      <div class="usecase-overlay">
+        <h3>Eventi & red carpet</h3>
+        <p>Outfit eleganti per serate e cerimonie.</p>
+      </div>
+    </article>
+    <article class="usecase-card" style="background-image: url('immagini/test.jpg;');">
+      <div class="usecase-overlay">
+        <h3>Spot e adv</h3>
+        <p>Capi versatili per spot TV, short e campagne.</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- Temi rapidi -->
+<section class="stycly-themes">
+  <div class="themes-header">
+    <h2 class="section-heading">Moodboard rapide</h2>
+    <p class="themes-sub">Scegli un tema e costruisci il set in pochi click.</p>
+  </div>
+  <div class="themes-grid">
+    <div class="theme-card">
+      <div class="theme-thumb" style="background-image: url('immagini/test.jpg;');"></div>
+      <span>Boho soft</span>
+    </div>
+    <div class="theme-card">
+      <div class="theme-thumb" style="background-image: url('immagini/test.jpg;');"></div>
+      <span>Formal chic</span>
+    </div>
+    <div class="theme-card">
+      <div class="theme-thumb" style="background-image: url('immagini/test.jpg;');"></div>
+      <span>Color pop</span>
+    </div>
+    <div class="theme-card">
+      <div class="theme-thumb" style="background-image: url('/static/img/theme-minimal.jpg');"></div>
+      <span>Minimal cool</span>
+    </div>
+  </div>
+</section>
+
+<!-- Come funziona -->
+<section class="stycly-how">
+  <div class="how-bg" style="background-image: url('immagini/test.jpg;');"></div>
+  <div class="how-card">
+    <h2 class="section-heading">Come funziona</h2>
+    <div class="how-steps">
+      <div class="how-step">
+        <span class="how-number">1</span>
+        <div>
+          <h4>Scegli</h4>
+          <p>Filtra per età, taglia, tema e seleziona i look.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <span class="how-number">2</span>
+        <div>
+          <h4>Prenota</h4>
+          <p>Conferma le date di noleggio e la spedizione veloce.</p>
+        </div>
+      </div>
+      <div class="how-step">
+        <span class="how-number">3</span>
+        <div>
+          <h4>Ricevi</h4>
+          <p>Prova i capi, fai il fitting e vai diretto allo shooting.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
