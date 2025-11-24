@@ -232,8 +232,7 @@
         </div>
       </div>
       <div class="cart-actions">
-        <button type="button" class="cart-btn" id="mini-cart-add">Aggiungi al carrello</button>
-        <button type="button" class="cart-btn primary" id="mini-cart-proceed">Procedi con l'ordine</button>
+        <button type="button" class="cart-btn primary" id="mini-cart-add">Aggiungi al carrello</button>
       </div>
     </div>
   </div>
@@ -429,7 +428,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const miniMinus = document.getElementById('mini-cart-minus');
   const miniPlus = document.getElementById('mini-cart-plus');
   const miniAdd = document.getElementById('mini-cart-add');
-  const miniProceed = document.getElementById('mini-cart-proceed');
 
   function openMini(product) {
     miniProduct = { ...product };
@@ -473,13 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!miniProduct || typeof window.styclyAddToCart !== 'function') return;
     for (let i = 0; i < (miniProduct.qty || 1); i++) window.styclyAddToCart(miniProduct);
     showToast('Articolo aggiunto al carrello');
-    closeMini();
-  });
-  if (miniProceed) miniProceed.addEventListener('click', () => {
-    if (miniProduct && typeof window.styclyAddToCart === 'function') {
-      for (let i = 0; i < (miniProduct.qty || 1); i++) window.styclyAddToCart(miniProduct);
-    }
-    if (typeof window.styclyOpenCart === 'function') window.styclyOpenCart();
     closeMini();
   });
 });
