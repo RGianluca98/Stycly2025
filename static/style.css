@@ -1934,6 +1934,35 @@ label.field.focused .psuedo_select::after {
     border: 1px solid #d5d9e3;
 }
 
+/* --- Toast notification --- */
+.toast-container {
+    position: fixed;
+    top: 90px;
+    right: 16px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.toast {
+    background: #3A4C69;
+    color: #fff;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.16);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .quickview-categories {
     font-size: 0.8rem;
     color: #555;

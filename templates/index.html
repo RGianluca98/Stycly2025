@@ -54,10 +54,11 @@
 
           <div class="stycly-featured-card-overlay">
             <button type="button"
-              class="icon-btn add-to-cart"
-              data-id="{{ capo['id'] }}"
-              data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
-              data-img="{{ (capo['immagine'] or '').split('/')[-1] }}">
+            class="icon-btn featured-cart-open"
+            data-id="{{ capo['id'] }}"
+            data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
+            data-img="{{ (capo['immagine'] or '').split('/')[-1] }}"
+            data-capo='{{ capo|tojson|safe }}'>
               <svg class="icon-20">
                 <use xlink:href="#shopping-carriage"></use>
               </svg>
@@ -466,8 +467,9 @@ document.addEventListener('DOMContentLoaded', () => {
       for (let i = 0; i < qvQty; i++) {
         window.styclyAddToCart(qvProduct);
       }
+      showToast('Articolo aggiunto al carrello');
       closeFeaturedDetail();
-    });
+    });;
   }
   if (proceedBtn) {
     proceedBtn.addEventListener('click', () => {
@@ -482,6 +484,12 @@ document.addEventListener('DOMContentLoaded', () => {
       // Qui puoi collegare il flusso di ordine
     });
   }
+  document.querySelectorAll('.featured-cart-open').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const capo = JSON.parse(this.getAttribute('data-capo'));
+      openFeaturedDetail(capo);
+    });
+  });
 });
 </script>
 <script>
@@ -617,5 +625,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   applyFilters();
 });
+
+function showToast(message) {
+  let container = document.querySelector('.toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  container.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2200);
+}
 </script>
 {% endblock %}
