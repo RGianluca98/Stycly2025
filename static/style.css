@@ -57,17 +57,21 @@ main {
     top: 0;
     z-index: 100;
     min-height: 68px;
-    padding: 0 24px;
+    padding: 0 16px;
 }
 
 .stycly-header-inner {
     width: 100%;
-    max-width: 1200px;
-    
-    display: grid;
-    grid-template-columns: auto 1fr auto;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 4px;
+    display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.stycly-logo {
+    flex: 0 0 auto;
 }
 
 .stycly-logo img {
@@ -82,7 +86,7 @@ main {
     align-items: center;
     gap: 0.8rem;
     position: relative;
-    flex: 1;
+    flex: 1 1 auto;
     flex-wrap: wrap;
     column-gap: 0.75rem;
     row-gap: 0.3rem;
@@ -289,8 +293,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding: 2.5rem 1rem 2.5rem;
     position: relative;
     z-index: 1;
     background: #ffffff;
@@ -298,24 +301,24 @@ main {
 
 .stycly-hero-content {
     width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-    text-align: center;
-    align-items: center;
+    max-width: 640px;
+    margin: 0;
+    text-align: left;
+    align-items: flex-start;
     position: relative;
     z-index: 1;
 }
 
 .stycly-hero-content h1 {
     font-family: var(--font-title);
-    font-size: 2.2rem;
+    font-size: clamp(2rem, 2vw + 1rem, 2.6rem);
     font-weight: 600;
     margin-bottom: 0.5rem;
     color: var(--col-primario);
 }
 
 .stycly-hero-content p {
-    font-size: var(--f-md);
+    font-size: clamp(1rem, 0.5vw + 0.9rem, 1.15rem);
     color: #4a5670;
     margin-bottom: 1.2rem;
     line-height: 1.5;
@@ -377,7 +380,10 @@ main {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     align-items: center;
-    gap: 1.5rem;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 0;
 }
 
 .hero-bg-gradient {
@@ -404,6 +410,7 @@ main {
     justify-content: center;
     padding: 1rem;
     z-index: 1;
+    width: 100%;
 }
 
 .hero-collage {
@@ -419,13 +426,13 @@ main {
 }
 
 .hero-shot.vertical {
-    width: 56%;
+    width: 54%;
     aspect-ratio: 3 / 4;
     animation-delay: 0.4s;
 }
 
 .hero-shot.horizontal {
-    width: 44%;
+    width: 40%;
     aspect-ratio: 4 / 3;
     align-self: flex-start;
     animation-delay: 1s;
@@ -1310,6 +1317,26 @@ label.field.focused .psuedo_select::after {
     .hero-visual {
         width: 100%;
         min-height: 240px;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 1200px) {
+    .hero-split {
+        grid-template-columns: 1fr;
+        padding: 2.5rem 0;
+    }
+    .stycly-hero-content {
+        text-align: center;
+        margin: 0 auto;
+        align-items: center;
+    }
+    .hero-highlights {
+        justify-content: center;
+    }
+    .hero-visual {
+        max-width: 620px;
+        margin: 0 auto;
     }
 }
 
