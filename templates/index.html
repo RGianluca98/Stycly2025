@@ -12,12 +12,10 @@
         Noleggia capi, scarpe e props per set creativi
       </h1>
     </div>
-
     <p class="hero-subtitle">
       Selezioni pronte: capi singoli, calzature e oggetti di scena per shooting, eventi e set.
       Nessun outfit preimpostato: componi tu ciò che serve.
     </p>
-
     <div class="hero-highlights">
       <span>Prodotti come nuovi</span>
       <span>Noleggio rapido e flessibile</span>
@@ -42,7 +40,6 @@
       <h2>Featured Products</h2>
       <a href="#products" class="view-all-link">Vai ai prodotti</a>
     </div>
-
     <div class="stycly-featured-grid">
       {% for capo in featured_capi %}
       <article class="stycly-featured-card">
@@ -51,19 +48,14 @@
             src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
             alt="{{ capo['tipologia'] or '' }}"
             draggable="false">
-
           <div class="stycly-featured-card-overlay">
             <button type="button"
-            class="icon-btn featured-cart-open"
-            data-id="{{ capo['id'] }}"
-            data-name="{{ capo['categoria'] }} - {{ capo['tipologia'] }}"
-            data-img="{{ (capo['immagine'] or '').split('/')[-1] }}"
-            data-capo='{{ capo|tojson|safe }}'>
+              class="icon-btn featured-cart-open"
+              data-capo='{{ capo|tojson|safe }}'>
               <svg class="icon-20">
                 <use xlink:href="#shopping-carriage"></use>
               </svg>
             </button>
-
             <button type="button"
               class="icon-btn featured-info-btn"
               data-capo='{{ capo|tojson|safe }}'>
@@ -73,12 +65,10 @@
             </button>
           </div>
         </div>
-
         <div class="stycly-featured-card-body">
           <h3 class="card-title">
             {{ capo['categoria'] }} - {{ capo['tipologia'] }}
           </h3>
-
           <p class="card-meta">
             Taglia: {{ capo['taglia'] or '-' }}
             {% if capo['colore'] %} · Colore: {{ capo['colore'] }}{% endif %}
@@ -97,96 +87,59 @@
     <div class="wardrobe-view-layout">
       <aside class="wardrobe-filters">
         <h3>Filtra capi</h3>
-
         <div style="margin-bottom: 1.2rem;">
           <label style="font-size: 0.9rem; font-weight: 500;">Categoria</label>
-          <select class="filter-select" data-filter="categoria"
-                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+          <select class="filter-select" data-filter="categoria" style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
             <option value="">Tutte</option>
             {% for cat in capi|map(attribute='categoria')|unique %}
-              {% if cat %}
-                <option value="{{ cat }}">{{ cat }}</option>
-              {% endif %}
+              {% if cat %}<option value="{{ cat }}">{{ cat }}</option>{% endif %}
             {% endfor %}
           </select>
         </div>
-
         <div style="margin-bottom: 1.2rem;">
           <label style="font-size: 0.9rem; font-weight: 500;">Taglia</label>
-          <select class="filter-select" data-filter="taglia"
-                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+          <select class="filter-select" data-filter="taglia" style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
             <option value="">Tutte</option>
             {% for t in capi|map(attribute='taglia')|unique %}
-              {% if t %}
-                <option value="{{ t }}">{{ t }}</option>
-              {% endif %}
+              {% if t %}<option value="{{ t }}">{{ t }}</option>{% endif %}
             {% endfor %}
           </select>
         </div>
-
         <div style="margin-bottom: 1.2rem;">
           <label style="font-size: 0.9rem; font-weight: 500;">Brand</label>
-          <select class="filter-select" data-filter="brand"
-                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+          <select class="filter-select" data-filter="brand" style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
             <option value="">Tutti</option>
             {% for b in capi|map(attribute='brand')|unique %}
-              {% if b %}
-                <option value="{{ b }}">{{ b }}</option>
-              {% endif %}
+              {% if b %}<option value="{{ b }}">{{ b }}</option>{% endif %}
             {% endfor %}
           </select>
         </div>
-
         <div style="margin-bottom: 1.2rem;">
           <label style="font-size: 0.9rem; font-weight: 500;">Destinazione</label>
-          <select class="filter-select" data-filter="destinazione"
-                  style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
+          <select class="filter-select" data-filter="destinazione" style="width: 100%; padding: 0.4rem; border-radius: 6px; border: 1px solid #ccc;">
             <option value="">Tutte</option>
             {% for d in capi|map(attribute='destinazione')|unique %}
-              {% if d %}
-                <option value="{{ d }}">{{ d }}</option>
-              {% endif %}
+              {% if d %}<option value="{{ d }}">{{ d }}</option>{% endif %}
             {% endfor %}
           </select>
         </div>
-
-        <button onclick="resetFilters()" style="
-          padding: 0.5rem 1rem;
-          background-color: #e6ecf9;
-          border: none;
-          border-radius: 6px;
-          color: #2b4ca3;
-          font-weight: 500;
-          cursor: pointer;
-          margin-top: 1rem;
-          width: 100%;
-        ">
-          Reset filtri
-        </button>
+        <button onclick="resetFilters()" style="padding: 0.5rem 1rem; background-color: #e6ecf9; border: none; border-radius: 6px; color: #2b4ca3; font-weight: 500; cursor: pointer; margin-top: 1rem; width: 100%;">Reset filtri</button>
       </aside>
-
       <div class="wardrobe-main">
         <h2>Products</h2>
-        <p style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;">
-          Tutti i capi caricati dagli Admin.
-        </p>
-
+        <p style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;">Tutti i capi caricati dagli Admin.</p>
         <p id="item-count" style="margin-top: 0.5rem; font-size: 0.95rem; color: #555;"></p>
-
         <div class="wardrobe-grid wardrobe-grid-3col">
           {% if capi %}
             {% for capo in capi %}
-            <div class="capo-flip-card"
-                 data-capo='{{ capo|tojson|safe }}'>
+            <div class="capo-flip-card" data-capo='{{ capo|tojson|safe }}'>
               <div class="capo-flip-inner">
                 <div class="capo-flip-front">
-                  <img src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}"
-                       alt="fronte" class="capo-img">
+                  <img src="{{ url_for('immagini', filename=(capo['immagine'] or '').split('/')[-1]) }}" alt="fronte" class="capo-img">
                 </div>
                 <div class="capo-flip-back">
                   {% if capo['immagine2'] %}
-                    <img src="{{ url_for('immagini', filename=(capo['immagine2'] or '').split('/')[-1]) }}"
-                         alt="retro" class="capo-img">
+                    <img src="{{ url_for('immagini', filename=(capo['immagine2'] or '').split('/')[-1]) }}" alt="retro" class="capo-img">
                   {% else %}
                     <p style="text-align:center; font-size: 0.8rem;">Nessuna retro immagine</p>
                   {% endif %}
@@ -203,7 +156,7 @@
   </div>
 </section>
 
-<!-- Modal dettagli capo -->
+<!-- Modal dettagli capo (sezione products) -->
 <div id="detail-modal" class="stycly-modal" style="display:none;">
   <div class="stycly-modal-content" style="max-width: 900px;">
     <button class="stycly-modal-close" onclick="closeDetailPopup()">&times;</button>
@@ -220,95 +173,18 @@
   </div>
 </div>
 
-<section id="how" class="stycly-how section-band">
-  <div class="how-bg"></div>
-  <div class="how-card">
-    <div class="how-head">
-      <h2 class="section-heading">Come funziona il noleggio</h2>
-      <p class="how-sub">Seguire il processo di noleggio su Stycly è semplice e veloce. Ecco tutti i passaggi:</p>
-    </div>
-    <div class="how-steps">
-      <div class="how-step">
-        <span class="how-number">1</span>
-        <div>
-          <h4>Cerca i prodotti</h4>
-          <p>Naviga in Prodotti e scopri capi, accessori, props e oggetti per bambini.</p>
-          <p>Filtra per categoria e guarda i dettagli di ogni articolo.</p>
-        </div>
-      </div>
-      <div class="how-step">
-        <span class="how-number">2</span>
-        <div>
-          <h4>Aggiungi al carrello</h4>
-          <p>Scegli gli articoli e la quantità desiderata, poi aggiungili al carrello.</p>
-        </div>
-      </div>
-      <div class="how-step">
-        <span class="how-number">3</span>
-        <div>
-          <h4>Invia una richiesta di noleggio</h4>
-          <p>Nel carrello clicca su Avanti e:</p>
-          <ul class="how-bullets">
-            <li>seleziona le date di noleggio dal calendario (uno o più giorni);</li>
-            <li>inserisci i tuoi dati di contatto;</li>
-            <li>conferma la richiesta.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="how-step">
-        <span class="how-number">4</span>
-        <div>
-          <h4>Ricevi il preventivo</h4>
-          <p>Entro 24 ore ti contattiamo via email per confermare disponibilità e inviarti il preventivo personalizzato.</p>
-          <p>Completa ordine via email o telefono.</p>
-        </div>
-      </div>
-      <div class="how-step">
-        <span class="how-number">5</span>
-        <div>
-          <h4>Pagamento e fatturazione</h4>
-          <p>Pagamento concordato con il nostro operatore (non online al momento) e ricezione della fattura.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="about" class="section-band-light about-placeholder">
-  <div class="section-heading-wrap">
-    <h2>About Us</h2>
-    <p class="section-sub">Presto aggiorneremo questa sezione con la nostra storia e il team.</p>
-  </div>
-</section>
-
-<section id="contact" class="section-band contact-placeholder">
-  <div class="section-heading-wrap">
-    <h2>Contact</h2>
-    <p class="section-sub">Inseriremo indirizzo, mappa e contatti in questo blocco.</p>
-  </div>
-</section>
-
-<footer class="stycly-footer">
-  <p>© {{ current_year or '2025' }} Stycly. All rights reserved.</p>
-</footer>
-
-<!-- QUICK VIEW MODAL featured -->
+<!-- Modal featured quickview -->
 <div id="featured-detail-modal" class="quickview-overlay" style="display:none;">
   <div class="quickview-modal">
     <button class="quickview-close" id="quickview-close-btn" type="button">&times;</button>
-
     <div class="quickview-layout">
       <div class="quickview-image-wrap">
         <img id="quickview-image" src="" alt="Capo">
       </div>
-
       <div class="quickview-info">
         <h2 id="quickview-title" class="quickview-title"></h2>
-
         <p id="quickview-subtitle" class="quickview-subtitle"></p>
-
         <div id="quickview-description" class="quickview-description"></div>
-
         <ul class="quickview-meta">
           <li><strong>Taglia:</strong> <span id="quickview-taglia"></span></li>
           <li><strong>Colore:</strong> <span id="quickview-colore"></span></li>
@@ -317,25 +193,47 @@
           <li><strong>Fit:</strong> <span id="quickview-fit"></span></li>
           <li><strong>Disponibilità:</strong> <span id="quickview-dispo"></span></li>
         </ul>
-
         <div class="quickview-actions">
           <div class="quickview-qty">
             <button type="button" id="quickview-minus" class="qty-btn">-</button>
             <span id="quickview-qty-value" class="qty-value">1</span>
             <button type="button" id="quickview-plus" class="qty-btn">+</button>
           </div>
-          <button type="button" id="quickview-add-cart" class="quickview-add-btn">
-            Add to cart
-          </button>
-          <button type="button" id="quickview-proceed" class="quickview-add-btn secondary">
-            Procedi con l'ordine
-          </button>
+          <button type="button" id="quickview-add-cart" class="quickview-add-btn">Add to cart</button>
+          <button type="button" id="quickview-proceed" class="quickview-add-btn secondary">Procedi con l'ordine</button>
         </div>
+        <p class="quickview-categories"><strong>Categoria:</strong> <span id="quickview-categoria"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
 
-        <p class="quickview-categories">
-          <strong>Categoria:</strong>
-          <span id="quickview-categoria"></span>
-        </p>
+<!-- Mini cart popup per icona carrello featured -->
+<div id="mini-cart-overlay" class="cart-overlay cart-hidden">
+  <div class="cart-modal">
+    <div class="cart-header">
+      <h2>Seleziona quantità</h2>
+      <button type="button" class="cart-close" id="mini-cart-close" aria-label="Chiudi mini carrello">
+        <svg class="icon-20"><use xlink:href="#close"></use></svg>
+      </button>
+    </div>
+    <div class="cart-body">
+      <div class="mini-cart-item">
+        <div class="mini-cart-img">
+          <img id="mini-cart-img" src="" alt="Prodotto">
+        </div>
+        <div class="mini-cart-info">
+          <div class="mini-cart-title" id="mini-cart-title"></div>
+          <div class="mini-cart-qty">
+            <button type="button" class="qty-btn" id="mini-cart-minus">-</button>
+            <span class="qty-value" id="mini-cart-qty">1</span>
+            <button type="button" class="qty-btn" id="mini-cart-plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="cart-actions">
+        <button type="button" class="cart-btn" id="mini-cart-add">Aggiungi al carrello</button>
+        <button type="button" class="cart-btn primary" id="mini-cart-proceed">Procedi con l'ordine</button>
       </div>
     </div>
   </div>
@@ -344,7 +242,7 @@
 
 {% block extra_js %}
 <script>
-// --- helper per immagini (stessa logica di public_wardrobe) ---
+// helper immagini
 function buildImageURLHome(filename) {
   if (!filename) return "";
   const cleanName = filename.toString().split("/").pop();
@@ -355,21 +253,16 @@ let qvFront = "";
 let qvBack  = "";
 let qvQty   = 1;
 let qvProduct = null;
+let miniProduct = null;
 
 function openFeaturedDetail(capo) {
   qvFront = capo.immagine;
   qvBack  = capo.immagine2 || "";
   qvQty   = 1;
-
   const title = (capo.categoria || '') + (capo.tipologia ? ' - ' + capo.tipologia : '');
   document.getElementById('quickview-title').textContent = title;
-
-  document.getElementById('quickview-subtitle').textContent =
-    capo.brand ? capo.brand : '';
-
-  document.getElementById('quickview-description').textContent =
-    capo.destinazione ? ('Perfetto per: ' + capo.destinazione) : '';
-
+  document.getElementById('quickview-subtitle').textContent = capo.brand || '';
+  document.getElementById('quickview-description').textContent = capo.destinazione ? ('Perfetto per: ' + capo.destinazione) : '';
   document.getElementById('quickview-taglia').textContent       = capo.taglia || '-';
   document.getElementById('quickview-colore').textContent       = capo.colore || '-';
   document.getElementById('quickview-brand').textContent        = capo.brand || '-';
@@ -377,16 +270,9 @@ function openFeaturedDetail(capo) {
   document.getElementById('quickview-fit').textContent          = capo.fit || '-';
   document.getElementById('quickview-dispo').textContent        = capo.disponibilita || 1;
   document.getElementById('quickview-categoria').textContent    = capo.categoria || '-';
-
   document.getElementById('quickview-image').src = buildImageURLHome(qvFront);
   document.getElementById('quickview-qty-value').textContent = qvQty;
-
-  qvProduct = {
-    id: capo.id,
-    name: title,
-    img: (capo.immagine || '').toString().split('/').pop()
-  };
-
+  qvProduct = { id: capo.id, name: title, img: (capo.immagine || '').toString().split('/').pop() };
   document.getElementById('featured-detail-modal').style.display = 'flex';
 }
 
@@ -394,148 +280,7 @@ function closeFeaturedDetail() {
   document.getElementById('featured-detail-modal').style.display = 'none';
 }
 
-function showFeaturedFront() {
-  if (qvFront) {
-    document.getElementById('quickview-image').src = buildImageURLHome(qvFront);
-  }
-}
-
-function showFeaturedBack() {
-  if (qvBack) {
-    document.getElementById('quickview-image').src = buildImageURLHome(qvBack);
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  // apertura quick view
-  document.querySelectorAll('.featured-info-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const capo = JSON.parse(this.getAttribute('data-capo'));
-      openFeaturedDetail(capo);
-    });
-  });
-
-  // chiusura quick view
-  const modal = document.getElementById('featured-detail-modal');
-  if (modal) {
-    document.getElementById('quickview-close-btn').addEventListener('click', closeFeaturedDetail);
-    modal.addEventListener('click', (e) => {
-      if (e.target.id === 'featured-detail-modal') {
-        closeFeaturedDetail();
-      }
-    });
-  }
-
-  // cambio fronte/retro cliccando sull'immagine
-  const qvImage = document.getElementById('quickview-image');
-  if (qvImage) {
-    qvImage.addEventListener('click', () => {
-      if (!qvBack) return;
-      const current = qvImage.getAttribute('src');
-      const frontURL = buildImageURLHome(qvFront);
-      const backURL  = buildImageURLHome(qvBack);
-      qvImage.src = (current === frontURL) ? backURL : frontURL;
-    });
-  }
-
-  // gestione quantità
-  const minus = document.getElementById('quickview-minus');
-  const plus = document.getElementById('quickview-plus');
-  if (minus && plus) {
-    minus.addEventListener('click', () => {
-      if (qvQty > 1) {
-        qvQty--;
-        document.getElementById('quickview-qty-value').textContent = qvQty;
-      }
-    });
-    plus.addEventListener('click', () => {
-      qvQty++;
-      document.getElementById('quickview-qty-value').textContent = qvQty;
-    });
-  }
-
-  // Add to cart dal popup
-  const addCartBtn = document.getElementById('quickview-add-cart');
-  const proceedBtn = document.getElementById('quickview-proceed');
-  if (addCartBtn) {
-    addCartBtn.addEventListener('click', () => {
-      if (!qvProduct) return;
-      if (typeof window.styclyAddToCart !== 'function') {
-        alert('Carrello non disponibile al momento.');
-        return;
-      }
-      for (let i = 0; i < qvQty; i++) {
-        window.styclyAddToCart(qvProduct);
-      }
-      showToast('Articolo aggiunto al carrello');
-      closeFeaturedDetail();
-    });;
-  }
-  if (proceedBtn) {
-    proceedBtn.addEventListener('click', () => {
-      if (!qvProduct) return;
-      if (typeof window.styclyAddToCart === 'function') {
-        window.styclyAddToCart(qvProduct);
-      }
-      if (typeof window.styclyOpenCart === 'function') {
-        window.styclyOpenCart();
-      }
-      closeFeaturedDetail();
-      // Qui puoi collegare il flusso di ordine
-    });
-  }
-  document.querySelectorAll('.featured-cart-open').forEach(btn => {
-    btn.addEventListener('click', function () {
-      const capo = JSON.parse(this.getAttribute('data-capo'));
-      openFeaturedDetail(capo);
-    });
-  });
-});
-</script>
-<script>
-// Attiva voce menu su scroll per le sezioni di questa pagina
-document.addEventListener('DOMContentLoaded', () => {
-  const navLinks = Array.from(document.querySelectorAll('.stycly-nav a'));
-  const sections = Array.from(document.querySelectorAll('section[id]'));
-
-  const activate = (id) => {
-    navLinks.forEach(link => {
-      const href = link.getAttribute('href') || '';
-      if (href.includes(`#${id}`)) {
-        link.classList.add('nav-active');
-      } else if (href.includes('#')) {
-        link.classList.remove('nav-active');
-      }
-    });
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        activate(entry.target.id);
-      }
-    });
-  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0.1 });
-
-  sections.forEach(sec => observer.observe(sec));
-
-  navLinks.forEach(link => {
-    const href = link.getAttribute('href') || '';
-    if (href.includes('#')) {
-      link.addEventListener('click', (e) => {
-        const targetId = href.split('#')[1];
-        const target = document.getElementById(targetId);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    }
-  });
-});
-</script>
-<script>
-// Sezione prodotti embedded (filtri + popup)
+// Modal prodotti (sezione products)
 let frontImg = "";
 let backImg  = "";
 
@@ -548,7 +293,6 @@ function buildImageURL(filename) {
 function openDetailPopup(capo) {
   frontImg = capo.immagine;
   backImg  = capo.immagine2 || "";
-
   document.getElementById('popup-image').src = buildImageURL(frontImg);
   document.getElementById('popup-details').innerHTML = `
     <p><b>Categoria:</b> ${capo.categoria || ''}</p>
@@ -567,17 +311,8 @@ function closeDetailPopup() {
   document.getElementById("detail-modal").style.display = "none";
 }
 
-function showFront() {
-  if (frontImg) {
-    document.getElementById('popup-image').src = buildImageURL(frontImg);
-  }
-}
-
-function showBack() {
-  if (backImg) {
-    document.getElementById('popup-image').src = buildImageURL(backImg);
-  }
-}
+function showFront() { if (frontImg) document.getElementById('popup-image').src = buildImageURL(frontImg); }
+function showBack()  { if (backImg)  document.getElementById('popup-image').src = buildImageURL(backImg); }
 
 function applyFilters() {
   const filters = {};
@@ -586,7 +321,6 @@ function applyFilters() {
     const val = select.value;
     if (val) filters[key] = val;
   });
-
   let visibleCount = 0;
   document.querySelectorAll('.capo-flip-card').forEach(card => {
     const capo = JSON.parse(card.getAttribute('data-capo'));
@@ -597,34 +331,14 @@ function applyFilters() {
     card.style.display = match ? 'flex' : 'none';
     if (match) visibleCount++;
   });
-
   const ic = document.getElementById("item-count");
-  if (ic) {
-    ic.textContent = `${visibleCount} cap${visibleCount === 1 ? 'o' : 'i'} trovati`;
-  }
+  if (ic) ic.textContent = `${visibleCount} cap${visibleCount === 1 ? 'o' : 'i'} trovati`;
 }
 
 function resetFilters() {
-  document.querySelectorAll('.filter-select').forEach(select => {
-    select.value = "";
-  });
+  document.querySelectorAll('.filter-select').forEach(select => { select.value = ""; });
   applyFilters();
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.capo-flip-card').forEach(card => {
-    card.addEventListener('click', function () {
-      const capo = JSON.parse(this.getAttribute('data-capo'));
-      openDetailPopup(capo);
-    });
-  });
-
-  document.querySelectorAll('.filter-select').forEach(select => {
-    select.addEventListener('change', applyFilters);
-  });
-
-  applyFilters();
-});
 
 function showToast(message) {
   let container = document.querySelector('.toast-container');
@@ -638,10 +352,136 @@ function showToast(message) {
   toast.textContent = message;
   container.appendChild(toast);
   requestAnimationFrame(() => toast.classList.add('show'));
-  setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => toast.remove(), 300);
-  }, 2200);
+  setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 2200);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  // quickview featured info
+  document.querySelectorAll('.featured-info-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const capo = JSON.parse(this.getAttribute('data-capo'));
+      openFeaturedDetail(capo);
+    });
+  });
+
+  const modal = document.getElementById('featured-detail-modal');
+  if (modal) {
+    document.getElementById('quickview-close-btn').addEventListener('click', closeFeaturedDetail);
+    modal.addEventListener('click', (e) => { if (e.target.id === 'featured-detail-modal') closeFeaturedDetail(); });
+  }
+
+  const qvImage = document.getElementById('quickview-image');
+  if (qvImage) {
+    qvImage.addEventListener('click', () => {
+      if (!qvBack) return;
+      const current = qvImage.getAttribute('src');
+      const frontURL = buildImageURLHome(qvFront);
+      const backURL  = buildImageURLHome(qvBack);
+      qvImage.src = (current === frontURL) ? backURL : frontURL;
+    });
+  }
+
+  const minus = document.getElementById('quickview-minus');
+  const plus = document.getElementById('quickview-plus');
+  if (minus && plus) {
+    minus.addEventListener('click', () => { if (qvQty > 1) qvQty--; document.getElementById('quickview-qty-value').textContent = qvQty; });
+    plus.addEventListener('click', () => { qvQty++; document.getElementById('quickview-qty-value').textContent = qvQty; });
+  }
+
+  const addCartBtn = document.getElementById('quickview-add-cart');
+  const proceedBtn = document.getElementById('quickview-proceed');
+  if (addCartBtn) {
+    addCartBtn.addEventListener('click', () => {
+      if (!qvProduct || typeof window.styclyAddToCart !== 'function') return alert('Carrello non disponibile al momento.');
+      for (let i = 0; i < qvQty; i++) window.styclyAddToCart(qvProduct);
+      showToast('Articolo aggiunto al carrello');
+      closeFeaturedDetail();
+    });
+  }
+  if (proceedBtn) {
+    proceedBtn.addEventListener('click', () => {
+      if (!qvProduct) return;
+      if (typeof window.styclyAddToCart === 'function') window.styclyAddToCart(qvProduct);
+      if (typeof window.styclyOpenCart === 'function') window.styclyOpenCart();
+      closeFeaturedDetail();
+    });
+  }
+
+  // products section
+  document.querySelectorAll('.capo-flip-card').forEach(card => {
+    card.addEventListener('click', function () {
+      const capo = JSON.parse(this.getAttribute('data-capo'));
+      openDetailPopup(capo);
+    });
+  });
+  document.querySelectorAll('.filter-select').forEach(select => select.addEventListener('change', applyFilters));
+  applyFilters();
+});
+</script>
+<script>
+// Mini cart per icona carrello nei featured
+document.addEventListener('DOMContentLoaded', () => {
+  const miniOverlay = document.getElementById('mini-cart-overlay');
+  const miniClose = document.getElementById('mini-cart-close');
+  const miniImg = document.getElementById('mini-cart-img');
+  const miniTitle = document.getElementById('mini-cart-title');
+  const miniQtyEl = document.getElementById('mini-cart-qty');
+  const miniMinus = document.getElementById('mini-cart-minus');
+  const miniPlus = document.getElementById('mini-cart-plus');
+  const miniAdd = document.getElementById('mini-cart-add');
+  const miniProceed = document.getElementById('mini-cart-proceed');
+
+  function openMini(product) {
+    miniProduct = { ...product };
+    if (miniImg) miniImg.src = "/immagini/" + (product.img || "");
+    if (miniTitle) miniTitle.textContent = product.name || "";
+    if (miniQtyEl) miniQtyEl.textContent = product.qty || 1;
+    if (miniOverlay) miniOverlay.classList.remove('cart-hidden');
+  }
+  function closeMini() {
+    if (miniOverlay) miniOverlay.classList.add('cart-hidden');
+    miniProduct = null;
+  }
+
+  document.querySelectorAll('.featured-cart-open').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const capo = JSON.parse(this.getAttribute('data-capo'));
+      openMini({
+        id: capo.id,
+        name: (capo.categoria || '') + (capo.tipologia ? ' - ' + capo.tipologia : ''),
+        img: (capo.immagine || '').toString().split('/').pop(),
+        qty: 1,
+      });
+    });
+  });
+
+  if (miniClose) miniClose.addEventListener('click', closeMini);
+  if (miniOverlay) miniOverlay.addEventListener('click', (e) => { if (e.target === miniOverlay) closeMini(); });
+  if (miniMinus) miniMinus.addEventListener('click', () => {
+    let qty = parseInt(miniQtyEl.textContent, 10) || 1;
+    qty = Math.max(1, qty - 1);
+    miniQtyEl.textContent = qty;
+    if (miniProduct) miniProduct.qty = qty;
+  });
+  if (miniPlus) miniPlus.addEventListener('click', () => {
+    let qty = parseInt(miniQtyEl.textContent, 10) || 1;
+    qty += 1;
+    miniQtyEl.textContent = qty;
+    if (miniProduct) miniProduct.qty = qty;
+  });
+  if (miniAdd) miniAdd.addEventListener('click', () => {
+    if (!miniProduct || typeof window.styclyAddToCart !== 'function') return;
+    for (let i = 0; i < (miniProduct.qty || 1); i++) window.styclyAddToCart(miniProduct);
+    showToast('Articolo aggiunto al carrello');
+    closeMini();
+  });
+  if (miniProceed) miniProceed.addEventListener('click', () => {
+    if (miniProduct && typeof window.styclyAddToCart === 'function') {
+      for (let i = 0; i < (miniProduct.qty || 1); i++) window.styclyAddToCart(miniProduct);
+    }
+    if (typeof window.styclyOpenCart === 'function') window.styclyOpenCart();
+    closeMini();
+  });
+});
 </script>
 {% endblock %}
