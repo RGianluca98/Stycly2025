@@ -516,6 +516,22 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 <script src="{{ url_for('static', filename='cart.js') }}"></script>
 <script src="{{ url_for('static', filename='main.js') }}"></script>
+<script>
+// Fallback apertura menu utente (nel caso main.js non parta)
+document.addEventListener('DOMContentLoaded', () => {
+  const userMenu = document.querySelector('.user-menu');
+  const userMenuToggle = document.querySelector('.user-menu-toggle');
+  if (userMenu && userMenuToggle) {
+    userMenuToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      userMenu.classList.toggle('open');
+    });
+    document.addEventListener('click', () => userMenu.classList.remove('open'));
+    const dropdown = userMenu.querySelector('.user-menu-dropdown');
+    if (dropdown) dropdown.addEventListener('click', (e) => e.stopPropagation());
+  }
+});
+</script>
 </body>
 </html>
 
