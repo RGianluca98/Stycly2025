@@ -290,6 +290,52 @@
 <footer class="stycly-footer">
   <p>© {{ current_year or '2025' }} Stycly. All rights reserved.</p>
 </footer>
+
+<!-- QUICK VIEW MODAL featured -->
+<div id="featured-detail-modal" class="quickview-overlay" style="display:none;">
+  <div class="quickview-modal">
+    <button class="quickview-close" id="quickview-close-btn" type="button">&times;</button>
+
+    <div class="quickview-layout">
+      <div class="quickview-image-wrap">
+        <img id="quickview-image" src="" alt="Capo">
+      </div>
+
+      <div class="quickview-info">
+        <h2 id="quickview-title" class="quickview-title"></h2>
+
+        <p id="quickview-subtitle" class="quickview-subtitle"></p>
+
+        <div id="quickview-description" class="quickview-description"></div>
+
+        <ul class="quickview-meta">
+          <li><strong>Taglia:</strong> <span id="quickview-taglia"></span></li>
+          <li><strong>Colore:</strong> <span id="quickview-colore"></span></li>
+          <li><strong>Brand:</strong> <span id="quickview-brand"></span></li>
+          <li><strong>Destinazione:</strong> <span id="quickview-destinazione"></span></li>
+          <li><strong>Fit:</strong> <span id="quickview-fit"></span></li>
+          <li><strong>Disponibilità:</strong> <span id="quickview-dispo"></span></li>
+        </ul>
+
+        <div class="quickview-actions">
+          <div class="quickview-qty">
+            <button type="button" id="quickview-minus" class="qty-btn">-</button>
+            <span id="quickview-qty-value" class="qty-value">1</span>
+            <button type="button" id="quickview-plus" class="qty-btn">+</button>
+          </div>
+          <button type="button" id="quickview-add-cart" class="quickview-add-btn">
+            Add to cart
+          </button>
+        </div>
+
+        <p class="quickview-categories">
+          <strong>Categoria:</strong>
+          <span id="quickview-categoria"></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
