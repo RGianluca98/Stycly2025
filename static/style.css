@@ -170,9 +170,6 @@ main {
 .user-menu.open .user-menu-dropdown {
   display: block;
 }
-.user-menu:hover .user-menu-dropdown {
-  display: block; /* fallback hover se JS non gira */
-}
 
 .user-menu-info {
   border-bottom: 1px solid #e5e7eb;
