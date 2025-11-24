@@ -385,6 +385,7 @@ main {
 }
 
 .hero-split {
+      margin-left: 2cm;
     overflow: hidden;
     position: relative;
     display: grid;
@@ -392,7 +393,7 @@ main {
     align-items: center;
     gap: 2.2rem;
     width: 100%;
-    max-width: auto;
+    max-width: 100%;
     margin: 0 auto;
     padding: clamp(2rem, 3vw, 3.5rem) 0;
 }
