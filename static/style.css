@@ -1660,6 +1660,30 @@ label.field.focused .psuedo_select::after {
     flex-wrap: nowrap;
 }
 
+.header-icons-group a {
+    font-size: 0.9rem;
+    color: var(--col-primario);
+    text-decoration: none;
+    padding: 4px 8px;
+    position: relative;
+    font-weight: 500;
+}
+
+.header-icons-group a:hover {
+    color: var(--col-accent);
+}
+
+.header-icons-group a.nav-active::after {
+    content: "";
+    position: absolute;
+    left: 12%;
+    right: 12%;
+    bottom: -3px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--col-accent);
+}
+
 .header-icon-btn {
     border: none;
     background: transparent;
@@ -2125,6 +2149,12 @@ label.field.focused .psuedo_select::after {
     pointer-events: auto;
     transform: translateY(0);
 }
+/* fallback: se l'observer non aggiunge in-view, manteniamo l'hover attivo comunque */
+.stycly-featured-card:hover .stycly-featured-card-overlay {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
 
 /* Icone dentro l’overlay */
 .stycly-featured-card-overlay .icon-btn {
@@ -2159,6 +2189,17 @@ label.field.focused .psuedo_select::after {
     transition-delay: 0.05s;
 }
 .stycly-featured-card.in-view:hover .icon-btn:nth-child(2) {
+    transition-delay: 0.10s;
+}
+/* fallback senza in-view */
+.stycly-featured-card:hover .icon-btn {
+    opacity: 1;
+    transform: translateY(0);
+}
+.stycly-featured-card:hover .icon-btn:nth-child(1) {
+    transition-delay: 0.05s;
+}
+.stycly-featured-card:hover .icon-btn:nth-child(2) {
     transition-delay: 0.10s;
 }
 

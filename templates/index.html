@@ -219,6 +219,97 @@
   </div>
 </section>
 
+<!-- Quickview Featured Modal -->
+<div id="featured-detail-modal" class="quickview-overlay" style="display: none;">
+  <div class="quickview-modal">
+    <button type="button" class="quickview-close" id="quickview-close-btn" aria-label="Chiudi">
+      &times;
+    </button>
+    <div class="quickview-layout">
+      <div class="quickview-image-wrap">
+        <img id="quickview-image" src="" alt="Dettaglio capo">
+      </div>
+      <div class="quickview-info">
+        <h3 class="quickview-title" id="quickview-title"></h3>
+        <div class="quickview-subtitle" id="quickview-subtitle"></div>
+        <p class="quickview-description" id="quickview-description"></p>
+        <ul class="quickview-meta">
+          <li>Categoria: <span id="quickview-categoria">-</span></li>
+          <li>Taglia: <span id="quickview-taglia">-</span></li>
+          <li>Colore: <span id="quickview-colore">-</span></li>
+          <li>Brand: <span id="quickview-brand">-</span></li>
+          <li>Destinazione: <span id="quickview-destinazione">-</span></li>
+          <li>Fit: <span id="quickview-fit">-</span></li>
+          <li>Disponibilita': <span id="quickview-dispo">-</span></li>
+        </ul>
+        <div class="quickview-actions">
+          <div class="quickview-qty">
+            <button type="button" id="quickview-minus" class="qty-btn">-</button>
+            <span id="quickview-qty-value">1</span>
+            <button type="button" id="quickview-plus" class="qty-btn">+</button>
+          </div>
+          <button type="button" id="quickview-add-cart" class="quickview-add-btn">
+            Aggiungi al carrello
+          </button>
+          <button type="button" id="quickview-proceed" class="quickview-add-btn secondary">
+            Procedi con l'ordine
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Dettaglio prodotti sezione Products -->
+<div id="detail-modal" class="quickview-overlay" style="display: none;">
+  <div class="quickview-modal">
+    <button type="button" class="quickview-close" id="detail-close-btn" aria-label="Chiudi">
+      &times;
+    </button>
+    <div class="quickview-layout">
+      <div class="quickview-image-wrap">
+        <img id="popup-image" src="" alt="Dettaglio capo">
+        <div class="quickview-actions" style="margin-top: 0.75rem;">
+          <button type="button" class="quickview-add-btn secondary" onclick="showFront()">Fronte</button>
+          <button type="button" class="quickview-add-btn secondary" onclick="showBack()">Retro</button>
+        </div>
+      </div>
+      <div class="quickview-info">
+        <h3 class="quickview-title">Dettagli prodotto</h3>
+        <div id="popup-details"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Mini cart per icona carrello nei featured -->
+<div id="mini-cart-overlay" class="cart-overlay cart-hidden">
+  <div class="cart-modal mini-cart">
+    <div class="cart-header">
+      <h2>Aggiungi al carrello</h2>
+      <button type="button" class="cart-close" id="mini-cart-close" aria-label="Chiudi popup">
+        <svg class="icon-20"><use xlink:href="#close"></use></svg>
+      </button>
+    </div>
+    <div class="mini-cart-body">
+      <div class="mini-cart-item">
+        <div class="mini-cart-img"><img id="mini-cart-img" src="" alt=""></div>
+        <div class="mini-cart-info">
+          <p class="mini-cart-title" id="mini-cart-title"></p>
+          <div class="mini-cart-qty">
+            <button type="button" class="qty-btn" id="mini-cart-minus">-</button>
+            <span class="qty-value" id="mini-cart-qty">1</span>
+            <button type="button" class="qty-btn" id="mini-cart-plus">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="cart-actions">
+        <button type="button" class="cart-btn primary" id="mini-cart-add">Aggiungi al carrello</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer class="stycly-footer">
   <p>© {{ current_year or '2025' }} Stycly. All rights reserved.</p>
 </footer>
@@ -352,6 +443,16 @@ document.addEventListener('DOMContentLoaded', () => {
   if (modal) {
     document.getElementById('quickview-close-btn').addEventListener('click', closeFeaturedDetail);
     modal.addEventListener('click', (e) => { if (e.target.id === 'featured-detail-modal') closeFeaturedDetail(); });
+  }
+
+  // detail modal products close
+  const detailModal = document.getElementById('detail-modal');
+  const detailClose = document.getElementById('detail-close-btn');
+  if (detailClose) detailClose.addEventListener('click', closeDetailPopup);
+  if (detailModal) {
+    detailModal.addEventListener('click', (e) => {
+      if (e.target.id === 'detail-modal') closeDetailPopup();
+    });
   }
 
   const qvImage = document.getElementById('quickview-image');
