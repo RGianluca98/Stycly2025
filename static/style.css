@@ -164,11 +164,14 @@ main {
   box-shadow: 0 10px 30px rgba(0,0,0,0.12);
   padding: 0.9rem 1rem 0.8rem;
   display: none;
-  z-index: 120;
+  z-index: 400;
 }
 
 .user-menu.open .user-menu-dropdown {
   display: block;
+}
+.user-menu:hover .user-menu-dropdown {
+  display: block; /* fallback hover se JS non gira */
 }
 
 .user-menu-info {
