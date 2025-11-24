@@ -392,21 +392,30 @@ main {
     grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
     align-items: center;
     gap: 2.2rem;
-    max-width: 1400px;
+    width: 100%;
+    max-width: 1300px;
     margin: 0 auto;
     padding: clamp(2rem, 3vw, 3.5rem) 0;
 }
 
 .hero-bg-gradient {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    height: 100%;
+    transform: translateX(-50%);
     background: radial-gradient(circle at 20% 20%, #f0f6ff, #ffffff 55%), linear-gradient(120deg, rgba(125,178,224,0.12), rgba(232,212,192,0.15));
     z-index: 0;
 }
 
 .hero-shade {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 50%;
+    width: 100vw;
+    height: 100%;
+    transform: translateX(-50%);
     background: rgba(58,76,105,0.28);
     opacity: 0;
     z-index: 0;
