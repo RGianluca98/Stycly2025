@@ -326,6 +326,9 @@
           <button type="button" id="quickview-add-cart" class="quickview-add-btn">
             Add to cart
           </button>
+          <button type="button" id="quickview-proceed" class="quickview-add-btn secondary">
+            Procedi con l'ordine
+          </button>
         </div>
 
         <p class="quickview-categories">
@@ -452,6 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Add to cart dal popup
   const addCartBtn = document.getElementById('quickview-add-cart');
+  const proceedBtn = document.getElementById('quickview-proceed');
   if (addCartBtn) {
     addCartBtn.addEventListener('click', () => {
       if (!qvProduct) return;
@@ -463,6 +467,19 @@ document.addEventListener('DOMContentLoaded', () => {
         window.styclyAddToCart(qvProduct);
       }
       closeFeaturedDetail();
+    });
+  }
+  if (proceedBtn) {
+    proceedBtn.addEventListener('click', () => {
+      if (!qvProduct) return;
+      if (typeof window.styclyAddToCart === 'function') {
+        window.styclyAddToCart(qvProduct);
+      }
+      if (typeof window.styclyOpenCart === 'function') {
+        window.styclyOpenCart();
+      }
+      closeFeaturedDetail();
+      // Qui puoi collegare il flusso di ordine
     });
   }
 });

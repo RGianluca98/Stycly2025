@@ -123,8 +123,8 @@ document.addEventListener('DOMContentLoaded', function () {
   loadCart();
   renderCart();
 
-
   window.styclyAddToCart = addToCart;
+  window.styclyOpenCart = openCart;
   // Click su "aggiungi al carrello" (products.html, ecc.)
   // Basta avere un elemento con classe .add-to-cart e:
   // data-id, data-name, data-img
@@ -181,9 +181,31 @@ document.addEventListener('DOMContentLoaded', function () {
   const btnOpenCart = document.getElementById('open-cart');
   const btnCloseCart = document.getElementById('close-cart');
   const cartOverlay = document.getElementById('cart-overlay');
+  const btnContinueSelection = document.getElementById('cart-continue-selection');
+  const btnProceedOrder = document.getElementById('cart-proceed');
 
   if (btnOpenCart) btnOpenCart.addEventListener('click', openCart);
   if (btnCloseCart) btnCloseCart.addEventListener('click', closeCart);
+  if (btnContinueSelection) {
+    btnContinueSelection.addEventListener('click', () => {
+      closeCart();
+      const target = document.getElementById('products');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        window.location.href = '/#products';
+      }
+    });
+  }
+  if (btnProceedOrder) {
+    btnProceedOrder.addEventListener('click', () => {
+      if (typeof window.styclyProceedOrder === 'function') {
+        window.styclyProceedOrder(cart);
+      } else {
+        alert('Procedi con l’ordine: collega qui il flusso di checkout.');
+      }
+    });
+  }
   if (cartOverlay) {
     cartOverlay.addEventListener('click', (e) => {
       if (e.target === cartOverlay) closeCart();

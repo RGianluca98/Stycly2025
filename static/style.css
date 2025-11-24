@@ -1928,6 +1928,12 @@ label.field.focused .psuedo_select::after {
     cursor: pointer;
 }
 
+.quickview-add-btn.secondary {
+    background: #f2f4f7;
+    color: #3A4C69;
+    border: 1px solid #d5d9e3;
+}
+
 .quickview-categories {
     font-size: 0.8rem;
     color: #555;
