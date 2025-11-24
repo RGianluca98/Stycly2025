@@ -64,8 +64,9 @@ main {
     width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 4px;
-    display: flex;
+    padding: 0 8px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 1rem;
 }
@@ -293,7 +294,7 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2.5rem 1rem 2.5rem;
+    padding: clamp(2.25rem, 4vw, 4rem) 1.5rem;
     position: relative;
     z-index: 1;
     background: #ffffff;
@@ -301,7 +302,7 @@ main {
 
 .stycly-hero-content {
     width: 100%;
-    max-width: 640px;
+    max-width: 720px;
     margin: 0;
     text-align: left;
     align-items: flex-start;
@@ -311,17 +312,17 @@ main {
 
 .stycly-hero-content h1 {
     font-family: var(--font-title);
-    font-size: clamp(2rem, 2vw + 1rem, 2.6rem);
+    font-size: clamp(1.9rem, 1.4vw + 1.2rem, 2.4rem);
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
     color: var(--col-primario);
 }
 
 .stycly-hero-content p {
-    font-size: clamp(1rem, 0.5vw + 0.9rem, 1.15rem);
+    font-size: clamp(1rem, 0.45vw + 0.95rem, 1.15rem);
     color: #4a5670;
-    margin-bottom: 1.2rem;
-    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    line-height: 1.55;
 }
 
 .typewriter {
@@ -336,6 +337,13 @@ main {
     border-right: 3px solid var(--col-accent);
     letter-spacing: 0.02em;
     animation: typing 3.6s steps(36, end), blink-caret 0.8s step-end infinite;
+}
+
+@media (max-width: 1400px) {
+    .typewriter-text {
+        white-space: normal;
+        display: block;
+    }
 }
 
 .hero-subtitle {
@@ -378,12 +386,12 @@ main {
     overflow: hidden;
     position: relative;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
     align-items: center;
-    gap: 2rem;
-    max-width: 1200px;
+    gap: 2.2rem;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 3rem 0;
+    padding: clamp(2rem, 3vw, 3.5rem) 0;
 }
 
 .hero-bg-gradient {
@@ -411,6 +419,7 @@ main {
     padding: 1rem;
     z-index: 1;
     width: 100%;
+    max-width: 540px;
 }
 
 .hero-collage {
@@ -426,13 +435,13 @@ main {
 }
 
 .hero-shot.vertical {
-    width: 54%;
+    width: 56%;
     aspect-ratio: 3 / 4;
     animation-delay: 0.4s;
 }
 
 .hero-shot.horizontal {
-    width: 40%;
+    width: 42%;
     aspect-ratio: 4 / 3;
     align-self: flex-start;
     animation-delay: 1s;
@@ -1303,9 +1312,9 @@ label.field.focused .psuedo_select::after {
     }
 
     .header-icons-group {
-        margin-left: 0;
-        width: 100%;
-        justify-content: flex-start;
+        margin-left: auto;
+        width: auto;
+        justify-content: flex-end;
     }
 
     .hero-split {
@@ -1321,7 +1330,7 @@ label.field.focused .psuedo_select::after {
     }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1360px) {
     .hero-split {
         grid-template-columns: 1fr;
         padding: 2.5rem 0;
@@ -1646,8 +1655,9 @@ label.field.focused .psuedo_select::after {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
-    margin-left: 0;
-    
+    margin-left: auto;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
 }
 
 .header-icon-btn {
