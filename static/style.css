@@ -1068,22 +1068,21 @@ label.field {
     position: relative;
     display: block;
     font-size: var(--f-sm);
-    margin: 1rem 0;
-    padding-top: 1.5rem;
+    margin: 0.6rem 0;
+    padding-top: 0.2rem;
 }
 
 label.field span {
     position: absolute;
-    top: 0;
+    top: -0.35rem;
     left: 0;
-    font-size: var(--f-sm);
-    color: #666;
+    font-size: 0.9rem;
+    color: #4a5670;
+    font-weight: 600;
     transition: all .2s ease;
 }
 
 label.field.focused span {
-    top: -1.2rem;
-    font-size: 0.85rem;
     color: var(--col-accent);
 }
 
@@ -1091,9 +1090,12 @@ label.field.focused span {
     min-width: auto;
     width: 100%;
     position: relative;
-    border-bottom: 2px solid #ccc;
-    padding: .6rem 2.5rem .6rem .2rem;
+    padding: 0.8rem 2.6rem 0.8rem 0.85rem;
     cursor: pointer;
+    border-radius: 12px;
+    border: 1px solid #dce3f2;
+    background: #f8fbff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
 }
 
 .psuedo_select .option {
@@ -1103,25 +1105,24 @@ label.field.focused span {
 }
 
 .psuedo_select::after {
-    content: "";
+    content: "▾";
     position: absolute;
-    right: .4rem;
+    right: 0.7rem;
     top: 50%;
     transform: translateY(-50%);
-    width: 0;
-    height: 0;
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 6px solid #666;
-    transition: transform .2s;
+    font-size: 0.9rem;
+    color: #6b7280;
+    transition: transform .2s, color .2s;
 }
 
 label.field.focused .psuedo_select {
-    border-bottom-color: var(--col-accent);
+    border-color: var(--col-accent);
+    background: #fff;
 }
 
 label.field.focused .psuedo_select::after {
     transform: translateY(-50%) rotate(180deg);
+    color: var(--col-accent);
 }
 
 .options {
@@ -1145,6 +1146,9 @@ label.field.focused .psuedo_select::after {
     padding: .6rem .8rem;
     cursor: pointer;
 }
+.option:hover {
+    background: #f0f4ff;
+}
 
 /* === Add capo (private wardrobe) === */
 .add-capo-wrapper {
@@ -1157,6 +1161,7 @@ label.field.focused .psuedo_select::after {
     border-radius: 18px;
     box-shadow: 0 14px 38px rgba(0,0,0,0.08);
     padding: 2rem 2.2rem;
+    border: 1px solid #eef1f8;
 }
 
 .add-capo-header {
@@ -1189,6 +1194,16 @@ label.field.focused .psuedo_select::after {
     line-height: 1.5;
 }
 
+.add-capo-hint {
+    background: #f0f6ff;
+    border: 1px solid #d9e6ff;
+    color: #2e4d8c;
+    padding: 0.65rem 0.9rem;
+    border-radius: 12px;
+    font-size: 0.92rem;
+    margin-bottom: 1rem;
+}
+
 .ghost-link {
     color: var(--col-primario);
     text-decoration: none;
@@ -1212,12 +1227,12 @@ label.field.focused .psuedo_select::after {
 .add-capo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1rem 1.5rem;
+    gap: 1.2rem 1.6rem;
 }
 
 .add-capo-input {
     width: 100%;
-    padding: 0.6rem 0.5rem;
+    padding: 0.65rem 0.65rem;
     border: 1px solid #d5d9e3;
     border-radius: 10px;
     font-family: var(--font-main);
@@ -1228,6 +1243,10 @@ label.field.focused .psuedo_select::after {
     outline: none;
     border-color: var(--col-accent);
     box-shadow: 0 0 0 2px rgba(125,178,224,0.25);
+}
+
+.file-input {
+    background: #f8fbff;
 }
 
 .add-capo-actions {

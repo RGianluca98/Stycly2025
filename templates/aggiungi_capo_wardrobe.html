@@ -16,6 +16,7 @@
     </div>
 
     <form method="post" enctype="multipart/form-data" class="add-capo-form">
+      <div class="add-capo-hint">Campi obbligatori con selezione guidata per evitare errori.</div>
       <div class="add-capo-grid">
         <!-- Categoria -->
         <label class="field">
@@ -78,12 +79,12 @@
         <!-- Immagini -->
         <label class="field">
           <span>Immagine</span>
-          <input type="file" name="immagine" accept="image/*" required class="add-capo-input">
+          <input type="file" name="immagine" accept="image/*" required class="add-capo-input file-input">
         </label>
 
         <label class="field">
           <span>Immagine retro (facoltativa)</span>
-          <input type="file" name="immagine2" id="immagine2" accept="image/*" class="add-capo-input">
+          <input type="file" name="immagine2" id="immagine2" accept="image/*" class="add-capo-input file-input">
         </label>
       </div>
 
