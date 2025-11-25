@@ -170,9 +170,6 @@ main {
 .user-menu.open .user-menu-dropdown {
   display: block;
 }
-.user-menu:hover .user-menu-dropdown {
-  display: block; /* fallback hover se JS non gira */
-}
 .user-menu-info {
   border-bottom: 1px solid #e5e7eb;
   padding-bottom: 0.6rem;
@@ -1147,6 +1144,111 @@ label.field.focused .psuedo_select::after {
 .option {
     padding: .6rem .8rem;
     cursor: pointer;
+}
+
+/* === Add capo (private wardrobe) === */
+.add-capo-wrapper {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+}
+
+.add-capo-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 14px 38px rgba(0,0,0,0.08);
+    padding: 2rem 2.2rem;
+}
+
+.add-capo-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.add-capo-eyebrow {
+    margin: 0 0 0.2rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2b4ca3;
+}
+
+.add-capo-title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: 1.6rem;
+    color: var(--col-primario);
+}
+
+.add-capo-sub {
+    margin: 0.3rem 0 0;
+    color: #4a5670;
+    font-size: 0.98rem;
+    line-height: 1.5;
+}
+
+.ghost-link {
+    color: var(--col-primario);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 0.5rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid #dce3f2;
+    background: #f7f9fc;
+    transition: all 0.2s ease;
+}
+
+.ghost-link:hover {
+    color: var(--col-accent);
+    border-color: var(--col-accent);
+}
+
+.add-capo-form {
+    width: 100%;
+}
+
+.add-capo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem 1.5rem;
+}
+
+.add-capo-input {
+    width: 100%;
+    padding: 0.6rem 0.5rem;
+    border: 1px solid #d5d9e3;
+    border-radius: 10px;
+    font-family: var(--font-main);
+    font-size: 0.95rem;
+}
+
+.add-capo-input:focus {
+    outline: none;
+    border-color: var(--col-accent);
+    box-shadow: 0 0 0 2px rgba(125,178,224,0.25);
+}
+
+.add-capo-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.4rem;
+}
+
+@media (max-width: 640px) {
+    .add-capo-card {
+        padding: 1.4rem 1.2rem;
+    }
+    .add-capo-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .add-capo-actions .stycly-cta-btn,
+    .add-capo-actions .ghost-link {
+        text-align: center;
+    }
 }
 
 .option:hover {
